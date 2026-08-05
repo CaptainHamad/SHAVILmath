@@ -34,30 +34,49 @@ body{
 header{
 
 position:fixed;
+
 top:0;
 left:0;
+
 width:100%;
-padding:18px 8%;
-background:white;
+
+padding:18px 7%;
+
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
-box-shadow:0 10px 25px rgba(0,0,0,.05);
-z-index:1000;
+
+background:rgba(255,255,255,.88);
+
+backdrop-filter:blur(20px);
+
+box-shadow:0 10px 30px rgba(0,0,0,.06);
+
+z-index:999;
 
 }
 
 .logo{
 
-font-size:32px;
-font-weight:800;
-color:#2563EB;
+display:flex;
+align-items:center;
 
 }
 
-.logo span{
+.logo img{
 
-color:#F59E0B;
+height:60px;
+width:auto;
+cursor:pointer;
+transition:.3s ease;
+
+}
+
+.logo img:hover{
+
+transform:scale(1.05);
 
 }
 
@@ -86,10 +105,23 @@ color:#2563EB;
 
 .login{
 
-padding:12px 25px;
-background:#2563EB;
+padding:12px 28px;
+
+background:linear-gradient(135deg,#2563EB,#1E40AF);
+
 color:white;
-border-radius:10px;
+
+border-radius:30px;
+
+transition:.35s;
+
+}
+
+.login:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 10px 25px rgba(37,99,235,.35);
 
 }
 
@@ -529,11 +561,8 @@ line-height:1.8;
 <body>
 
 <header>
-
 <div class="logo">
-
-SHAVIL<span>math</span>
-
+    <img src="assets/images/logo.png" alt="SHAVILmath Logo">
 </div>
 
 <nav>
