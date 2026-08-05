@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -20,177 +20,337 @@
     font-family:'Poppins',sans-serif;
 }
 
-body{
-    background:#F8FAFC;
-    color:#1E293B;
+html{
+    scroll-behavior:smooth;
 }
 
+body{
+    background:#f8fbff;
+    color:#1e293b;
+}
+
+/*================ NAVBAR ================*/
+
 header{
-    position:fixed;
-    width:100%;
-    top:0;
-    background:white;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 8%;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
-    z-index:1000;
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+padding:18px 8%;
+background:white;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+z-index:1000;
+
 }
 
 .logo{
-    font-size:30px;
-    font-weight:800;
-    color:#2563EB;
+
+font-size:32px;
+font-weight:800;
+color:#2563EB;
+
 }
 
 .logo span{
-    color:#F59E0B;
+
+color:#F59E0B;
+
+}
+
+nav{
+
+display:flex;
+gap:35px;
+align-items:center;
+
 }
 
 nav a{
-    text-decoration:none;
-    color:#334155;
-    margin-left:30px;
-    font-weight:500;
-    transition:.3s;
+
+text-decoration:none;
+color:#334155;
+font-weight:500;
+transition:.3s;
+
 }
 
 nav a:hover{
-    color:#2563EB;
+
+color:#2563EB;
+
 }
+
+.login{
+
+padding:12px 25px;
+background:#2563EB;
+color:white;
+border-radius:10px;
+
+}
+
+/*================ HERO ================*/
 
 .hero{
 
-    min-height:100vh;
+padding:150px 8% 90px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:60px;
+flex-wrap:wrap;
 
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:120px 8% 60px;
-
-    gap:50px;
-
-    flex-wrap:wrap;
 }
 
 .left{
 
-    flex:1;
-    min-width:300px;
+flex:1;
+min-width:320px;
+
+}
+
+.badge{
+
+display:inline-block;
+padding:10px 18px;
+background:#dbeafe;
+color:#2563EB;
+border-radius:30px;
+font-size:14px;
+font-weight:600;
+margin-bottom:25px;
+
 }
 
 .left h1{
 
-    font-size:60px;
+font-size:68px;
+line-height:1.15;
+margin-bottom:20px;
 
-    line-height:1.2;
-
-    margin-bottom:20px;
 }
 
 .left h1 span{
 
-    color:#2563EB;
+color:#2563EB;
+
 }
 
 .left p{
 
-    color:#64748B;
+font-size:20px;
+line-height:1.8;
+color:#64748b;
+margin-bottom:40px;
 
-    font-size:20px;
-
-    line-height:1.8;
-
-    margin-bottom:40px;
 }
 
 .buttons{
 
-    display:flex;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
 
-    gap:20px;
-
-    flex-wrap:wrap;
 }
 
 .btn{
 
-    padding:16px 34px;
+text-decoration:none;
+padding:16px 35px;
+border-radius:12px;
+font-weight:600;
+transition:.3s;
 
-    border-radius:10px;
-
-    text-decoration:none;
-
-    font-weight:600;
-
-    transition:.3s;
 }
 
 .primary{
 
-    background:#2563EB;
+background:#2563EB;
+color:white;
 
-    color:white;
 }
 
 .primary:hover{
 
-    transform:translateY(-3px);
+transform:translateY(-4px);
 
-    background:#1E40AF;
 }
 
 .secondary{
 
-    border:2px solid #2563EB;
+border:2px solid #2563EB;
+color:#2563EB;
 
-    color:#2563EB;
 }
 
 .secondary:hover{
 
-    background:#2563EB;
+background:#2563EB;
+color:white;
 
-    color:white;
 }
+
+/*================ RIGHT ================*/
 
 .right{
 
-    flex:1;
+flex:1;
+display:flex;
+justify-content:center;
 
-    display:flex;
+}
 
-    justify-content:center;
+.hero-card{
 
-    min-width:300px;
+width:500px;
+height:500px;
+
+border-radius:40px;
+
+background:linear-gradient(135deg,#2563EB,#60A5FA);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+position:relative;
+
+overflow:hidden;
+
+box-shadow:0 40px 80px rgba(37,99,235,.30);
+
+}
+
+.hero-card h2{
+
+font-size:160px;
+
+color:white;
+
+z-index:2;
+
 }
 
 .circle{
 
-    width:420px;
+position:absolute;
 
-    height:420px;
+border-radius:50%;
 
-    border-radius:50%;
+background:rgba(255,255,255,.15);
 
-    background:linear-gradient(135deg,#2563EB,#60A5FA);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    color:white;
-
-    font-size:120px;
-
-    box-shadow:0 30px 80px rgba(37,99,235,.35);
 }
+
+.c1{
+
+width:250px;
+height:250px;
+
+top:-80px;
+right:-80px;
+
+}
+
+.c2{
+
+width:180px;
+height:180px;
+
+bottom:-50px;
+left:-40px;
+
+}
+
+.math{
+
+position:absolute;
+
+font-size:34px;
+
+font-weight:bold;
+
+color:white;
+
+opacity:.18;
+
+}
+
+.m1{
+
+top:50px;
+left:60px;
+
+}
+
+.m2{
+
+right:70px;
+bottom:80px;
+
+}
+
+.m3{
+
+bottom:160px;
+left:100px;
+
+}
+
+/*================ STATS ================*/
+
+.stats{
+
+padding:20px 8% 100px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+
+gap:25px;
+
+}
+
+.stat{
+
+background:white;
+
+padding:35px;
+
+border-radius:20px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.05);
+
+transition:.3s;
+
+}
+
+.stat:hover{
+
+transform:translateY(-10px);
+
+}
+
+.stat h2{
+
+font-size:42px;
+
+color:#2563EB;
+
+margin-bottom:10px;
+
+}
+
+.stat p{
+
+color:#64748b;
+
+}
+
+/*================ RESPONSIVE ================*/
 
 @media(max-width:900px){
 
@@ -198,45 +358,46 @@ header{
 
 flex-direction:column;
 
-gap:15px;
+gap:20px;
+
 }
 
 nav{
 
-display:flex;
-
 flex-wrap:wrap;
-
 justify-content:center;
-}
 
-nav a{
-
-margin:8px 12px;
 }
 
 .hero{
 
 text-align:center;
+
+}
+
+.left h1{
+
+font-size:48px;
+
 }
 
 .buttons{
 
 justify-content:center;
+
 }
 
-.left h1{
+.hero-card{
 
-font-size:42px;
+width:320px;
+height:320px;
+
 }
 
-.circle{
+.hero-card h2{
 
-width:280px;
+font-size:90px;
 
-height:280px;
-
-font-size:80px;
 }
 
 }
@@ -250,7 +411,9 @@ font-size:80px;
 <header>
 
 <div class="logo">
+
 SHAVIL<span>math</span>
+
 </div>
 
 <nav>
@@ -263,7 +426,7 @@ SHAVIL<span>math</span>
 
 <a href="#">About</a>
 
-<a href="#">Login</a>
+<a href="#" class="login">Login</a>
 
 </nav>
 
@@ -272,6 +435,12 @@ SHAVIL<span>math</span>
 <section class="hero">
 
 <div class="left">
+
+<div class="badge">
+
+🇹🇿 Made for Tanzanian Students
+
+</div>
 
 <h1>
 
@@ -283,9 +452,9 @@ The Smart Way
 
 <p>
 
-Master mathematics with interactive lessons,
-practice questions, quizzes, and detailed explanations.
-Designed especially for Tanzanian students.
+Interactive lessons, practice questions,
+quizzes and step-by-step solutions that help
+students master mathematics with confidence.
 
 </p>
 
@@ -299,7 +468,7 @@ Start Learning
 
 <a href="#" class="btn secondary">
 
-Explore Topics
+Practice Now
 
 </a>
 
@@ -309,15 +478,67 @@ Explore Topics
 
 <div class="right">
 
-<div class="circle">
+<div class="hero-card">
 
-📘
+<div class="circle c1"></div>
+
+<div class="circle c2"></div>
+
+<div class="math m1">π</div>
+
+<div class="math m2">√x</div>
+
+<div class="math m3">∑</div>
+
+<h2>📘</h2>
 
 </div>
 
 </div>
 
 </section>
+
+<section class="stats">
+
+<div class="stat">
+
+<h2>10,000+</h2>
+
+<p>Students Learning Mathematics</p>
+
+</div>
+
+<div class="stat">
+
+<h2>30+</h2>
+
+<p>Topics Explained Clearly</p>
+
+</div>
+
+<div class="stat">
+
+<h2>1000+</h2>
+
+<p>Practice Questions</p>
+
+</div>
+
+<div class="stat">
+
+<h2>98%</h2>
+
+<p>Student Satisfaction</p>
+
+</div>
+
+</section>
+
+<script>
+
+console.log("Welcome to SHAVILmath");
+
+</script>
 
 </body>
 </html>
