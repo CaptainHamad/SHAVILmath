@@ -304,15 +304,12 @@ loginForm.addEventListener("submit", async (e)=>{
 
     });
 
-    if(error){
-
-        message.className="message error";
-
-        message.innerHTML=error.message;
-
-        return;
-
-    }
+    if (error) {
+    console.error(error);
+    alert(error.message);
+    return;
+}
+   
 
     message.className="message success";
 
