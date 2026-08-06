@@ -230,17 +230,17 @@ placeholder="Enter your school name">
 
 <label>Form</label>
 
-<select>
+<select required>
 
-<option>Choose Form</option>
+<option value="" selected disabled>Select Your Form</option>
 
-<option>Form One</option>
+<option value="Form I">Form I</option>
 
-<option>Form Two</option>
+<option value="Form II">Form II</option>
 
-<option>Form Three</option>
+<option value="Form III">Form III</option>
 
-<option>Form Four</option>
+<option value="Form IV">Form IV</option>
 
 </select>
 
@@ -297,7 +297,9 @@ Login
 </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="supabase.js"></script>
 </body>
 
 </html>
