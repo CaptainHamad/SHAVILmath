@@ -335,8 +335,7 @@ console.log("Register button clicked");
 
     }
 console.log("About to sign up...");
-    const { data, error } = await supabase.auth.signUp({
-
+   const { data, error } = await window.supabaseClient.auth.signUp({
         email: email,
 
         password: password,
