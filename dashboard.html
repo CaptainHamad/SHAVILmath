@@ -115,6 +115,38 @@ padding:40px;
 
 }
 
+  .search-box{
+
+margin-bottom:25px;
+
+}
+
+.search-box input{
+
+width:100%;
+
+padding:18px;
+
+border-radius:15px;
+
+border:1px solid #CBD5E1;
+
+font-size:16px;
+
+outline:none;
+
+transition:.3s;
+
+}
+
+.search-box input:focus{
+
+border-color:#2563EB;
+
+box-shadow:0 0 10px rgba(37,99,235,.15);
+
+}
+
 .header{
 
 display:flex;
@@ -277,22 +309,21 @@ grid-template-columns:1fr;
 
 <div class="menu">
 
-<a href="#">🏠 Dashboard</a>
+<a href="dashboard.html">🏠 Dashboard</a>
 
-<a href="#">📝 Exercises</a>
+<a href="exercises.html">📝 Exercises</a>
 
-<a href="#">⚡ Quizzes</a>
+<a href="quizzes.html">⚡ Quizzes</a>
 
-<a href="#">🎯 Special Tests</a>
+<a href="special-tests.html">🎯 Special Tests</a>
 
-<a href="#">📄 Past Papers</a>
+<a href="past-papers.html">📄 Past Papers</a>
 
-<a href="#">👤 Profile</a>
+<a href="profile.html">👤 My Profile</a>
 
 <a href="#" id="logoutBtn">🚪 Logout</a>
 
 </div>
-
 </div>
 
 <!-- Main Content -->
@@ -314,7 +345,13 @@ Loading...
 </div>
 
 </div>
+<div class="search-box">
 
+<input
+type="text"
+placeholder="🔍 Search topics, quizzes or past papers...">
+
+</div>
 <div class="question">
 
 <h2>📅 Question of the Day</h2>
@@ -335,7 +372,7 @@ Start Solving
 
 <div class="cards">
 
-<div class="card">
+<div class="card" onclick="window.location.href='exercises.html'">
 
 <h2>📝</h2>
 
@@ -343,13 +380,13 @@ Start Solving
 
 <p>
 
-Practice questions by topic.
+Practice mathematics by topic.
 
 </p>
 
 </div>
 
-<div class="card">
+<div class="card" onclick="window.location.href='quizzes.html'">
 
 <h2>⚡</h2>
 
@@ -357,13 +394,13 @@ Practice questions by topic.
 
 <p>
 
-Quick quizzes with instant results.
+Challenge yourself with quick quizzes.
 
 </p>
 
 </div>
 
-<div class="card">
+<div class="card" onclick="window.location.href='special-tests.html'">
 
 <h2>🎯</h2>
 
@@ -371,13 +408,13 @@ Quick quizzes with instant results.
 
 <p>
 
-Timed mathematics tests.
+Take timed mathematics tests.
 
 </p>
 
 </div>
 
-<div class="card">
+<div class="card" onclick="window.location.href='past-papers.html'">
 
 <h2>📄</h2>
 
@@ -385,14 +422,54 @@ Timed mathematics tests.
 
 <p>
 
-Practice previous examinations.
+Practice previous examination papers.
 
 </p>
 
 </div>
 
 </div>
+<h2 style="margin-top:40px;color:#0F172A;">
 
+📊 My Progress
+
+</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<h2>0</h2>
+
+<h3>Questions Solved</h3>
+
+</div>
+
+<div class="card">
+
+<h2>0%</h2>
+
+<h3>Accuracy</h3>
+
+</div>
+
+<div class="card">
+
+<h2>0</h2>
+
+<h3>Correct Answers</h3>
+
+</div>
+
+<div class="card">
+
+<h2>Beginner</h2>
+
+<h3>Current Level</h3>
+
+</div>
+
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
