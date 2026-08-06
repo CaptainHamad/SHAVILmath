@@ -9,7 +9,6 @@
 <title>Login | SHAVILmath</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,167 +16,191 @@
 <style>
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
 }
 
 body{
 
-background:linear-gradient(135deg,#2563EB,#1E40AF);
+    background:linear-gradient(135deg,#2563EB,#1E40AF);
 
-height:100vh;
+    height:100vh;
 
-display:flex;
+    display:flex;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
-padding:20px;
+    padding:20px;
 
 }
 
 .container{
 
-background:white;
+    background:white;
 
-width:100%;
+    width:100%;
 
-max-width:430px;
+    max-width:430px;
 
-padding:45px;
+    padding:45px;
 
-border-radius:25px;
+    border-radius:25px;
 
-box-shadow:0 25px 60px rgba(0,0,0,.2);
+    box-shadow:0 25px 60px rgba(0,0,0,.2);
 
 }
 
 .logo{
 
-text-align:center;
+    text-align:center;
 
-margin-bottom:25px;
+    margin-bottom:25px;
 
 }
 
 .logo img{
 
-height:70px;
+    height:70px;
 
 }
 
 h2{
 
-text-align:center;
+    text-align:center;
 
-margin-bottom:10px;
+    margin-bottom:10px;
 
-color:#0F172A;
+    color:#0F172A;
 
 }
 
 .subtitle{
 
-text-align:center;
+    text-align:center;
 
-color:#64748B;
+    color:#64748B;
 
-margin-bottom:35px;
+    margin-bottom:35px;
 
-font-size:15px;
+    font-size:15px;
 
 }
 
 .input-group{
 
-margin-bottom:20px;
+    margin-bottom:20px;
 
 }
 
 label{
 
-display:block;
+    display:block;
 
-margin-bottom:8px;
+    margin-bottom:8px;
 
-font-weight:600;
+    font-weight:600;
 
 }
 
 input{
 
-width:100%;
+    width:100%;
 
-padding:15px;
+    padding:15px;
 
-border:1px solid #CBD5E1;
+    border:1px solid #CBD5E1;
 
-border-radius:12px;
+    border-radius:12px;
 
-font-size:15px;
+    font-size:15px;
 
-outline:none;
+    outline:none;
 
-transition:.3s;
+    transition:.3s;
 
 }
 
 input:focus{
 
-border-color:#2563EB;
+    border-color:#2563EB;
 
 }
 
 button{
 
-width:100%;
+    width:100%;
 
-padding:16px;
+    padding:16px;
 
-background:#2563EB;
+    background:#2563EB;
 
-color:white;
+    color:white;
 
-border:none;
+    border:none;
 
-border-radius:12px;
+    border-radius:12px;
 
-font-size:16px;
+    font-size:16px;
 
-font-weight:600;
+    font-weight:600;
 
-cursor:pointer;
+    cursor:pointer;
 
-transition:.3s;
+    transition:.3s;
 
 }
 
 button:hover{
 
-background:#1E40AF;
+    background:#1E40AF;
 
 }
 
 .register{
 
-text-align:center;
+    text-align:center;
 
-margin-top:25px;
+    margin-top:25px;
 
-font-size:15px;
+    font-size:15px;
 
 }
 
 .register a{
 
-color:#2563EB;
+    color:#2563EB;
 
-text-decoration:none;
+    text-decoration:none;
 
-font-weight:600;
+    font-weight:600;
+
+}
+
+.message{
+
+    margin-top:20px;
+
+    text-align:center;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.success{
+
+    color:green;
+
+}
+
+.error{
+
+    color:red;
 
 }
 
@@ -191,7 +214,7 @@ font-weight:600;
 
 <div class="logo">
 
-<img src="assets/images/logo.png">
+<img src="assets/images/logo.png" alt="SHAVILmath">
 
 </div>
 
@@ -203,15 +226,17 @@ Login and continue practicing Mathematics.
 
 </p>
 
-<form>
+<form id="loginForm">
 
 <div class="input-group">
 
 <label>Email</label>
 
 <input
+id="email"
 type="email"
-placeholder="Enter your email">
+placeholder="Enter your email"
+required>
 
 </div>
 
@@ -220,18 +245,22 @@ placeholder="Enter your email">
 <label>Password</label>
 
 <input
+id="password"
 type="password"
-placeholder="Enter your password">
+placeholder="Enter your password"
+required>
 
 </div>
 
-<button>
+<button type="submit">
 
 Login
 
 </button>
 
 </form>
+
+<div id="message" class="message"></div>
 
 <div class="register">
 
@@ -246,9 +275,59 @@ Create Account
 </div>
 
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="supabase.js"></script>
+
+<script>
+
+const loginForm = document.getElementById("loginForm");
+
+const message = document.getElementById("message");
+
+loginForm.addEventListener("submit", async (e)=>{
+
+    e.preventDefault();
+
+    message.innerHTML="";
+
+    const email=document.getElementById("email").value;
+
+    const password=document.getElementById("password").value;
+
+    const {data,error}=await window.supabaseClient.auth.signInWithPassword({
+
+        email:email,
+
+        password:password
+
+    });
+
+    if(error){
+
+        message.className="message error";
+
+        message.innerHTML=error.message;
+
+        return;
+
+    }
+
+    message.className="message success";
+
+    message.innerHTML="Login successful...";
+
+    setTimeout(()=>{
+
+        window.location.href="dashboard.html";
+
+    },1000);
+
+});
+
+</script>
+
 </body>
 
 </html>
