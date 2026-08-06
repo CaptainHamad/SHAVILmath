@@ -211,6 +211,7 @@ Join SHAVILmath and start practicing today.
 <label>Full Name</label>
 
 <input
+id="fullName"
 type="text"
 placeholder="Enter your full name">
 
@@ -221,6 +222,7 @@ placeholder="Enter your full name">
 <label>School</label>
 
 <input
+id="school"
 type="text"
 placeholder="Enter your school name">
 
@@ -230,7 +232,7 @@ placeholder="Enter your school name">
 
 <label>Form</label>
 
-<select required>
+<select id="form">
 
 <option value="" selected disabled>Select Your Form</option>
 
@@ -251,6 +253,7 @@ placeholder="Enter your school name">
 <label>Email</label>
 
 <input
+id="email"
 type="email"
 placeholder="Enter your email">
 
@@ -261,6 +264,7 @@ placeholder="Enter your email">
 <label>Password</label>
 
 <input
+id="password"
 type="password"
 placeholder="Create password">
 
@@ -269,8 +273,8 @@ placeholder="Create password">
 <div class="input-group">
 
 <label>Confirm Password</label>
-
 <input
+id="confirmPassword"
 type="password"
 placeholder="Confirm password">
 
@@ -300,6 +304,21 @@ Login
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://shnkqegaaocffjfscznu.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_VsQ1yMkQLvDQB_tj-qSQmg_G8-5crac";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+console.log("Supabase Connected Successfully!");
+</script>
+
 </body>
 
 </html>
