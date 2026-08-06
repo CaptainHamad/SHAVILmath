@@ -1,27 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Dashboard | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-body{
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
 
-font-family:Arial,sans-serif;
+body{
 
 background:#f4f7fb;
 
 display:flex;
 
-justify-content:center;
+min-height:100vh;
+
+}
+
+/* Sidebar */
+
+.sidebar{
+
+width:260px;
+
+background:#2563EB;
+
+color:white;
+
+padding:30px 20px;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.logo{
+
+text-align:center;
+
+margin-bottom:40px;
+
+}
+
+.logo img{
+
+height:65px;
+
+margin-bottom:10px;
+
+}
+
+.logo h2{
+
+font-size:24px;
+
+}
+
+.menu{
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+}
+
+.menu a{
+
+color:white;
+
+text-decoration:none;
+
+padding:14px 18px;
+
+border-radius:12px;
+
+transition:.3s;
+
+font-weight:500;
+
+}
+
+.menu a:hover{
+
+background:rgba(255,255,255,.15);
+
+}
+
+/* Content */
+
+.content{
+
+flex:1;
+
+padding:40px;
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
 
 align-items:center;
 
-height:100vh;
+margin-bottom:35px;
 
-margin:0;
+}
+
+.header h1{
+
+font-size:34px;
+
+color:#0F172A;
+
+}
+
+.header p{
+
+color:#64748B;
+
+}
+
+/* Cards */
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:25px;
+
+margin-top:30px;
 
 }
 
@@ -29,21 +159,67 @@ margin:0;
 
 background:white;
 
-padding:40px;
+padding:30px;
 
 border-radius:20px;
 
-box-shadow:0 10px 30px rgba(0,0,0,.1);
+box-shadow:0 12px 35px rgba(0,0,0,.08);
 
-text-align:center;
+cursor:pointer;
+
+transition:.3s;
 
 }
 
-button{
+.card:hover{
+
+transform:translateY(-8px);
+
+}
+
+.card h2{
+
+font-size:28px;
+
+margin-bottom:10px;
+
+}
+
+.card h3{
+
+margin-bottom:8px;
+
+color:#0F172A;
+
+}
+
+.card p{
+
+color:#64748B;
+
+}
+
+/* Question */
+
+.question{
+
+background:white;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+margin-top:25px;
+
+}
+
+.question button{
 
 margin-top:20px;
 
-padding:12px 25px;
+padding:14px 30px;
 
 background:#2563EB;
 
@@ -57,28 +233,205 @@ cursor:pointer;
 
 }
 
+/* Responsive */
+
+@media(max-width:900px){
+
+body{
+
+flex-direction:column;
+
+}
+
+.sidebar{
+
+width:100%;
+
+}
+
+.cards{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
 
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<div class="logo">
+
+<img src="assets/images/logo.png">
+
+<h2>SHAVILmath</h2>
+
+</div>
+
+<div class="menu">
+
+<a href="#">🏠 Dashboard</a>
+
+<a href="#">📝 Exercises</a>
+
+<a href="#">⚡ Quizzes</a>
+
+<a href="#">🎯 Special Tests</a>
+
+<a href="#">📄 Past Papers</a>
+
+<a href="#">👤 Profile</a>
+
+<a href="#" id="logoutBtn">🚪 Logout</a>
+
+</div>
+
+</div>
+
+<!-- Main Content -->
+
+<div class="content">
+
+<div class="header">
+
+<div>
+
+<h1 id="welcomeName">Welcome 👋</h1>
+
+<p id="studentInfo">
+
+Loading...
+
+</p>
+
+</div>
+
+</div>
+
+<div class="question">
+
+<h2>📅 Question of the Day</h2>
+
+<p>
+
+Solve today's mathematics challenge.
+
+</p>
+
+<button>
+
+Start Solving
+
+</button>
+
+</div>
+
+<div class="cards">
+
 <div class="card">
 
-<h1>🎉 Welcome to SHAVILmath</h1>
+<h2>📝</h2>
 
-<p>You have successfully logged in.</p>
+<h3>Exercises</h3>
 
-<button id="logoutBtn">Logout</button>
+<p>
+
+Practice questions by topic.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>⚡</h2>
+
+<h3>Quizzes</h3>
+
+<p>
+
+Quick quizzes with instant results.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>🎯</h2>
+
+<h3>Special Tests</h3>
+
+<p>
+
+Timed mathematics tests.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>📄</h2>
+
+<h3>Past Papers</h3>
+
+<p>
+
+Practice previous examinations.
+
+</p>
+
+</div>
+
+</div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="supabase.js"></script>
 
 <script>
 
-document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+async function loadUser(){
+
+const {
+
+data:{user}
+
+}=await window.supabaseClient.auth.getUser();
+
+if(!user){
+
+window.location.href="login.html";
+
+return;
+
+}
+
+document.getElementById("welcomeName").innerHTML=
+
+"Welcome, "+user.user_metadata.full_name+" 👋";
+
+document.getElementById("studentInfo").innerHTML=
+
+user.user_metadata.school+" • "+user.user_metadata.form;
+
+}
+
+loadUser();
+
+document.getElementById("logoutBtn").addEventListener("click",async(e)=>{
+
+e.preventDefault();
 
 await window.supabaseClient.auth.signOut();
 
@@ -89,4 +442,5 @@ window.location.href="login.html";
 </script>
 
 </body>
+
 </html>
