@@ -1,1 +1,279 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Topic | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#F4F7FB;
+
+}
+
+header{
+
+background:#2563EB;
+
+padding:25px 8%;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+color:white;
+
+}
+
+header img{
+
+height:60px;
+
+}
+
+header a{
+
+color:white;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.container{
+
+padding:50px 8%;
+
+}
+
+h1{
+
+font-size:40px;
+
+color:#0F172A;
+
+margin-bottom:10px;
+
+}
+
+.subtitle{
+
+color:#64748B;
+
+margin-bottom:40px;
+
+font-size:18px;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+gap:30px;
+
+}
+
+.card{
+
+background:white;
+
+padding:35px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 20px 45px rgba(37,99,235,.20);
+
+}
+
+.card h2{
+
+font-size:55px;
+
+margin-bottom:20px;
+
+}
+
+.card h3{
+
+margin-bottom:12px;
+
+color:#0F172A;
+
+}
+
+.card p{
+
+color:#64748B;
+
+line-height:1.6;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="assets/images/logo.png">
+
+<a href="topics.html">
+
+⬅ Back to Topics
+
+</a>
+
+</header>
+
+<div class="container">
+
+<h1 id="topicTitle">
+
+Loading...
+
+</h1>
+
+<p class="subtitle">
+
+Choose what you want to do.
+
+</p>
+
+<div class="grid">
+
+<div class="card" onclick="goExamples()">
+
+<h2>📖</h2>
+
+<h3>Worked Examples</h3>
+
+<p>
+
+Learn using step-by-step solved examples.
+
+</p>
+
+</div>
+
+<div class="card" onclick="goExercises()">
+
+<h2>📝</h2>
+
+<h3>Exercises</h3>
+
+<p>
+
+Practice questions from this topic.
+
+</p>
+
+</div>
+
+<div class="card" onclick="goQuiz()">
+
+<h2>⚡</h2>
+
+<h3>Quiz</h3>
+
+<p>
+
+Test yourself with a quick quiz.
+
+</p>
+
+</div>
+
+<div class="card" onclick="goTest()">
+
+<h2>🎯</h2>
+
+<h3>Topic Test</h3>
+
+<p>
+
+Take a full topic assessment.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const topic = localStorage.getItem("selectedTopic");
+
+document.getElementById("topicTitle").innerHTML = topic;
+
+function goExamples(){
+
+window.location.href="examples.html";
+
+}
+
+function goExercises(){
+
+window.location.href="questions.html";
+
+}
+
+function goQuiz(){
+
+window.location.href="quiz.html";
+
+}
+
+function goTest(){
+
+window.location.href="topic-test.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
