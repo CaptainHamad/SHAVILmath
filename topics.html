@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -9,7 +8,6 @@
 <title>Topics | SHAVILmath</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,16 +22,14 @@ font-family:Poppins,sans-serif;
 }
 
 body{
-
 background:#F4F7FB;
-
 }
 
 header{
 
 background:#2563EB;
 
-padding:25px 8%;
+padding:20px 8%;
 
 display:flex;
 
@@ -67,13 +63,13 @@ padding:50px 8%;
 
 }
 
-h1{
+#formTitle{
 
-font-size:38px;
-
-color:#0F172A;
+font-size:40px;
 
 margin-bottom:10px;
+
+color:#0F172A;
 
 }
 
@@ -82,8 +78,6 @@ margin-bottom:10px;
 color:#64748B;
 
 margin-bottom:40px;
-
-font-size:17px;
 
 }
 
@@ -105,11 +99,11 @@ padding:30px;
 
 border-radius:20px;
 
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-
 cursor:pointer;
 
 transition:.3s;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
 
 }
 
@@ -123,11 +117,9 @@ box-shadow:0 15px 40px rgba(37,99,235,.18);
 
 .topic h2{
 
-font-size:22px;
+color:#2563EB;
 
 margin-bottom:10px;
-
-color:#2563EB;
 
 }
 
@@ -135,7 +127,27 @@ color:#2563EB;
 
 color:#64748B;
 
-line-height:1.6;
+}
+
+.loading{
+
+text-align:center;
+
+font-size:22px;
+
+padding:60px;
+
+}
+
+.error{
+
+text-align:center;
+
+color:red;
+
+font-size:18px;
+
+padding:40px;
 
 }
 
@@ -171,94 +183,124 @@ Choose a topic to start practicing.
 
 </p>
 
-<div class="topics" id="topicsContainer">
+<div id="topicsContainer" class="topics">
+
+<div class="loading">
+
+Loading topics...
 
 </div>
 
 </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
 
 <script>
 
 const form = localStorage.getItem("selectedForm");
 
-document.getElementById("formTitle").innerHTML=form;
+const title=document.getElementById("formTitle");
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+const container=document.getElementById("topicsContainer");
 
-<script src="supabase.js"></script>
-
-const form = localStorage.getItem("selectedForm");
-
-document.getElementById("formTitle").innerHTML = form;
-
-const container = document.getElementById("topicsContainer");
-
-loadTopics();
+title.innerHTML=form || "Topics";
 
 async function loadTopics(){
 
-    // Pata ID ya Form
-    const { data: forms } = await window.supabaseClient
-        .from("forms")
-        .select("*")
-        .eq("form_name", form);
+try{
 
-    if(!forms || forms.length===0){
+// pata form
 
-        container.innerHTML="<h2>No topics found.</h2>";
+const {data:forms,error:formError}=await window.supabaseClient
 
-        return;
+.from("forms")
 
-    }
+.select("*")
 
-    const formId = forms[0].id;
+.eq("form_name",form)
 
-    // Pata Topics
-    const { data: topics, error } = await window.supabaseClient
-        .from("topics")
-        .select("*")
-        .eq("form_id", formId)
-        .order("topic_order");
+.single();
 
-    if(error){
+if(formError){
 
-        console.log(error);
+container.innerHTML='<div class="error">Form not found.</div>';
 
-        return;
+return;
 
-    }
+}
 
-    topics.forEach(topic=>{
+// pata topics
 
-        container.innerHTML += `
+const {data:topics,error}=await window.supabaseClient
 
-        <div class="topic"
+.from("topics")
 
-        onclick="openTopic('${topic.topic_name}')">
+.select("*")
 
-            <h2>📘 ${topic.topic_name}</h2>
+.eq("form_id",forms.id)
 
-            <p>
+.order("topic_order");
 
-            Practice questions from this topic.
+if(error){
 
-            </p>
+container.innerHTML='<div class="error">'+error.message+'</div>';
 
-        </div>
+return;
 
-        `;
+}
 
-    });
+container.innerHTML="";
+
+if(topics.length===0){
+
+container.innerHTML='<div class="error">No topics found.</div>';
+
+return;
+
+}
+
+topics.forEach(topic=>{
+
+container.innerHTML+=`
+
+<div class="topic" onclick="openTopic('${topic.topic_name}')">
+
+<h2>📘 ${topic.topic_name}</h2>
+
+<p>
+
+Practice questions from this topic.
+
+</p>
+
+</div>
+
+`;
+
+});
+
+}catch(err){
+
+container.innerHTML='<div class="error">'+err.message+'</div>';
+
+}
 
 }
 
 function openTopic(topic){
 
-    localStorage.setItem("selectedTopic",topic);
+localStorage.setItem("selectedTopic",topic);
 
-    window.location.href="topic.html";
+window.location.href="topic.html";
 
 }
+
+loadTopics();
+
 </script>
 
 </body>
