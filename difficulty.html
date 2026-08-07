@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Select Difficulty | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#F4F7FB;
+
+}
+
+header{
+
+background:#2563EB;
+
+padding:22px 8%;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+color:white;
+
+}
+
+header img{
+
+height:60px;
+
+}
+
+header a{
+
+color:white;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.container{
+
+padding:50px 8%;
+
+}
+
+.title{
+
+text-align:center;
+
+margin-bottom:40px;
+
+}
+
+.title h1{
+
+font-size:38px;
+
+color:#0F172A;
+
+margin-bottom:10px;
+
+}
+
+.title p{
+
+color:#64748B;
+
+}
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+gap:30px;
+
+}
+
+.card{
+
+background:white;
+
+padding:35px;
+
+border-radius:20px;
+
+text-align:center;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 20px 45px rgba(37,99,235,.18);
+
+}
+
+.card h2{
+
+font-size:60px;
+
+margin-bottom:15px;
+
+}
+
+.card h3{
+
+margin-bottom:10px;
+
+color:#0F172A;
+
+}
+
+.card p{
+
+color:#64748B;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="assets/images/logo.png">
+
+<a href="topic.html">
+
+⬅ Back
+
+</a>
+
+</header>
+
+<div class="container">
+
+<div class="title">
+
+<h1 id="topicTitle">
+
+Loading...
+
+</h1>
+
+<p>
+
+Choose your preferred difficulty level.
+
+</p>
+
+</div>
+
+<div class="grid">
+
+<div class="card" onclick="chooseDifficulty('Easy')">
+
+<h2>🟢</h2>
+
+<h3>Easy</h3>
+
+<p>Beginner level questions.</p>
+
+</div>
+
+<div class="card" onclick="chooseDifficulty('Medium')">
+
+<h2>🟡</h2>
+
+<h3>Medium</h3>
+
+<p>Intermediate level questions.</p>
+
+</div>
+
+<div class="card" onclick="chooseDifficulty('Hard')">
+
+<h2>🔴</h2>
+
+<h3>Hard</h3>
+
+<p>Advanced level questions.</p>
+
+</div>
+
+<div class="card" onclick="chooseDifficulty('Mixed')">
+
+<h2>🔵</h2>
+
+<h3>Mixed</h3>
+
+<p>Random questions from all levels.</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const topic=localStorage.getItem("selectedTopic");
+
+document.getElementById("topicTitle").innerHTML=topic;
+
+function chooseDifficulty(level){
+
+localStorage.setItem("difficulty",level);
+
+window.location.href="questions.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
