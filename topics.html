@@ -187,68 +187,77 @@ const topics={
 
 "Form I":[
 
+"Concept of Mathematics",
+
 "Numbers",
 
-"Fractions",
+"Approximations",
 
-"Decimals",
-
-"Percentages",
+"Ratios and Proportions",
 
 "Algebra",
 
-"Geometry",
-
-"Statistics"
+"Coordinate Geometry"
 
 ],
 
 "Form II":[
 
-"Indices",
+"Exponents and Radicals",
+
+"Algebra",
+
+"Quadratic Equations",
 
 "Logarithms",
 
-"Linear Equations",
+"Congruence",
 
-"Coordinate Geometry",
+"Similarity",
 
-"Area and Perimeter",
+"Geometrical Transformations",
 
-"Probability"
+"Pythagoras' Theorem",
+
+"Trigonometry",
+
+"Sets",
+
+"Statistics"
 
 ],
 
 "Form III":[
 
+"Relations",
+
 "Functions",
 
-"Quadratic Equations",
+"Linear Programming",
 
-"Trigonometry",
+"Sequences and Series",
 
-"Circles",
-
-"Vectors"
+"Circles"
 
 ],
 
 "Form IV":[
 
+"Coordinate Geometry II",
+
+"Trigonometry II",
+
+"Vectors",
+
 "Matrices",
-
-"Transformations",
-
-"Linear Programming",
 
 "Probability",
 
-"Revision"
+"Earth as a Sphere"
 
 ]
 
 };
-
 const container=document.getElementById("topicsContainer");
 
 topics[form].forEach(topic=>{
@@ -281,10 +290,9 @@ function openTopic(topic){
 
 localStorage.setItem("selectedTopic",topic);
 
-window.location.href="difficulty.html";
+window.location.href="topic.html";
 
 }
-
 </script>
 
 </body>
