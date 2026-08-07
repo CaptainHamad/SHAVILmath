@@ -301,6 +301,45 @@ window.location.href="topic.html";
 
 loadTopics();
 
+  async function loadTopics(){
+
+    try{
+
+        const {data:forms,error:formError}=await window.supabaseClient
+        .from("forms")
+        .select("*")
+        .eq("form_name",form)
+        .single();
+
+        console.log("FORM =", forms);
+        console.log("FORM ERROR =", formError);
+
+        if(formError){
+
+            container.innerHTML="<h2>Form not found</h2>";
+
+            return;
+
+        }
+
+        const {data:topics,error}=await window.supabaseClient
+        .from("topics")
+        .select("*")
+        .eq("form_id",forms.id)
+        .order("topic_order");
+
+        console.log("TOPICS =", topics);
+        console.log("TOPIC ERROR =", error);
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+loadTopics();
 </script>
 
 </body>
