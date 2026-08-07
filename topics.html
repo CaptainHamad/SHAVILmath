@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Topics | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#F4F7FB;
+
+}
+
+header{
+
+background:#2563EB;
+
+padding:25px 8%;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+color:white;
+
+}
+
+header img{
+
+height:60px;
+
+}
+
+header a{
+
+color:white;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.container{
+
+padding:50px 8%;
+
+}
+
+h1{
+
+font-size:38px;
+
+color:#0F172A;
+
+margin-bottom:10px;
+
+}
+
+.subtitle{
+
+color:#64748B;
+
+margin-bottom:40px;
+
+font-size:17px;
+
+}
+
+.topics{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:25px;
+
+}
+
+.topic{
+
+background:white;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.topic:hover{
+
+transform:translateY(-8px);
+
+box-shadow:0 15px 40px rgba(37,99,235,.18);
+
+}
+
+.topic h2{
+
+font-size:22px;
+
+margin-bottom:10px;
+
+color:#2563EB;
+
+}
+
+.topic p{
+
+color:#64748B;
+
+line-height:1.6;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="assets/images/logo.png">
+
+<a href="exercises.html">
+
+⬅ Back
+
+</a>
+
+</header>
+
+<div class="container">
+
+<h1 id="formTitle">
+
+Loading...
+
+</h1>
+
+<p class="subtitle">
+
+Choose a topic to start practicing.
+
+</p>
+
+<div class="topics" id="topicsContainer">
+
+</div>
+
+</div>
+
+<script>
+
+const form = localStorage.getItem("selectedForm");
+
+document.getElementById("formTitle").innerHTML=form;
+
+const topics={
+
+"Form I":[
+
+"Numbers",
+
+"Fractions",
+
+"Decimals",
+
+"Percentages",
+
+"Algebra",
+
+"Geometry",
+
+"Statistics"
+
+],
+
+"Form II":[
+
+"Indices",
+
+"Logarithms",
+
+"Linear Equations",
+
+"Coordinate Geometry",
+
+"Area and Perimeter",
+
+"Probability"
+
+],
+
+"Form III":[
+
+"Functions",
+
+"Quadratic Equations",
+
+"Trigonometry",
+
+"Circles",
+
+"Vectors"
+
+],
+
+"Form IV":[
+
+"Matrices",
+
+"Transformations",
+
+"Linear Programming",
+
+"Probability",
+
+"Revision"
+
+]
+
+};
+
+const container=document.getElementById("topicsContainer");
+
+topics[form].forEach(topic=>{
+
+container.innerHTML+=`
+
+<div class="topic"
+
+onclick="openTopic('${topic}')">
+
+<h2>
+
+📘 ${topic}
+
+</h2>
+
+<p>
+
+Practice questions from ${topic}
+
+</p>
+
+</div>
+
+`;
+
+});
+
+function openTopic(topic){
+
+localStorage.setItem("selectedTopic",topic);
+
+window.location.href="difficulty.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
