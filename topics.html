@@ -183,114 +183,80 @@ const form = localStorage.getItem("selectedForm");
 
 document.getElementById("formTitle").innerHTML=form;
 
-const topics={
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-"Form I":[
+<script src="supabase.js"></script>
 
-"Concept of Mathematics",
+const form = localStorage.getItem("selectedForm");
 
-"Numbers",
+document.getElementById("formTitle").innerHTML = form;
 
-"Approximations",
+const container = document.getElementById("topicsContainer");
 
-"Ratios and Proportions",
+loadTopics();
 
-"Algebra",
+async function loadTopics(){
 
-"Coordinate Geometry"
+    // Pata ID ya Form
+    const { data: forms } = await window.supabaseClient
+        .from("forms")
+        .select("*")
+        .eq("form_name", form);
 
-],
+    if(!forms || forms.length===0){
 
-"Form II":[
+        container.innerHTML="<h2>No topics found.</h2>";
 
-"Exponents and Radicals",
+        return;
 
-"Algebra",
+    }
 
-"Quadratic Equations",
+    const formId = forms[0].id;
 
-"Logarithms",
+    // Pata Topics
+    const { data: topics, error } = await window.supabaseClient
+        .from("topics")
+        .select("*")
+        .eq("form_id", formId)
+        .order("topic_order");
 
-"Congruence",
+    if(error){
 
-"Similarity",
+        console.log(error);
 
-"Geometrical Transformations",
+        return;
 
-"Pythagoras' Theorem",
+    }
 
-"Trigonometry",
+    topics.forEach(topic=>{
 
-"Sets",
+        container.innerHTML += `
 
-"Statistics"
+        <div class="topic"
 
-],
+        onclick="openTopic('${topic.topic_name}')">
 
-"Form III":[
+            <h2>📘 ${topic.topic_name}</h2>
 
-"Relations",
+            <p>
 
-"Functions",
+            Practice questions from this topic.
 
-"Linear Programming",
+            </p>
 
-"Sequences and Series",
+        </div>
 
-"Circles"
+        `;
 
-],
+    });
 
-"Form IV":[
-
-"Coordinate Geometry II",
-
-"Trigonometry II",
-
-"Vectors",
-
-"Matrices",
-
-"Probability",
-
-"Earth as a Sphere"
-
-]
-
-};
-const container=document.getElementById("topicsContainer");
-
-topics[form].forEach(topic=>{
-
-container.innerHTML+=`
-
-<div class="topic"
-
-onclick="openTopic('${topic}')">
-
-<h2>
-
-📘 ${topic}
-
-</h2>
-
-<p>
-
-Practice questions from ${topic}
-
-</p>
-
-</div>
-
-`;
-
-});
+}
 
 function openTopic(topic){
 
-localStorage.setItem("selectedTopic",topic);
+    localStorage.setItem("selectedTopic",topic);
 
-window.location.href="topic.html";
+    window.location.href="topic.html";
 
 }
 </script>
