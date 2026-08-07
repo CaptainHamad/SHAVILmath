@@ -1,1 +1,270 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Exercises | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#f4f7fb;
+
+}
+
+header{
+
+background:#2563EB;
+
+padding:25px 8%;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+color:white;
+
+}
+
+header img{
+
+height:60px;
+
+}
+
+header a{
+
+color:white;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.container{
+
+padding:50px 8%;
+
+}
+
+.title{
+
+text-align:center;
+
+margin-bottom:45px;
+
+}
+
+.title h1{
+
+font-size:38px;
+
+color:#0F172A;
+
+margin-bottom:10px;
+
+}
+
+.title p{
+
+color:#64748B;
+
+font-size:18px;
+
+}
+
+.forms{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+}
+
+.form-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.form-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 20px 45px rgba(37,99,235,.18);
+
+}
+
+.form-card h2{
+
+font-size:60px;
+
+margin-bottom:20px;
+
+}
+
+.form-card h3{
+
+font-size:28px;
+
+margin-bottom:10px;
+
+color:#0F172A;
+
+}
+
+.form-card p{
+
+color:#64748B;
+
+line-height:1.6;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="assets/images/logo.png">
+
+<a href="dashboard.html">
+
+⬅ Back to Dashboard
+
+</a>
+
+</header>
+
+<div class="container">
+
+<div class="title">
+
+<h1>
+
+📝 Practice Exercises
+
+</h1>
+
+<p>
+
+Choose your form to start practicing Mathematics.
+
+</p>
+
+</div>
+
+<div class="forms">
+
+<div class="form-card" onclick="selectForm('Form I')">
+
+<h2>📘</h2>
+
+<h3>Form I</h3>
+
+<p>
+
+Basic Mathematics for Form One students.
+
+</p>
+
+</div>
+
+<div class="form-card" onclick="selectForm('Form II')">
+
+<h2>📗</h2>
+
+<h3>Form II</h3>
+
+<p>
+
+Practice all Form Two topics.
+
+</p>
+
+</div>
+
+<div class="form-card" onclick="selectForm('Form III')">
+
+<h2>📙</h2>
+
+<h3>Form III</h3>
+
+<p>
+
+Master Form Three Mathematics.
+
+</p>
+
+</div>
+
+<div class="form-card" onclick="selectForm('Form IV')">
+
+<h2>📕</h2>
+
+<h3>Form IV</h3>
+
+<p>
+
+Prepare for CSEE examinations.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function selectForm(form){
+
+localStorage.setItem("selectedForm",form);
+
+window.location.href="topics.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
