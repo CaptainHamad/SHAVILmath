@@ -234,15 +234,39 @@ Choose your preferred difficulty level.
 
 <script>
 
-const topic=localStorage.getItem("selectedTopic");
+const topic = localStorage.getItem("selectedTopic");
+const topicId = localStorage.getItem("selectedTopicId");
 
+console.log("TOPIC =", topic);
+console.log("TOPIC ID =", topicId);
+
+document.getElementById("topicTitle").innerHTML =
+    topic || "Select Topic";
 document.getElementById("topicTitle").innerHTML=topic;
 
 function chooseDifficulty(level){
 
-localStorage.setItem("difficulty",level);
+    let difficultyValue;
 
-window.location.href="questions.html";
+    if(level === "Easy"){
+        difficultyValue = 1;
+    }
+
+    else if(level === "Medium"){
+        difficultyValue = 2;
+    }
+
+    else if(level === "Hard"){
+        difficultyValue = 3;
+    }
+
+    else if(level === "Mixed"){
+        difficultyValue = "Mixed";
+    }
+
+    localStorage.setItem("difficulty", difficultyValue);
+
+    window.location.href = "questions.html";
 
 }
 
