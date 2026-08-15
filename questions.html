@@ -9,9 +9,13 @@
 <title>Practice Questions | SHAVILmath</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
 <style>
 
@@ -23,11 +27,19 @@
 }
 
 body{
+
     background:#F4F7FB;
+
     color:#0F172A;
+
+    min-height:100vh;
+
 }
 
-/* HEADER */
+
+/* =========================
+   HEADER
+========================= */
 
 header{
 
@@ -46,7 +58,9 @@ header{
 }
 
 header img{
+
     height:55px;
+
 }
 
 header a{
@@ -59,7 +73,10 @@ header a{
 
 }
 
-/* MAIN */
+
+/* =========================
+   MAIN CONTAINER
+========================= */
 
 .container{
 
@@ -69,17 +86,20 @@ header a{
 
     margin:auto;
 
-    padding:45px 20px;
+    padding:40px 20px 70px;
 
 }
 
-/* TOP INFO */
 
-.top-info{
+/* =========================
+   TOP INFORMATION
+========================= */
+
+.top-card{
 
     background:white;
 
-    padding:25px;
+    padding:25px 30px;
 
     border-radius:20px;
 
@@ -89,33 +109,34 @@ header a{
 
 }
 
-.top-info h1{
+.top-card h1{
 
     font-size:28px;
 
-    margin-bottom:8px;
+    margin-bottom:5px;
 
 }
 
-.top-info p{
+.top-card p{
 
     color:#64748B;
 
-}
-
-/* PROGRESS */
-
-.progress-area{
-
-    margin-top:20px;
+    font-size:15px;
 
 }
 
-.progress-text{
+
+/* =========================
+   PROGRESS
+========================= */
+
+.progress-info{
 
     display:flex;
 
     justify-content:space-between;
+
+    margin-top:22px;
 
     margin-bottom:8px;
 
@@ -129,7 +150,7 @@ header a{
 
     width:100%;
 
-    height:10px;
+    height:9px;
 
     background:#E2E8F0;
 
@@ -151,7 +172,10 @@ header a{
 
 }
 
-/* QUESTION CARD */
+
+/* =========================
+   QUESTION CARD
+========================= */
 
 .question-card{
 
@@ -159,17 +183,19 @@ header a{
 
     padding:35px;
 
-    border-radius:20px;
+    border-radius:22px;
 
-    box-shadow:0 15px 35px rgba(0,0,0,.08);
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
 
 }
 
-.question-number{
+.question-label{
 
     color:#2563EB;
 
     font-weight:700;
+
+    font-size:15px;
 
     margin-bottom:15px;
 
@@ -179,13 +205,20 @@ header a{
 
     font-size:22px;
 
+    font-weight:600;
+
     line-height:1.6;
 
     margin-bottom:30px;
 
+    white-space:pre-wrap;
+
 }
 
-/* OPTIONS */
+
+/* =========================
+   OPTIONS
+========================= */
 
 .options{
 
@@ -193,7 +226,7 @@ header a{
 
     flex-direction:column;
 
-    gap:15px;
+    gap:14px;
 
 }
 
@@ -201,21 +234,23 @@ header a{
 
     width:100%;
 
-    padding:18px;
+    padding:17px 20px;
+
+    background:white;
 
     border:2px solid #E2E8F0;
 
     border-radius:14px;
 
-    background:white;
-
     text-align:left;
-
-    cursor:pointer;
 
     font-size:16px;
 
+    cursor:pointer;
+
     transition:.2s;
+
+    color:#0F172A;
 
 }
 
@@ -235,15 +270,48 @@ header a{
 
 }
 
-/* NEXT */
+.option-letter{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:32px;
+
+    height:32px;
+
+    border-radius:50%;
+
+    background:#E2E8F0;
+
+    margin-right:10px;
+
+    font-weight:700;
+
+}
+
+.option.selected .option-letter{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
 
 .actions{
-
-    margin-top:30px;
 
     display:flex;
 
     justify-content:flex-end;
+
+    margin-top:30px;
 
 }
 
@@ -281,13 +349,20 @@ header a{
 
 }
 
-/* LOADING */
+
+/* =========================
+   LOADING
+========================= */
 
 .loading{
 
-    text-align:center;
+    background:white;
 
-    padding:70px;
+    padding:70px 20px;
+
+    border-radius:20px;
+
+    text-align:center;
 
     color:#64748B;
 
@@ -295,32 +370,72 @@ header a{
 
 }
 
-/* ERROR */
+
+/* =========================
+   ERROR
+========================= */
 
 .error{
 
-    text-align:center;
+    background:white;
 
-    padding:50px;
+    padding:50px 25px;
+
+    border-radius:20px;
+
+    text-align:center;
 
     color:#DC2626;
 
 }
 
-/* MOBILE */
+.error h2{
+
+    margin-bottom:10px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:600px){
 
+    header{
+
+        padding:15px 20px;
+
+    }
+
+    header img{
+
+        height:45px;
+
+    }
+
     .container{
-        padding:30px 15px;
+
+        padding:25px 15px 50px;
+
+    }
+
+    .top-card{
+
+        padding:22px;
+
     }
 
     .question-card{
-        padding:25px;
+
+        padding:25px 20px;
+
     }
 
     .question-text{
+
         font-size:19px;
+
     }
 
 }
@@ -329,60 +444,83 @@ header a{
 
 </head>
 
+
 <body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <header>
 
-<img src="assets/images/logo.png">
+    <img src="assets/images/logo.png">
 
-<a href="difficulty.html">
+    <a href="difficulty.html">
 
-⬅ Back
+        ⬅ Back
 
-</a>
+    </a>
 
 </header>
 
 
+
+<!-- =========================
+     MAIN
+========================= -->
+
 <div class="container">
 
-    <div class="top-info">
+
+    <!-- TOP CARD -->
+
+    <div class="top-card">
 
         <h1 id="topicTitle">
+
             Loading...
+
         </h1>
 
-        <p id="difficultyText">
+        <p id="difficultyTitle">
+
             Loading difficulty...
+
         </p>
 
-        <div class="progress-area">
 
-            <div class="progress-text">
+        <div class="progress-info">
 
-                <span id="questionProgress">
-                    Question 0 of 0
-                </span>
+            <span id="questionNumber">
 
-                <span id="scoreText">
-                    Score: 0
-                </span>
+                Question 0 of 0
 
-            </div>
+            </span>
 
-            <div class="progress">
+            <span id="scoreDisplay">
 
-                <div
-                    id="progressBar"
-                    class="progress-bar">
-                </div>
+                Score: 0
 
+            </span>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                id="progressBar"
+                class="progress-bar">
             </div>
 
         </div>
 
     </div>
 
+
+
+    <!-- QUESTION -->
 
     <div id="questionContainer">
 
@@ -394,8 +532,14 @@ header a{
 
     </div>
 
+
 </div>
 
+
+
+<!-- =========================
+     SUPABASE
+========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -404,9 +548,10 @@ header a{
 
 <script>
 
-/* ==============================
-   GET SAVED INFORMATION
-============================== */
+
+/* =====================================================
+   GET DATA FROM LOCAL STORAGE
+===================================================== */
 
 const topicId =
     localStorage.getItem("selectedTopicId");
@@ -418,148 +563,113 @@ const difficulty =
     localStorage.getItem("difficulty");
 
 
-/* ==============================
+console.log("TOPIC ID =", topicId);
+
+console.log("TOPIC =", topicName);
+
+console.log("DIFFICULTY =", difficulty);
+
+
+
+/* =====================================================
    ELEMENTS
-============================== */
+===================================================== */
 
 const topicTitle =
     document.getElementById("topicTitle");
 
-const difficultyText =
-    document.getElementById("difficultyText");
+const difficultyTitle =
+    document.getElementById("difficultyTitle");
 
-const questionContainer =
-    document.getElementById("questionContainer");
+const questionNumber =
+    document.getElementById("questionNumber");
 
-const questionProgress =
-    document.getElementById("questionProgress");
-
-const scoreText =
-    document.getElementById("scoreText");
+const scoreDisplay =
+    document.getElementById("scoreDisplay");
 
 const progressBar =
     document.getElementById("progressBar");
 
+const questionContainer =
+    document.getElementById("questionContainer");
 
-/* ==============================
-   QUESTIONS
-============================== */
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
 
 let questions = [];
 
-let currentQuestion = 0;
+let currentQuestionIndex = 0;
 
 let score = 0;
 
 let selectedAnswer = null;
 
 
-/* ==============================
-   DISPLAY TOPIC
-============================== */
 
-topicTitle.innerHTML =
+/* =====================================================
+   DISPLAY TOPIC
+===================================================== */
+
+topicTitle.textContent =
     topicName || "Practice Questions";
 
-difficultyText.innerHTML =
-    "Difficulty: " + (difficulty || "All Levels");
+
+if(difficulty == 1){
+
+    difficultyTitle.textContent =
+        "Easy Level • 15 Questions";
+
+}
+
+else if(difficulty == 2){
+
+    difficultyTitle.textContent =
+        "Medium Level";
+
+}
+
+else if(difficulty == 3){
+
+    difficultyTitle.textContent =
+        "Hard Level";
+
+}
+
+else{
+
+    difficultyTitle.textContent =
+        "Practice Questions";
+
+}
 
 
-/* ==============================
+
+/* =====================================================
    LOAD QUESTIONS
-============================== */
+===================================================== */
 
 async function loadQuestions(){
 
     try{
 
+
+        /* =========================
+           CHECK TOPIC
+        ========================= */
+
         if(!topicId){
 
             questionContainer.innerHTML = `
-                <div class="error">
-
-                    No topic selected.
-
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        let query =
-            window.supabaseClient
-            .from("questions")
-            .select("*")
-            .eq("topic_id", topicId)
-            .eq("status", "Published");
-
-
-        /* ==============================
-           FILTER DIFFICULTY
-        ============================== */
-
-        if(difficulty === "Easy"){
-
-            query = query.eq("difficulty", 1);
-
-        }
-
-        else if(difficulty === "Medium"){
-
-            query = query.eq("difficulty", 2);
-
-        }
-
-        else if(difficulty === "Hard"){
-
-            query = query.eq("difficulty", 3);
-
-        }
-
-
-        const {
-
-            data,
-            error
-
-        } = await query;
-
-
-        console.log("QUESTIONS =", data);
-
-        console.log("QUESTION ERROR =", error);
-
-
-        if(error){
-
-            questionContainer.innerHTML = `
-                <div class="error">
-
-                    ${error.message}
-
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        if(!data || data.length === 0){
-
-            questionContainer.innerHTML = `
 
                 <div class="error">
 
-                    <h2>No questions available yet.</h2>
+                    <h2>No topic selected</h2>
 
-                    <p style="margin-top:10px">
-
-                        Questions for this topic and difficulty
-                        have not been added yet.
-
+                    <p>
+                        Please go back and select a topic.
                     </p>
 
                 </div>
@@ -571,8 +681,151 @@ async function loadQuestions(){
         }
 
 
-        questions = data;
 
+        /* =========================
+           CHECK DIFFICULTY
+        ========================= */
+
+        if(
+            difficulty !== "1" &&
+            difficulty !== "2" &&
+            difficulty !== "3"
+        ){
+
+            questionContainer.innerHTML = `
+
+                <div class="error">
+
+                    <h2>Invalid difficulty</h2>
+
+                    <p>
+                        Please go back and select
+                        Easy, Medium or Hard.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           GET QUESTIONS
+        ========================= */
+
+        const {
+
+            data,
+            error
+
+        } = await window.supabaseClient
+
+            .from("questions")
+
+            .select("*")
+
+            .eq("topic_id", Number(topicId))
+
+            .eq("difficulty", Number(difficulty))
+
+            .eq("status", "Published")
+
+            .order("question_order", {
+                ascending:true
+            });
+
+
+
+        console.log("QUESTIONS =", data);
+
+        console.log("QUESTION ERROR =", error);
+
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        if(error){
+
+            console.error(error);
+
+            questionContainer.innerHTML = `
+
+                <div class="error">
+
+                    <h2>Unable to load questions</h2>
+
+                    <p>
+                        ${error.message}
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           NO QUESTIONS
+        ========================= */
+
+        if(!data || data.length === 0){
+
+            questionContainer.innerHTML = `
+
+                <div class="error">
+
+                    <h2>No questions available</h2>
+
+                    <p>
+                        There are no questions for
+                        this topic and difficulty yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           EASY = MAX 15
+        ========================= */
+
+        if(Number(difficulty) === 1){
+
+            questions = data.slice(0,15);
+
+        }
+
+        else{
+
+            questions = data;
+
+        }
+
+
+
+        /* =========================
+           START
+        ========================= */
+
+        currentQuestionIndex = 0;
+
+        score = 0;
 
         showQuestion();
 
@@ -587,7 +840,11 @@ async function loadQuestions(){
 
             <div class="error">
 
-                Something went wrong.
+                <h2>Something went wrong</h2>
+
+                <p>
+                    ${error.message}
+                </p>
 
             </div>
 
@@ -598,140 +855,215 @@ async function loadQuestions(){
 }
 
 
-/* ==============================
+
+/* =====================================================
    SHOW QUESTION
-============================== */
+===================================================== */
 
 async function showQuestion(){
 
-    selectedAnswer = null;
+    try{
 
 
-    const question =
-        questions[currentQuestion];
+        selectedAnswer = null;
 
 
-    questionProgress.innerHTML =
-
-        `Question ${currentQuestion + 1} of ${questions.length}`;
-
-
-    scoreText.innerHTML =
-
-        `Score: ${score}`;
+        const question =
+            questions[currentQuestionIndex];
 
 
-    const progress =
-        ((currentQuestion + 1) / questions.length) * 100;
+
+        /* =========================
+           PROGRESS
+        ========================= */
+
+        const number =
+            currentQuestionIndex + 1;
+
+        const total =
+            questions.length;
 
 
-    progressBar.style.width =
-        progress + "%";
+        questionNumber.textContent =
+            `Question ${number} of ${total}`;
 
 
-    /* ==============================
-       GET OPTIONS
-    ============================== */
-
-    const {
-
-        data: options,
-        error
-
-    } = await window.supabaseClient
-
-        .from("question_options")
-
-        .select("*")
-
-        .eq("question_id", question.id)
-
-        .order("option_letter");
+        scoreDisplay.textContent =
+            `Score: ${score}`;
 
 
-    if(error){
-
-        console.error(error);
-
-        return;
-
-    }
+        const percentage =
+            (number / total) * 100;
 
 
-    let optionsHTML = "";
+        progressBar.style.width =
+            percentage + "%";
 
 
-    options.forEach(option => {
 
-        optionsHTML += `
+        /* =========================
+           GET OPTIONS
+        ========================= */
 
-            <button
-                class="option"
-                onclick="selectAnswer('${option.option_letter}', this)"
-            >
+        const {
 
-                <strong>
-                    ${option.option_letter}.
-                </strong>
+            data:options,
 
-                ${option.option_text}
+            error
 
-            </button>
+        } = await window.supabaseClient
+
+            .from("question_options")
+
+            .select("*")
+
+            .eq("question_id", question.id)
+
+            .order("option_order", {
+                ascending:true
+            });
+
+
+
+        console.log("OPTIONS =", options);
+
+        console.log("OPTION ERROR =", error);
+
+
+
+        if(error){
+
+            questionContainer.innerHTML = `
+
+                <div class="error">
+
+                    <h2>Unable to load answers</h2>
+
+                    <p>
+                        ${error.message}
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           BUILD OPTIONS
+        ========================= */
+
+        let optionsHTML = "";
+
+
+
+        if(options && options.length > 0){
+
+            options.forEach(option => {
+
+                optionsHTML += `
+
+                    <button
+                        type="button"
+                        class="option"
+                        onclick="selectAnswer('${escapeValue(option.option_letter)}', this)"
+                    >
+
+                        <span class="option-letter">
+
+                            ${escapeHTML(option.option_letter)}
+
+                        </span>
+
+                        <span>
+
+                            ${escapeHTML(option.option_text)}
+
+                        </span>
+
+                    </button>
+
+                `;
+
+            });
+
+        }
+
+
+
+        /* =========================
+           QUESTION CARD
+        ========================= */
+
+        questionContainer.innerHTML = `
+
+            <div class="question-card">
+
+                <div class="question-label">
+
+                    Question ${number}
+
+                </div>
+
+
+                <div class="question-text">
+
+                    ${escapeHTML(question.question)}
+
+                </div>
+
+
+                <div class="options">
+
+                    ${optionsHTML}
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button
+                        id="nextButton"
+                        type="button"
+                        class="next-btn"
+                        disabled
+                        onclick="nextQuestion()"
+                    >
+
+                        ${
+                            number === total
+                            ? "Finish"
+                            : "Next →"
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
 
         `;
 
-    });
 
+    }
 
-    questionContainer.innerHTML = `
+    catch(error){
 
-        <div class="question-card">
+        console.error(error);
 
-            <div class="question-number">
-
-                Question ${currentQuestion + 1}
-
-            </div>
-
-            <div class="question-text">
-
-                ${question.question}
-
-            </div>
-
-            <div class="options">
-
-                ${optionsHTML}
-
-            </div>
-
-            <div class="actions">
-
-                <button
-                    id="nextButton"
-                    class="next-btn"
-                    disabled
-                    onclick="nextQuestion()"
-                >
-
-                    ${currentQuestion === questions.length - 1
-                        ? "Finish"
-                        : "Next →"}
-
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
+    }
 
 }
 
 
-/* ==============================
+
+/* =====================================================
    SELECT ANSWER
-============================== */
+===================================================== */
 
 function selectAnswer(answer, button){
 
@@ -750,19 +1082,27 @@ function selectAnswer(answer, button){
     button.classList.add("selected");
 
 
-    document.getElementById("nextButton")
-        .disabled = false;
+    const nextButton =
+        document.getElementById("nextButton");
+
+
+    if(nextButton){
+
+        nextButton.disabled = false;
+
+    }
 
 }
 
 
-/* ==============================
+
+/* =====================================================
    NEXT QUESTION
-============================== */
+===================================================== */
 
 function nextQuestion(){
 
-    if(!selectedAnswer){
+    if(selectedAnswer === null){
 
         return;
 
@@ -770,22 +1110,36 @@ function nextQuestion(){
 
 
     const question =
-        questions[currentQuestion];
+        questions[currentQuestionIndex];
 
 
-    if(selectedAnswer === question.correct_answer){
+    /* =========================
+       CHECK ANSWER
+    ========================= */
+
+    if(
+        selectedAnswer ===
+        question.correct_answer
+    ){
 
         score++;
 
     }
 
 
-    currentQuestion++;
+    /* =========================
+       NEXT
+    ========================= */
+
+    currentQuestionIndex++;
 
 
-    if(currentQuestion >= questions.length){
+    if(
+        currentQuestionIndex >=
+        questions.length
+    ){
 
-        finishQuiz();
+        finishPractice();
 
         return;
 
@@ -797,21 +1151,36 @@ function nextQuestion(){
 }
 
 
-/* ==============================
-   FINISH
-============================== */
 
-function finishQuiz(){
+/* =====================================================
+   FINISH
+===================================================== */
+
+function finishPractice(){
 
     localStorage.setItem(
         "quizScore",
         score
     );
 
+
     localStorage.setItem(
         "quizTotal",
         questions.length
     );
+
+
+    localStorage.setItem(
+        "practiceTopic",
+        topicName
+    );
+
+
+    localStorage.setItem(
+        "practiceDifficulty",
+        difficulty
+    );
+
 
     window.location.href =
         "results.html";
@@ -819,13 +1188,59 @@ function finishQuiz(){
 }
 
 
-/* ==============================
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+
+/* =====================================================
+   ESCAPE VALUE
+===================================================== */
+
+function escapeValue(value){
+
+    return String(value)
+
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'");
+
+}
+
+
+
+/* =====================================================
    START
-============================== */
+===================================================== */
 
 loadQuestions();
 
 </script>
+
 
 </body>
 
