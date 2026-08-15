@@ -267,7 +267,7 @@ topics.forEach(topic=>{
 
 container.innerHTML+=`
 
-<div class="topic" onclick="openTopic('${topic.topic_name}')">
+<div class="topic" onclick="openTopic(${topic.id}, '${topic.topic_name}')">
 
 <h2>📘 ${topic.topic_name}</h2>
 
@@ -291,11 +291,13 @@ container.innerHTML='<div class="error">'+err.message+'</div>';
 
 }
 
-function openTopic(topic){
+function openTopic(topicId, topicName){
 
-localStorage.setItem("selectedTopic",topic);
+    localStorage.setItem("selectedTopicId", topicId);
 
-window.location.href="topic.html";
+    localStorage.setItem("selectedTopic", topicName);
+
+    window.location.href = "topic.html";
 
 }
 
