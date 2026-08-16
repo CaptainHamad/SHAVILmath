@@ -4,11 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Results | SHAVILmath</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
 
 <link rel="preconnect"
       href="https://fonts.gstatic.com"
@@ -16,6 +19,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet">
+
 
 <style>
 
@@ -26,69 +30,98 @@
     font-family:Poppins,sans-serif;
 }
 
-body{
 
-    min-height:100vh;
+body{
 
     background:#F4F7FB;
 
+    color:#0F172A;
+
+    min-height:100vh;
+
+}
+
+
+header{
+
+    background:#2563EB;
+
+    padding:18px 8%;
+
     display:flex;
 
-    justify-content:center;
+    justify-content:space-between;
 
     align-items:center;
 
-    padding:30px;
+    color:white;
 
 }
+
+
+header img{
+
+    height:55px;
+
+}
+
+
+header a{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
 
 .container{
 
     width:100%;
 
-    max-width:600px;
+    max-width:900px;
+
+    margin:auto;
+
+    padding:40px 20px 70px;
+
+}
+
+
+.result-card{
 
     background:white;
 
-    padding:45px;
+    padding:40px;
 
     border-radius:25px;
 
     text-align:center;
 
-    box-shadow:0 20px 50px rgba(0,0,0,.08);
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
 
 }
 
-.logo{
-
-    margin-bottom:25px;
-
-}
-
-.logo img{
-
-    height:65px;
-
-}
 
 .icon{
 
-    font-size:65px;
-
-    margin-bottom:15px;
-
-}
-
-h1{
-
-    color:#0F172A;
-
-    font-size:32px;
+    font-size:55px;
 
     margin-bottom:10px;
 
 }
+
+
+h1{
+
+    font-size:32px;
+
+    margin-bottom:8px;
+
+}
+
 
 .subtitle{
 
@@ -98,17 +131,19 @@ h1{
 
 }
 
+
 .score-box{
 
     background:#EFF6FF;
 
+    padding:25px;
+
     border-radius:20px;
 
-    padding:30px;
-
-    margin-bottom:30px;
+    margin-bottom:25px;
 
 }
+
 
 .score{
 
@@ -120,7 +155,24 @@ h1{
 
 }
 
+
 .score-label{
+
+    color:#64748B;
+
+}
+
+
+.topic{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+
+.difficulty{
 
     color:#64748B;
 
@@ -128,25 +180,130 @@ h1{
 
 }
 
-.topic{
+
+.review-title{
+
+    margin-top:40px;
+
+    margin-bottom:20px;
+
+    font-size:26px;
+
+    text-align:left;
+
+}
+
+
+.review{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+
+.review-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.07);
+
+    border-left:5px solid #DC2626;
+
+}
+
+
+.review-number{
+
+    color:#DC2626;
+
+    font-weight:700;
+
+    font-size:14px;
+
+    margin-bottom:10px;
+
+}
+
+
+.question{
 
     font-size:18px;
 
     font-weight:600;
 
-    color:#0F172A;
+    line-height:1.6;
 
-    margin-bottom:5px;
+    margin-bottom:20px;
+
+}
+
+
+.answer-row{
+
+    padding:12px 15px;
+
+    border-radius:10px;
+
+    margin-top:10px;
 
 }
 
-.difficulty{
 
-    color:#64748B;
+.your-answer{
 
-    font-size:14px;
+    background:#FEF2F2;
+
+    color:#991B1B;
 
 }
+
+
+.correct-answer{
+
+    background:#F0FDF4;
+
+    color:#166534;
+
+}
+
+
+.answer-label{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    display:block;
+
+    margin-bottom:3px;
+
+}
+
+
+.explanation{
+
+    margin-top:18px;
+
+    padding:15px;
+
+    background:#F8FAFC;
+
+    border-radius:10px;
+
+    color:#475569;
+
+    line-height:1.6;
+
+}
+
 
 .buttons{
 
@@ -156,7 +313,10 @@ h1{
 
     gap:14px;
 
+    margin-top:35px;
+
 }
+
 
 button{
 
@@ -176,6 +336,7 @@ button{
 
 }
 
+
 .primary{
 
     background:#2563EB;
@@ -184,11 +345,13 @@ button{
 
 }
 
+
 .primary:hover{
 
     background:#1D4ED8;
 
 }
+
 
 .secondary{
 
@@ -198,9 +361,73 @@ button{
 
 }
 
+
 .secondary:hover{
 
     background:#CBD5E1;
+
+}
+
+
+.no-mistakes{
+
+    background:#F0FDF4;
+
+    color:#166534;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    margin-top:30px;
+
+    font-weight:600;
+
+}
+
+
+@media(max-width:600px){
+
+    header{
+
+        padding:15px 20px;
+
+    }
+
+
+    header img{
+
+        height:45px;
+
+    }
+
+
+    .container{
+
+        padding:25px 15px 50px;
+
+    }
+
+
+    .result-card{
+
+        padding:30px 20px;
+
+    }
+
+
+    .score{
+
+        font-size:45px;
+
+    }
+
+
+    .question{
+
+        font-size:17px;
+
+    }
 
 }
 
@@ -212,82 +439,121 @@ button{
 <body>
 
 
+<header>
+
+    <img src="assets/images/logo.png">
+
+    <a href="dashboard.html">
+
+        ⬅ Dashboard
+
+    </a>
+
+</header>
+
+
+
 <div class="container">
 
 
-    <div class="logo">
+    <!-- =========================
+         RESULT SUMMARY
+    ========================= -->
 
-        <img src="assets/images/logo.png">
-
-    </div>
-
-
-    <div class="icon">
-
-        🎉
-
-    </div>
+    <div class="result-card">
 
 
-    <h1>
+        <div class="icon">
 
-        Practice Complete!
+            🎉
 
-    </h1>
-
-
-    <p class="subtitle">
-
-        Well done! You have completed this practice.
-
-    </p>
+        </div>
 
 
-    <div class="score-box">
+        <h1>
+
+            Practice Complete!
+
+        </h1>
+
+
+        <p class="subtitle">
+
+            Well done! Review your mistakes below
+            and learn from them.
+
+        </p>
+
+
+        <div class="score-box">
+
+            <div
+                id="score"
+                class="score">
+
+                0 / 0
+
+            </div>
+
+
+            <div class="score-label">
+
+                Your Score
+
+            </div>
+
+        </div>
+
 
         <div
-            id="score"
-            class="score">
+            id="topic"
+            class="topic">
 
-            0 / 0
-
-        </div>
-
-        <div class="score-label">
-
-            Your Score
+            Numbers
 
         </div>
 
-    </div>
 
-
-    <div class="topic">
-
-        <span id="topic">
-
-            Practice
-
-        </span>
-
-    </div>
-
-
-    <div class="difficulty">
-
-        <span id="difficulty">
+        <div
+            id="difficulty"
+            class="difficulty">
 
             Easy Level
 
-        </span>
+        </div>
+
 
     </div>
 
 
-    <br>
 
+    <!-- =========================
+         WRONG QUESTIONS
+    ========================= -->
+
+    <h2
+        id="reviewTitle"
+        class="review-title">
+
+        Questions You Got Wrong
+
+    </h2>
+
+
+    <div
+        id="reviewContainer"
+        class="review">
+
+    </div>
+
+
+
+    <!-- =========================
+         BUTTONS
+    ========================= -->
 
     <div class="buttons">
+
 
         <button
             class="primary"
@@ -315,6 +581,7 @@ button{
 
         </button>
 
+
     </div>
 
 
@@ -332,14 +599,25 @@ button{
 const score =
     Number(localStorage.getItem("quizScore")) || 0;
 
+
 const total =
     Number(localStorage.getItem("quizTotal")) || 0;
 
+
 const topic =
-    localStorage.getItem("practiceTopic") || "Practice";
+    localStorage.getItem("practiceTopic")
+    || "Practice";
+
 
 const difficulty =
     localStorage.getItem("practiceDifficulty");
+
+
+const reviewData =
+    JSON.parse(
+        localStorage.getItem("answerReview")
+        || "[]"
+    );
 
 
 
@@ -357,7 +635,7 @@ document.getElementById("topic").textContent =
 
 
 /* =========================
-   DISPLAY DIFFICULTY
+   DIFFICULTY
 ========================= */
 
 if(difficulty == "1"){
@@ -391,6 +669,177 @@ else{
 
 
 /* =========================
+   GET WRONG ANSWERS
+========================= */
+
+const wrongAnswers =
+    reviewData.filter(
+        item => item.isCorrect === false
+    );
+
+
+const reviewContainer =
+    document.getElementById("reviewContainer");
+
+
+const reviewTitle =
+    document.getElementById("reviewTitle");
+
+
+
+/* =========================
+   NO MISTAKES
+========================= */
+
+if(wrongAnswers.length === 0){
+
+    reviewTitle.textContent =
+        "Excellent Work! 🎉";
+
+
+    reviewContainer.innerHTML = `
+
+        <div class="no-mistakes">
+
+            🎯 Perfect!
+
+            <br><br>
+
+            You answered every question correctly.
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================
+   SHOW WRONG ANSWERS
+========================= */
+
+else{
+
+    reviewTitle.textContent =
+        `Questions You Got Wrong (${wrongAnswers.length})`;
+
+
+    wrongAnswers.forEach(
+        (item,index) => {
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "review-card";
+
+
+        card.innerHTML = `
+
+            <div class="review-number">
+
+                Question ${index + 1}
+
+            </div>
+
+
+            <div class="question">
+
+                ${escapeHTML(item.question)}
+
+            </div>
+
+
+            <div class="answer-row your-answer">
+
+                <span class="answer-label">
+
+                    YOUR ANSWER
+
+                </span>
+
+                ${escapeHTML(
+                    item.selectedAnswer
+                )}
+
+                ${item.selectedAnswerText
+                    ? " — " +
+                      escapeHTML(
+                          item.selectedAnswerText
+                      )
+                    : ""
+                }
+
+            </div>
+
+
+            <div class="answer-row correct-answer">
+
+                <span class="answer-label">
+
+                    CORRECT ANSWER
+
+                </span>
+
+                ${escapeHTML(
+                    item.correctAnswer
+                )}
+
+                ${item.correctAnswerText
+                    ? " — " +
+                      escapeHTML(
+                          item.correctAnswerText
+                      )
+                    : ""
+                }
+
+            </div>
+
+
+            ${
+                item.explanation
+                ?
+
+                `
+
+                <div class="explanation">
+
+                    <strong>
+                        Explanation:
+                    </strong>
+
+                    <br>
+
+                    ${escapeHTML(
+                        item.explanation
+                    )}
+
+                </div>
+
+                `
+
+                :
+
+                ""
+
+            }
+
+        `;
+
+
+        reviewContainer.appendChild(card);
+
+
+    });
+
+}
+
+
+
+/* =========================
    TRY AGAIN
 ========================= */
 
@@ -404,7 +853,7 @@ function tryAgain(){
 
 
 /* =========================
-   BACK TO TOPICS
+   TOPICS
 ========================= */
 
 function goBackToTopics(){
@@ -424,6 +873,38 @@ function goDashboard(){
 
     window.location.href =
         "dashboard.html";
+
+}
+
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
 
 }
 
