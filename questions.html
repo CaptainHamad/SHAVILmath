@@ -548,11 +548,6 @@ header a{
 
 <script>
 
-
-/* =====================================================
-   GET DATA FROM LOCAL STORAGE
-===================================================== */
-
 const topicId =
     localStorage.getItem("selectedTopicId");
 
@@ -564,16 +559,9 @@ const difficulty =
 
 
 console.log("TOPIC ID =", topicId);
-
 console.log("TOPIC =", topicName);
-
 console.log("DIFFICULTY =", difficulty);
 
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
 
 const topicTitle =
     document.getElementById("topicTitle");
@@ -594,11 +582,6 @@ const questionContainer =
     document.getElementById("questionContainer");
 
 
-
-/* =====================================================
-   VARIABLES
-===================================================== */
-
 let questions = [];
 
 let currentQuestionIndex = 0;
@@ -610,37 +593,30 @@ let selectedAnswer = null;
 let answerReview = [];
 
 
-
-/* =====================================================
-   DISPLAY TOPIC
-===================================================== */
+/* =========================
+   TOPIC
+========================= */
 
 topicTitle.textContent =
     topicName || "Practice Questions";
 
 
-if(difficulty == 1){
+if (difficulty == "1") {
 
     difficultyTitle.textContent =
         "Easy Level • 15 Questions";
 
-}
-
-else if(difficulty == 2){
+} else if (difficulty == "2") {
 
     difficultyTitle.textContent =
         "Medium Level";
 
-}
-
-else if(difficulty == 3){
+} else if (difficulty == "3") {
 
     difficultyTitle.textContent =
         "Hard Level";
 
-}
-
-else{
+} else {
 
     difficultyTitle.textContent =
         "Practice Questions";
@@ -648,24 +624,17 @@ else{
 }
 
 
-
-/* =====================================================
+/* =========================
    LOAD QUESTIONS
-===================================================== */
+========================= */
 
-async function loadQuestions(){
+async function loadQuestions() {
 
-    try{
+    try {
 
-
-        /* =========================
-           CHECK TOPIC
-        ========================= */
-
-        if(!topicId){
+        if (!topicId) {
 
             questionContainer.innerHTML = `
-
                 <div class="error">
 
                     <h2>No topic selected</h2>
@@ -675,7 +644,6 @@ async function loadQuestions(){
                     </p>
 
                 </div>
-
             `;
 
             return;
@@ -683,30 +651,23 @@ async function loadQuestions(){
         }
 
 
-
-        /* =========================
-           CHECK DIFFICULTY
-        ========================= */
-
-        if(
+        if (
             difficulty !== "1" &&
             difficulty !== "2" &&
             difficulty !== "3"
-        ){
+        ) {
 
             questionContainer.innerHTML = `
-
                 <div class="error">
 
                     <h2>Invalid difficulty</h2>
 
                     <p>
                         Please go back and select
-                        Easy, Medium or Hard.
+                        a difficulty level.
                     </p>
 
                 </div>
-
             `;
 
             return;
@@ -714,16 +675,9 @@ async function loadQuestions(){
         }
 
 
-
-        /* =========================
-           GET QUESTIONS
-        ========================= */
-
         const {
-
             data,
             error
-
         } = await window.supabaseClient
 
             .from("questions")
@@ -737,9 +691,8 @@ async function loadQuestions(){
             .eq("status", "Published")
 
             .order("question_order", {
-                ascending:true
+                ascending: true
             });
-
 
 
         console.log("QUESTIONS =", data);
@@ -747,27 +700,18 @@ async function loadQuestions(){
         console.log("QUESTION ERROR =", error);
 
 
-
-        /* =========================
-           ERROR
-        ========================= */
-
-        if(error){
-
-            console.error(error);
+        if (error) {
 
             questionContainer.innerHTML = `
-
                 <div class="error">
 
                     <h2>Unable to load questions</h2>
 
                     <p>
-                        ${error.message}
+                        ${escapeHTML(error.message)}
                     </p>
 
                 </div>
-
             `;
 
             return;
@@ -775,15 +719,9 @@ async function loadQuestions(){
         }
 
 
-
-        /* =========================
-           NO QUESTIONS
-        ========================= */
-
-        if(!data || data.length === 0){
+        if (!data || data.length === 0) {
 
             questionContainer.innerHTML = `
-
                 <div class="error">
 
                     <h2>No questions available</h2>
@@ -794,7 +732,6 @@ async function loadQuestions(){
                     </p>
 
                 </div>
-
             `;
 
             return;
@@ -802,54 +739,41 @@ async function loadQuestions(){
         }
 
 
+        if (Number(difficulty) === 1) {
 
-        /* =========================
-           EASY = MAX 15
-        ========================= */
+            questions = data.slice(0, 15);
 
-        if(Number(difficulty) === 1){
-
-            questions = data.slice(0,15);
-
-        }
-
-        else{
+        } else {
 
             questions = data;
 
         }
 
 
-
-        /* =========================
-           START
-        ========================= */
-
         currentQuestionIndex = 0;
 
         score = 0;
 
-        showQuestion();
+        answerReview = [];
 
+        showQuestion();
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error("LOAD QUESTIONS ERROR =", error);
 
         questionContainer.innerHTML = `
-
             <div class="error">
 
                 <h2>Something went wrong</h2>
 
                 <p>
-                    ${error.message}
+                    ${escapeHTML(error.message)}
                 </p>
 
             </div>
-
         `;
 
     }
@@ -857,15 +781,13 @@ async function loadQuestions(){
 }
 
 
-
-/* =====================================================
+/* =========================
    SHOW QUESTION
-===================================================== */
+========================= */
 
-async function showQuestion(){
+async function showQuestion() {
 
-    try{
-
+    try {
 
         selectedAnswer = null;
 
@@ -874,10 +796,12 @@ async function showQuestion(){
             questions[currentQuestionIndex];
 
 
+        if (!question) {
 
-        /* =========================
-           PROGRESS
-        ========================= */
+            return;
+
+        }
+
 
         const number =
             currentQuestionIndex + 1;
@@ -902,17 +826,9 @@ async function showQuestion(){
             percentage + "%";
 
 
-
-        /* =========================
-           GET OPTIONS
-        ========================= */
-
         const {
-
-            data:options,
-
+            data: options,
             error
-
         } = await window.supabaseClient
 
             .from("question_options")
@@ -922,9 +838,8 @@ async function showQuestion(){
             .eq("question_id", question.id)
 
             .order("option_order", {
-                ascending:true
+                ascending: true
             });
-
 
 
         console.log("OPTIONS =", options);
@@ -932,21 +847,18 @@ async function showQuestion(){
         console.log("OPTION ERROR =", error);
 
 
-
-        if(error){
+        if (error) {
 
             questionContainer.innerHTML = `
-
                 <div class="error">
 
                     <h2>Unable to load answers</h2>
 
                     <p>
-                        ${error.message}
+                        ${escapeHTML(error.message)}
                     </p>
 
                 </div>
-
             `;
 
             return;
@@ -954,52 +866,40 @@ async function showQuestion(){
         }
 
 
-question._options = options;
-        /* =========================
-           BUILD OPTIONS
-        ========================= */
+        question._options = options || [];
+
 
         let optionsHTML = "";
 
 
+        question._options.forEach(option => {
 
-        if(options && options.length > 0){
+            optionsHTML += `
 
-            options.forEach(option => {
+                <button
+                    type="button"
+                    class="option"
+                    onclick="selectAnswer('${escapeValue(option.option_letter)}', this)"
+                >
 
-                optionsHTML += `
+                    <span class="option-letter">
 
-                    <button
-                        type="button"
-                        class="option"
-                        onclick="selectAnswer('${escapeValue(option.option_letter)}', this)"
-                    >
+                        ${escapeHTML(option.option_letter)}
 
-                        <span class="option-letter">
+                    </span>
 
-                            ${escapeHTML(option.option_letter)}
+                    <span>
 
-                        </span>
+                        ${escapeHTML(option.option_text)}
 
-                        <span>
+                    </span>
 
-                            ${escapeHTML(option.option_text)}
+                </button>
 
-                        </span>
+            `;
 
-                    </button>
+        });
 
-                `;
-
-            });
-
-        }
-
-
-
-        /* =========================
-           QUESTION CARD
-        ========================= */
 
         questionContainer.innerHTML = `
 
@@ -1038,8 +938,8 @@ question._options = options;
 
                         ${
                             number === total
-                            ? "Finish"
-                            : "Next →"
+                                ? "Finish"
+                                : "Next →"
                         }
 
                     </button>
@@ -1050,24 +950,22 @@ question._options = options;
 
         `;
 
-
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error("SHOW QUESTION ERROR =", error);
 
     }
 
 }
 
 
-
-/* =====================================================
+/* =========================
    SELECT ANSWER
-===================================================== */
+========================= */
 
-function selectAnswer(answer, button){
+function selectAnswer(answer, button) {
 
     selectedAnswer = answer;
 
@@ -1088,7 +986,7 @@ function selectAnswer(answer, button){
         document.getElementById("nextButton");
 
 
-    if(nextButton){
+    if (nextButton) {
 
         nextButton.disabled = false;
 
@@ -1097,14 +995,13 @@ function selectAnswer(answer, button){
 }
 
 
-
-/* =====================================================
+/* =========================
    NEXT QUESTION
-===================================================== */
+========================= */
 
-function nextQuestion(){
+function nextQuestion() {
 
-    if(selectedAnswer === null){
+    if (selectedAnswer === null) {
 
         return;
 
@@ -1115,20 +1012,20 @@ function nextQuestion(){
         questions[currentQuestionIndex];
 
 
-    /* =========================
-       FIND SELECTED OPTION
-    ========================= */
+    if (!question) {
+
+        return;
+
+    }
+
 
     const selectedOption =
         question._options.find(
             option =>
-                option.option_letter === selectedAnswer
+                option.option_letter ===
+                selectedAnswer
         );
 
-
-    /* =========================
-       FIND CORRECT OPTION
-    ========================= */
 
     const correctOption =
         question._options.find(
@@ -1138,25 +1035,17 @@ function nextQuestion(){
         );
 
 
-    /* =========================
-       CHECK ANSWER
-    ========================= */
-
     const isCorrect =
         selectedAnswer ===
         question.correct_answer;
 
 
-    if(isCorrect){
+    if (isCorrect) {
 
         score++;
 
     }
 
-
-    /* =========================
-       SAVE REVIEW DATA
-    ========================= */
 
     answerReview.push({
 
@@ -1164,10 +1053,7 @@ function nextQuestion(){
 
         question: question.question,
 
-        selectedAnswer:
-            selectedOption
-                ? selectedOption.option_letter
-                : selectedAnswer,
+        selectedAnswer: selectedAnswer,
 
         selectedAnswerText:
             selectedOption
@@ -1190,17 +1076,13 @@ function nextQuestion(){
     });
 
 
-    /* =========================
-       NEXT QUESTION
-    ========================= */
-
     currentQuestionIndex++;
 
 
-    if(
+    if (
         currentQuestionIndex >=
         questions.length
-    ){
+    ) {
 
         finishPractice();
 
@@ -1214,29 +1096,11 @@ function nextQuestion(){
 }
 
 
-    if(
-        currentQuestionIndex >=
-        questions.length
-    ){
+/* =========================
+   FINISH PRACTICE
+========================= */
 
-        finishPractice();
-
-        return;
-
-    }
-
-
-    showQuestion();
-
-}
-
-
-
-/* =====================================================
-   FINISH
-===================================================== */
-
-function finishPractice(){
+function finishPractice() {
 
     localStorage.setItem(
         "quizScore",
@@ -1268,19 +1132,28 @@ function finishPractice(){
     );
 
 
+    console.log(
+        "ANSWER REVIEW =",
+        answerReview
+    );
+
+
     window.location.href =
         "results.html";
 
 }
 
 
-/* =====================================================
+/* =========================
    ESCAPE HTML
-===================================================== */
+========================= */
 
-function escapeHTML(value){
+function escapeHTML(value) {
 
-    if(value === null || value === undefined){
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
         return "";
 
@@ -1289,43 +1162,41 @@ function escapeHTML(value){
 
     return String(value)
 
-        .replace(/&/g,"&amp;")
+        .replace(/&/g, "&amp;")
 
-        .replace(/</g,"&lt;")
+        .replace(/</g, "&lt;")
 
-        .replace(/>/g,"&gt;")
+        .replace(/>/g, "&gt;")
 
-        .replace(/"/g,"&quot;")
+        .replace(/"/g, "&quot;")
 
-        .replace(/'/g,"&#039;");
+        .replace(/'/g, "&#039;");
 
 }
 
 
+/* =========================
+   ESCAPE ATTRIBUTE
+========================= */
 
-/* =====================================================
-   ESCAPE VALUE
-===================================================== */
-
-function escapeValue(value){
+function escapeValue(value) {
 
     return String(value)
 
-        .replace(/\\/g,"\\\\")
-        .replace(/'/g,"\\'");
+        .replace(/\\/g, "\\\\")
+
+        .replace(/'/g, "\\'");
 
 }
 
 
-
-/* =====================================================
+/* =========================
    START
-===================================================== */
+========================= */
 
 loadQuestions();
 
 </script>
-
 
 </body>
 
