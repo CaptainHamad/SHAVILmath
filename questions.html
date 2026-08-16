@@ -607,6 +607,8 @@ let score = 0;
 
 let selectedAnswer = null;
 
+let answerReview = [];
+
 
 
 /* =====================================================
@@ -952,7 +954,7 @@ async function showQuestion(){
         }
 
 
-
+question._options = options;
         /* =========================
            BUILD OPTIONS
         ========================= */
@@ -1114,13 +1116,38 @@ function nextQuestion(){
 
 
     /* =========================
+       FIND SELECTED OPTION
+    ========================= */
+
+    const selectedOption =
+        question._options.find(
+            option =>
+                option.option_letter === selectedAnswer
+        );
+
+
+    /* =========================
+       FIND CORRECT OPTION
+    ========================= */
+
+    const correctOption =
+        question._options.find(
+            option =>
+                option.option_letter ===
+                question.correct_answer
+        );
+
+
+    /* =========================
        CHECK ANSWER
     ========================= */
 
-    if(
+    const isCorrect =
         selectedAnswer ===
-        question.correct_answer
-    ){
+        question.correct_answer;
+
+
+    if(isCorrect){
 
         score++;
 
@@ -1128,10 +1155,63 @@ function nextQuestion(){
 
 
     /* =========================
-       NEXT
+       SAVE REVIEW DATA
+    ========================= */
+
+    answerReview.push({
+
+        questionId: question.id,
+
+        question: question.question,
+
+        selectedAnswer:
+            selectedOption
+                ? selectedOption.option_letter
+                : selectedAnswer,
+
+        selectedAnswerText:
+            selectedOption
+                ? selectedOption.option_text
+                : "",
+
+        correctAnswer:
+            question.correct_answer,
+
+        correctAnswerText:
+            correctOption
+                ? correctOption.option_text
+                : "",
+
+        explanation:
+            question.explanation || "",
+
+        isCorrect: isCorrect
+
+    });
+
+
+    /* =========================
+       NEXT QUESTION
     ========================= */
 
     currentQuestionIndex++;
+
+
+    if(
+        currentQuestionIndex >=
+        questions.length
+    ){
+
+        finishPractice();
+
+        return;
+
+    }
+
+
+    showQuestion();
+
+}
 
 
     if(
@@ -1182,11 +1262,16 @@ function finishPractice(){
     );
 
 
+    localStorage.setItem(
+        "answerReview",
+        JSON.stringify(answerReview)
+    );
+
+
     window.location.href =
         "results.html";
 
 }
-
 
 
 /* =====================================================
