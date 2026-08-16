@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Results | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:#F4F7FB;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
+}
+
+.container{
+
+    width:100%;
+
+    max-width:600px;
+
+    background:white;
+
+    padding:45px;
+
+    border-radius:25px;
+
+    text-align:center;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+
+}
+
+.logo{
+
+    margin-bottom:25px;
+
+}
+
+.logo img{
+
+    height:65px;
+
+}
+
+.icon{
+
+    font-size:65px;
+
+    margin-bottom:15px;
+
+}
+
+h1{
+
+    color:#0F172A;
+
+    font-size:32px;
+
+    margin-bottom:10px;
+
+}
+
+.subtitle{
+
+    color:#64748B;
+
+    margin-bottom:30px;
+
+}
+
+.score-box{
+
+    background:#EFF6FF;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+}
+
+.score{
+
+    font-size:55px;
+
+    font-weight:800;
+
+    color:#2563EB;
+
+}
+
+.score-label{
+
+    color:#64748B;
+
+    margin-top:5px;
+
+}
+
+.topic{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#0F172A;
+
+    margin-bottom:5px;
+
+}
+
+.difficulty{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+.buttons{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+button{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+.primary{
+
+    background:#2563EB;
+
+    color:white;
+
+}
+
+.primary:hover{
+
+    background:#1D4ED8;
+
+}
+
+.secondary{
+
+    background:#E2E8F0;
+
+    color:#0F172A;
+
+}
+
+.secondary:hover{
+
+    background:#CBD5E1;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="logo">
+
+        <img src="assets/images/logo.png">
+
+    </div>
+
+
+    <div class="icon">
+
+        🎉
+
+    </div>
+
+
+    <h1>
+
+        Practice Complete!
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Well done! You have completed this practice.
+
+    </p>
+
+
+    <div class="score-box">
+
+        <div
+            id="score"
+            class="score">
+
+            0 / 0
+
+        </div>
+
+        <div class="score-label">
+
+            Your Score
+
+        </div>
+
+    </div>
+
+
+    <div class="topic">
+
+        <span id="topic">
+
+            Practice
+
+        </span>
+
+    </div>
+
+
+    <div class="difficulty">
+
+        <span id="difficulty">
+
+            Easy Level
+
+        </span>
+
+    </div>
+
+
+    <br>
+
+
+    <div class="buttons">
+
+        <button
+            class="primary"
+            onclick="tryAgain()">
+
+            🔄 Try Again
+
+        </button>
+
+
+        <button
+            class="secondary"
+            onclick="goBackToTopics()">
+
+            📚 Choose Another Topic
+
+        </button>
+
+
+        <button
+            class="secondary"
+            onclick="goDashboard()">
+
+            🏠 Dashboard
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   GET RESULT DATA
+========================= */
+
+const score =
+    Number(localStorage.getItem("quizScore")) || 0;
+
+const total =
+    Number(localStorage.getItem("quizTotal")) || 0;
+
+const topic =
+    localStorage.getItem("practiceTopic") || "Practice";
+
+const difficulty =
+    localStorage.getItem("practiceDifficulty");
+
+
+
+/* =========================
+   DISPLAY SCORE
+========================= */
+
+document.getElementById("score").textContent =
+    `${score} / ${total}`;
+
+
+document.getElementById("topic").textContent =
+    topic;
+
+
+
+/* =========================
+   DISPLAY DIFFICULTY
+========================= */
+
+if(difficulty == "1"){
+
+    document.getElementById("difficulty").textContent =
+        "Easy Level";
+
+}
+
+else if(difficulty == "2"){
+
+    document.getElementById("difficulty").textContent =
+        "Medium Level";
+
+}
+
+else if(difficulty == "3"){
+
+    document.getElementById("difficulty").textContent =
+        "Hard Level";
+
+}
+
+else{
+
+    document.getElementById("difficulty").textContent =
+        "Practice";
+
+}
+
+
+
+/* =========================
+   TRY AGAIN
+========================= */
+
+function tryAgain(){
+
+    window.location.href =
+        "questions.html";
+
+}
+
+
+
+/* =========================
+   BACK TO TOPICS
+========================= */
+
+function goBackToTopics(){
+
+    window.location.href =
+        "topics.html";
+
+}
+
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function goDashboard(){
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
