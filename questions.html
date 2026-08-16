@@ -609,18 +609,24 @@ if (difficulty == "1") {
 } else if (difficulty == "2") {
 
     difficultyTitle.textContent =
-        "Medium Level";
+        "Medium Level • 15 Questions";
 
 } else if (difficulty == "3") {
 
     difficultyTitle.textContent =
-        "Hard Level";
+        "Hard Level • 15 Questions";
+
+} else if (difficulty == "Mixed") {
+
+    difficultyTitle.textContent =
+        "Mixed Level • 15 Questions";
 
 } else {
 
     difficultyTitle.textContent =
         "Practice Questions";
 
+}
 }
 
 
@@ -652,48 +658,55 @@ async function loadQuestions() {
 
 
         if (
-            difficulty !== "1" &&
-            difficulty !== "2" &&
-            difficulty !== "3"
-        ) {
+    difficulty !== "1" &&
+    difficulty !== "2" &&
+    difficulty !== "3" &&
+    difficulty !== "Mixed"
+) {
 
-            questionContainer.innerHTML = `
-                <div class="error">
+    questionContainer.innerHTML = `
+        <div class="error">
 
-                    <h2>Invalid difficulty</h2>
+            <h2>Invalid difficulty</h2>
 
-                    <p>
-                        Please go back and select
-                        a difficulty level.
-                    </p>
+            <p>
+                Please go back and select
+                a difficulty level.
+            </p>
 
-                </div>
-            `;
+        </div>
+    `;
 
-            return;
+    return;
 
-        }
+}
 
 
-        const {
-            data,
-            error
-        } = await window.supabaseClient
+        let query = window.supabaseClient
+    .from("questions")
+    .select("*")
+    .eq("topic_id", Number(topicId))
+    .eq("status", "Published");
 
-            .from("questions")
+if (difficulty === "Mixed") {
 
-            .select("*")
+    query = query
+        .eq("set_name", "Mixed");
 
-            .eq("topic_id", Number(topicId))
+} else {
 
-            .eq("difficulty", Number(difficulty))
+    query = query
+        .eq("difficulty", Number(difficulty))
+        .neq("set_name", "Mixed");
 
-            .eq("status", "Published")
+}
 
-            .order("question_order", {
-                ascending: true
-            });
-
+const {
+    data,
+    error
+} = await query.order("question_order", {
+    ascending: true
+});
 
         console.log("QUESTIONS =", data);
 
@@ -739,15 +752,7 @@ async function loadQuestions() {
         }
 
 
-        if (Number(difficulty) === 1) {
-
-            questions = data.slice(0, 15);
-
-        } else {
-
-            questions = data;
-
-        }
+        questions = data.slice(0, 15);
 
 
         currentQuestionIndex = 0;
