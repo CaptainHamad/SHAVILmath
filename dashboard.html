@@ -439,7 +439,7 @@ Practice previous examination papers.
 
 <div class="card">
 
-<h2>0</h2>
+<h2 id="questionsSolved">0</h2>
 
 <h3>Questions Solved</h3>
 
@@ -447,7 +447,7 @@ Practice previous examination papers.
 
 <div class="card">
 
-<h2>0%</h2>
+<h2 id="accuracy">0%</h2>
 
 <h3>Accuracy</h3>
 
@@ -455,7 +455,7 @@ Practice previous examination papers.
 
 <div class="card">
 
-<h2>0</h2>
+<h2 id="correctAnswers">0</h2>
 
 <h3>Correct Answers</h3>
 
@@ -463,9 +463,11 @@ Practice previous examination papers.
 
 <div class="card">
 
-<h2>Beginner</h2>
+<h2 id="currentLevel">Beginner</h2>
 
 <h3>Current Level</h3>
+
+</div>
 
 </div>
 
@@ -480,29 +482,145 @@ Practice previous examination papers.
 
 async function loadUser(){
 
-const {
+    const {
 
-data:{user}
+        data:{user}
 
-}=await window.supabaseClient.auth.getUser();
+    } = await window.supabaseClient.auth.getUser();
 
-if(!user){
+    if(!user){
 
-window.location.href="login.html";
+        window.location.href="login.html";
 
-return;
+        return;
+
+    }
+
+    const fullName =
+        user.user_metadata.full_name ||
+        user.email.split("@")[0];
+
+    document.getElementById("welcomeName").innerHTML =
+        "Welcome, " + fullName + " 👋";
+
+
+    const school =
+        user.user_metadata.school || "";
+
+    const form =
+        user.user_metadata.form || "";
+
+    if(school || form){
+
+        document.getElementById("studentInfo").innerHTML =
+            school + " • " + form;
+
+    }else{
+
+        document.getElementById("studentInfo").innerHTML =
+            user.email;
+
+    }
+
+
+    await loadProgress(user.id);
 
 }
 
-document.getElementById("welcomeName").innerHTML=
 
-"Welcome, "+user.user_metadata.full_name+" 👋";
+async function loadProgress(userId){
 
-document.getElementById("studentInfo").innerHTML=
+    const { data, error } =
+        await window.supabaseClient
+        .from("user_answers")
+        .select(`
+            question_id,
+            is_correct
+        `)
+        .eq("user_id", userId);
 
-user.user_metadata.school+" • "+user.user_metadata.form;
+
+    if(error){
+
+        console.error(
+            "Progress error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    const questionsSolved = data.length;
+
+
+    const correctAnswers =
+        data.filter(
+            answer =>
+            answer.is_correct === true
+        ).length;
+
+
+    let accuracy = 0;
+
+    if(questionsSolved > 0){
+
+        accuracy = Math.round(
+            (correctAnswers / questionsSolved) * 100
+        );
+
+    }
+
+
+    document.getElementById(
+        "questionsSolved"
+    ).innerHTML = questionsSolved;
+
+
+    document.getElementById(
+        "correctAnswers"
+    ).innerHTML = correctAnswers;
+
+
+    document.getElementById(
+        "accuracy"
+    ).innerHTML = accuracy + "%";
+
+
+    let level = "Beginner";
+
+
+    if(questionsSolved >= 50 &&
+       accuracy >= 60){
+
+        level = "Intermediate";
+
+    }
+
+
+    if(questionsSolved >= 150 &&
+       accuracy >= 70){
+
+        level = "Advanced";
+
+    }
+
+
+    if(questionsSolved >= 300 &&
+       accuracy >= 80){
+
+        level = "Mathematics Master 🏆";
+
+    }
+
+
+    document.getElementById(
+        "currentLevel"
+    ).innerHTML = level;
 
 }
+
 
 loadUser();
 
