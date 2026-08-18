@@ -1137,7 +1137,7 @@ function nextQuestion() {
    FINISH PRACTICE
 ========================= */
 
-function finishPractice() {
+async function finishPractice() {
 
     localStorage.setItem(
         "quizScore",
@@ -1175,6 +1175,67 @@ function finishPractice() {
     );
 
 
+          // =========================
+    // SAVE USER QUESTION PROGRESS
+    // =========================
+
+    const {
+        data: { user },
+        error: userError
+    } = await window.supabaseClient.auth.getUser();
+
+
+    if (userError || !user) {
+
+        console.error(
+            "User not found:",
+            userError
+        );
+
+    } else {
+
+        const progressData =
+            answerReview.map(item => ({
+
+                user_id: user.id,
+
+                question_id: item.questionId,
+
+                is_correct: item.isCorrect
+
+            }));
+
+
+        const { error: progressError } =
+            await window.supabaseClient
+            .from("user_question_progress")
+            .upsert(
+                progressData,
+                {
+                    onConflict:
+                        "user_id,question_id",
+
+                    ignoreDuplicates: true
+                }
+            );
+
+
+        if (progressError) {
+
+            console.error(
+                "Error saving progress:",
+                progressError
+            );
+
+        } else {
+
+            console.log(
+                "Question progress saved successfully"
+            );
+
+        }
+
+    }
     window.location.href =
         "results.html";
 
