@@ -215,6 +215,26 @@ header a{
 
 }
 
+/* =========================
+   QUESTION DIAGRAM
+========================= */
+
+.question-diagram{
+    width:100%;
+    margin:10px 0 30px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow-x:auto;
+}
+
+.question-diagram svg{
+    width:100%;
+    max-width:600px;
+    height:auto;
+    display:block;
+}
+
 
 /* =========================
    OPTIONS
@@ -906,55 +926,67 @@ async function showQuestion() {
         });
 
 
-        questionContainer.innerHTML = `
-
-            <div class="question-card">
-
-                <div class="question-label">
-
-                    Question ${number}
-
-                </div>
-
-
-                <div class="question-text">
-
-                    ${escapeHTML(question.question)}
-
-                </div>
-
-
-                <div class="options">
-
-                    ${optionsHTML}
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button
-                        id="nextButton"
-                        type="button"
-                        class="next-btn"
-                        disabled
-                        onclick="nextQuestion()"
-                    >
-
-                        ${
-                            number === total
-                                ? "Finish"
-                                : "Next →"
-                        }
-
-                    </button>
-
-                </div>
-
+       const diagramHTML =
+    question.diagram_svg
+        ? `
+            <div class="question-diagram">
+                ${question.diagram_svg}
             </div>
+        `
+        : "";
 
-        `;
 
+questionContainer.innerHTML = `
+
+    <div class="question-card">
+
+        <div class="question-label">
+
+            Question ${number}
+
+        </div>
+
+
+        <div class="question-text">
+
+            ${escapeHTML(question.question)}
+
+        </div>
+
+
+        ${diagramHTML}
+
+
+        <div class="options">
+
+            ${optionsHTML}
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                id="nextButton"
+                type="button"
+                class="next-btn"
+                disabled
+                onclick="nextQuestion()"
+            >
+
+                ${
+                    number === total
+                        ? "Finish"
+                        : "Next →"
+                }
+
+            </button>
+
+        </div>
+
+    </div>
+
+`;
     }
 
     catch (error) {
