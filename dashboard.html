@@ -539,18 +539,13 @@ async function loadProgress(userId){
         `)
         .eq("user_id", userId);
 
+if(error){
 
-    if(error){
+    console.error("PROGRESS ERROR:", JSON.stringify(error, null, 2));
 
-        console.error(
-            "Progress error:",
-            error
-        );
+    return;
 
-        return;
-
-    }
-
+}
 
     const questionsSolved = data.length;
 
