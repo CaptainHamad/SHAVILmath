@@ -204,6 +204,51 @@ button:hover{
 
 }
 
+.divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:25px 0;
+    color:#94A3B8;
+    font-size:14px;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#E2E8F0;
+}
+
+.google-btn{
+    width:100%;
+    padding:15px;
+    background:white;
+    color:#334155;
+    border:1px solid #CBD5E1;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    transition:.3s;
+}
+
+.google-btn:hover{
+    background:#F8FAFC;
+    border-color:#2563EB;
+}
+
+.google-icon{
+    width:20px;
+    height:20px;
+}
 </style>
 
 </head>
@@ -260,6 +305,42 @@ Login
 
 </form>
 
+<div class="divider">
+
+<span>OR</span>
+
+</div>
+
+<button
+type="button"
+class="google-btn"
+id="googleLogin">
+
+<svg
+class="google-icon"
+viewBox="0 0 24 24">
+
+<path
+fill="#4285F4"
+d="M21.35 12.27c0-.79-.07-1.55-.21-2.27H12v4.3h5.23a4.47 4.47 0 0 1-1.94 2.93v2.78h3.14c1.84-1.69 2.92-4.18 2.92-7.74z"/>
+
+<path
+fill="#34A853"
+d="M12 21.5c2.64 0 4.86-.87 6.48-2.36l-3.14-2.78c-.87.58-1.99.92-3.34.92-2.57 0-4.75-1.74-5.53-4.08H3.23v2.87A9.78 9.78 0 0 0 12 21.5z"/>
+
+<path
+fill="#FBBC05"
+d="M6.47 13.2A5.88 5.88 0 0 1 6.16 12c0-.42.07-.82.18-1.2V7.93H3.23A9.5 9.5 0 0 0 2.5 12c0 1.46.35 2.84.73 4.07l3.24-2.87z"/>
+
+<path
+fill="#EA4335"
+d="M12 6.72c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.86 3.83 14.64 2.5 12 2.5a9.78 9.78 0 0 0-8.77 5.43l3.24 2.87c.78-2.34 2.96-4.08 5.53-4.08z"/>
+
+</svg>
+
+Continue with Google
+
+</button>
 <div id="message" class="message"></div>
 
 <div class="register">
@@ -323,6 +404,41 @@ loginForm.addEventListener("submit", async (e)=>{
 
 });
 
+
+const googleLogin =
+    document.getElementById("googleLogin");
+
+googleLogin.addEventListener("click", async () => {
+
+    message.className = "message";
+    message.innerHTML = "Redirecting to Google...";
+
+    const { error } =
+        await window.supabaseClient
+        .auth
+        .signInWithOAuth({
+
+            provider: "google",
+
+            options: {
+                redirectTo:
+                    window.location.origin +
+                    "/dashboard.html"
+            }
+
+        });
+
+    if (error) {
+
+        console.error(error);
+
+        message.className = "message error";
+
+        message.innerHTML = error.message;
+
+    }
+
+});
 </script>
 
 </body>
