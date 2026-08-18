@@ -538,7 +538,7 @@ async function loadProgress(userId){
 
     } = await window.supabaseClient
 
-        .from("user_answers")
+        .from("user_question_progress")
 
         .select(`
             question_id,
@@ -561,64 +561,23 @@ async function loadProgress(userId){
 
 
     console.log(
-        "USER ANSWERS:",
+        "PROGRESS DATA:",
         answers
     );
-
-
-    /*
-    Ondoa duplicate questions.
-
-    Swali likishajibiwa mara nyingi,
-    lihesabiwe mara moja tu.
-    */
-
-    const uniqueQuestions = {};
-
-
-    answers.forEach(answer => {
-
-        if(
-
-            !uniqueQuestions[
-                answer.question_id
-            ]
-
-        ){
-
-            uniqueQuestions[
-                answer.question_id
-            ] = answer;
-
-        }
-
-    });
-
-
-    const uniqueAnswers =
-
-        Object.values(
-            uniqueQuestions
-        );
 
 
     /* Questions Solved */
 
     const questionsSolved =
-
-        uniqueAnswers.length;
+        answers.length;
 
 
     /* Correct Answers */
 
     const correctAnswers =
-
-        uniqueAnswers.filter(
-
+        answers.filter(
             answer =>
-
                 answer.is_correct === true
-
         ).length;
 
 
@@ -634,30 +593,31 @@ async function loadProgress(userId){
             (
                 correctAnswers /
                 questionsSolved
-            )
-
-            * 100
+            ) * 100
 
         );
 
     }
 
 
-    /* Update cards */
+    /* Update Dashboard */
 
     document.getElementById(
         "questionsSolved"
-    ).innerHTML = questionsSolved;
+    ).innerHTML =
+        questionsSolved;
 
 
     document.getElementById(
         "correctAnswers"
-    ).innerHTML = correctAnswers;
+    ).innerHTML =
+        correctAnswers;
 
 
     document.getElementById(
         "accuracy"
-    ).innerHTML = accuracy + "%";
+    ).innerHTML =
+        accuracy + "%";
 
 
     /* Current Level */
@@ -697,7 +657,8 @@ async function loadProgress(userId){
 
     document.getElementById(
         "currentLevel"
-    ).innerHTML = level;
+    ).innerHTML =
+        level;
 
 
     console.log(
