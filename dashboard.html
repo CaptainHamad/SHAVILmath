@@ -530,80 +530,256 @@ async function loadUser(){
 
 async function loadProgress(userId){
 
-    const { data, error } =
-        await window.supabaseClient
-        .from("user_answers")
-        .select(`
-            question_id,
-            is_correct
-        `)
+    /* STEP 1:
+    Pata attempts zote za mwanafunzi huyu
+    */
+
+    const {
+
+        data: attempts,
+
+        error: attemptsError
+
+    } = await window.supabaseClient
+
+        .from("practice_attempts")
+
+        .select("id")
+
         .eq("user_id", userId);
 
-if(error){
 
-    console.error("PROGRESS ERROR:", JSON.stringify(error, null, 2));
+    if(attemptsError){
 
-    return;
+        console.error(
+            "ATTEMPTS ERROR:",
+            attemptsError
+        );
 
-}
+        return;
 
-    const questionsSolved = data.length;
+    }
 
+
+    /* Kama hajafanya exercise yoyote */
+
+    if(!attempts || attempts.length === 0){
+
+        document.getElementById(
+            "questionsSolved"
+        ).innerHTML = 0;
+
+        document.getElementById(
+            "correctAnswers"
+        ).innerHTML = 0;
+
+        document.getElementById(
+            "accuracy"
+        ).innerHTML = "0%";
+
+        document.getElementById(
+            "currentLevel"
+        ).innerHTML = "Beginner";
+
+        return;
+
+    }
+
+
+    /* Chukua IDs za attempts */
+
+    const attemptIds = attempts.map(
+
+        attempt => attempt.id
+
+    );
+
+
+    /* STEP 2:
+    Pata answers zote zinazohusiana
+    na attempts za mwanafunzi
+    */
+
+    const {
+
+        data: answers,
+
+        error: answersError
+
+    } = await window.supabaseClient
+
+        .from("user_answers")
+
+        .select(`
+            question_id,
+            is_correct,
+            attempt_id
+        `)
+
+        .in(
+            "attempt_id",
+            attemptIds
+        );
+
+
+    if(answersError){
+
+        console.error(
+            "ANSWERS ERROR:",
+            answersError
+        );
+
+        return;
+
+    }
+
+
+    /*
+    STEP 3:
+    Ondoa duplicate questions.
+
+    Kama mwanafunzi amerudia test
+    au swali lilelile limejitokeza tena,
+    litahesabiwa mara moja tu.
+    */
+
+    const uniqueQuestions = {};
+
+
+    answers.forEach(answer => {
+
+        if(
+
+            !uniqueQuestions[
+                answer.question_id
+            ]
+
+        ){
+
+            uniqueQuestions[
+                answer.question_id
+            ] = answer;
+
+        }
+
+    });
+
+
+    const uniqueAnswers =
+
+        Object.values(
+            uniqueQuestions
+        );
+
+
+    /* Questions Solved */
+
+    const questionsSolved =
+
+        uniqueAnswers.length;
+
+
+    /* Correct Answers */
 
     const correctAnswers =
-        data.filter(
+
+        uniqueAnswers.filter(
+
             answer =>
-            answer.is_correct === true
+
+                answer.is_correct === true
+
         ).length;
 
 
+    /* Accuracy */
+
     let accuracy = 0;
+
 
     if(questionsSolved > 0){
 
         accuracy = Math.round(
-            (correctAnswers / questionsSolved) * 100
+
+            (
+                correctAnswers /
+                questionsSolved
+            )
+
+            * 100
+
         );
 
     }
 
 
+    /* Weka values kwenye cards */
+
     document.getElementById(
+
         "questionsSolved"
-    ).innerHTML = questionsSolved;
+
+    ).innerHTML =
+
+        questionsSolved;
 
 
     document.getElementById(
+
         "correctAnswers"
-    ).innerHTML = correctAnswers;
+
+    ).innerHTML =
+
+        correctAnswers;
 
 
     document.getElementById(
-        "accuracy"
-    ).innerHTML = accuracy + "%";
 
+        "accuracy"
+
+    ).innerHTML =
+
+        accuracy + "%";
+
+
+    /* Current Level */
 
     let level = "Beginner";
 
 
-    if(questionsSolved >= 50 &&
-       accuracy >= 60){
+    if(
+
+        questionsSolved >= 50 &&
+
+        accuracy >= 60
+
+    ){
 
         level = "Intermediate";
 
     }
 
 
-    if(questionsSolved >= 150 &&
-       accuracy >= 70){
+    if(
+
+        questionsSolved >= 150 &&
+
+        accuracy >= 70
+
+    ){
 
         level = "Advanced";
 
     }
 
 
-    if(questionsSolved >= 300 &&
-       accuracy >= 80){
+    if(
+
+        questionsSolved >= 300 &&
+
+        accuracy >= 80
+
+    ){
 
         level = "Mathematics Master 🏆";
 
@@ -611,13 +787,25 @@ if(error){
 
 
     document.getElementById(
+
         "currentLevel"
-    ).innerHTML = level;
+
+    ).innerHTML =
+
+        level;
+
+
+    console.log(
+        "Progress loaded:",
+        {
+            questionsSolved,
+            correctAnswers,
+            accuracy,
+            level
+        }
+    );
 
 }
-
-
-loadUser();
 
 document.getElementById("logoutBtn").addEventListener("click",async(e)=>{
 
