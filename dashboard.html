@@ -530,82 +530,11 @@ async function loadUser(){
 
 async function loadProgress(userId){
 
-    /* STEP 1:
-    Pata attempts zote za mwanafunzi huyu
-    */
-
-    const {
-
-        data: attempts,
-
-        error: attemptsError
-
-    } = await window.supabaseClient
-
-        .from("practice_attempts")
-
-        .select("id")
-
-        .eq("user_id", userId);
-
-
-    if(attemptsError){
-
-        console.error(
-            "ATTEMPTS ERROR:",
-            attemptsError
-        );
-
-        return;
-
-    }
-
-console.log("USER ID:", userId);
-console.log("ATTEMPTS:", attempts);
-    /* Kama hajafanya exercise yoyote */
-
-    if(!attempts || attempts.length === 0){
-
-        document.getElementById(
-            "questionsSolved"
-        ).innerHTML = 0;
-
-        document.getElementById(
-            "correctAnswers"
-        ).innerHTML = 0;
-
-        document.getElementById(
-            "accuracy"
-        ).innerHTML = "0%";
-
-        document.getElementById(
-            "currentLevel"
-        ).innerHTML = "Beginner";
-
-        return;
-
-    }
-
-
-    /* Chukua IDs za attempts */
-
-    const attemptIds = attempts.map(
-
-        attempt => attempt.id
-
-    );
-
-
-    /* STEP 2:
-    Pata answers zote zinazohusiana
-    na attempts za mwanafunzi
-    */
-
     const {
 
         data: answers,
 
-        error: answersError
+        error
 
     } = await window.supabaseClient
 
@@ -613,36 +542,35 @@ console.log("ATTEMPTS:", attempts);
 
         .select(`
             question_id,
-            is_correct,
-            attempt_id
+            is_correct
         `)
 
-        .in(
-            "attempt_id",
-            attemptIds
-        );
+        .eq("user_id", userId);
 
 
-    if(answersError){
+    if(error){
 
         console.error(
-            "ANSWERS ERROR:",
-            answersError
+            "PROGRESS ERROR:",
+            error
         );
 
         return;
 
     }
-console.log("ATTEMPT IDs:", attemptIds);
-console.log("ANSWERS:", answers);
+
+
+    console.log(
+        "USER ANSWERS:",
+        answers
+    );
+
 
     /*
-    STEP 3:
     Ondoa duplicate questions.
 
-    Kama mwanafunzi amerudia test
-    au swali lilelile limejitokeza tena,
-    litahesabiwa mara moja tu.
+    Swali likishajibiwa mara nyingi,
+    lihesabiwe mara moja tu.
     */
 
     const uniqueQuestions = {};
@@ -715,33 +643,21 @@ console.log("ANSWERS:", answers);
     }
 
 
-    /* Weka values kwenye cards */
+    /* Update cards */
 
     document.getElementById(
-
         "questionsSolved"
-
-    ).innerHTML =
-
-        questionsSolved;
+    ).innerHTML = questionsSolved;
 
 
     document.getElementById(
-
         "correctAnswers"
-
-    ).innerHTML =
-
-        correctAnswers;
+    ).innerHTML = correctAnswers;
 
 
     document.getElementById(
-
         "accuracy"
-
-    ).innerHTML =
-
-        accuracy + "%";
+    ).innerHTML = accuracy + "%";
 
 
     /* Current Level */
@@ -750,11 +666,8 @@ console.log("ANSWERS:", answers);
 
 
     if(
-
         questionsSolved >= 50 &&
-
         accuracy >= 60
-
     ){
 
         level = "Intermediate";
@@ -763,11 +676,8 @@ console.log("ANSWERS:", answers);
 
 
     if(
-
         questionsSolved >= 150 &&
-
         accuracy >= 70
-
     ){
 
         level = "Advanced";
@@ -776,11 +686,8 @@ console.log("ANSWERS:", answers);
 
 
     if(
-
         questionsSolved >= 300 &&
-
         accuracy >= 80
-
     ){
 
         level = "Mathematics Master 🏆";
@@ -789,12 +696,8 @@ console.log("ANSWERS:", answers);
 
 
     document.getElementById(
-
         "currentLevel"
-
-    ).innerHTML =
-
-        level;
+    ).innerHTML = level;
 
 
     console.log(
