@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Special Tests | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#F4F7FB;
+    color:#0F172A;
+    min-height:100vh;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    background:#2563EB;
+    color:white;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo img{
+    height:55px;
+}
+
+.logo h2{
+    font-size:24px;
+}
+
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    padding:10px 18px;
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;
+    transition:.3s;
+}
+
+.back-btn:hover{
+    background:rgba(255,255,255,.15);
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    background:linear-gradient(
+        135deg,
+        #2563EB,
+        #1E40AF
+    );
+
+    color:white;
+
+    text-align:center;
+
+    padding:60px 20px;
+}
+
+.hero h1{
+    font-size:40px;
+    margin-bottom:12px;
+}
+
+.hero p{
+    font-size:16px;
+    opacity:.9;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+
+/* =========================
+   TEST GRID
+========================= */
+
+.tests-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(280px,1fr)
+        );
+    gap:25px;
+}
+
+
+/* =========================
+   TEST CARD
+========================= */
+
+.test-card{
+    background:white;
+    border-radius:22px;
+    padding:30px;
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.test-card:hover{
+    transform:translateY(-8px);
+    box-shadow:
+        0 20px 45px
+        rgba(37,99,235,.16);
+}
+
+.test-icon{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+.test-card h3{
+    font-size:21px;
+    margin-bottom:10px;
+}
+
+.test-card p{
+    color:#64748B;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+
+/* TEST DETAILS */
+
+.test-details{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.detail{
+    background:#EFF6FF;
+    color:#1E40AF;
+    padding:8px 12px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+}
+
+
+/* START BUTTON */
+
+.start-btn{
+    width:100%;
+    border:none;
+    background:#2563EB;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.start-btn:hover{
+    background:#1E40AF;
+}
+
+
+/* EMPTY */
+
+.empty-message{
+    text-align:center;
+    color:#64748B;
+    padding:60px 20px;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:650px){
+
+    header{
+        padding:18px 20px;
+    }
+
+    .logo h2{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+<div class="logo">
+
+<img
+src="assets/images/logo.png"
+alt="SHAVILmath Logo">
+
+<h2>SHAVILmath</h2>
+
+</div>
+
+
+<a
+href="special-tests.html"
+class="back-btn">
+
+← Back
+
+</a>
+
+</header>
+
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+<h1 id="formTitle">
+
+Loading Tests...
+
+</h1>
+
+<p>
+
+Choose a Special Test and challenge yourself.
+
+</p>
+
+</section>
+
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<div class="container">
+
+
+<div
+id="testsContainer"
+class="tests-grid">
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   GET SELECTED FORM
+========================= */
+
+const selectedForm =
+
+    localStorage.getItem(
+        "selectedSpecialTestForm"
+    );
+
+
+/* IF NO FORM SELECTED */
+
+if(!selectedForm){
+
+    window.location.href =
+        "special-tests.html";
+
+}
+
+
+/* DISPLAY FORM TITLE */
+
+document.getElementById(
+    "formTitle"
+).innerHTML =
+
+    selectedForm +
+    " Special Tests 🎯";
+
+
+/* =========================
+   SPECIAL TEST DATA
+========================= */
+
+const specialTests = {
+
+
+    "Form One":[
+
+        {
+            id:1,
+
+            title:"Special Test 1",
+
+            description:
+            "Test your understanding of Form One Mathematics topics.",
+
+            questions:20,
+
+            duration:30
+        },
+
+        {
+            id:2,
+
+            title:"Special Test 2",
+
+            description:
+            "Challenge yourself with another Form One Mathematics test.",
+
+            questions:25,
+
+            duration:40
+        },
+
+        {
+            id:3,
+
+            title:"Algebra Challenge",
+
+            description:
+            "Test your skills in Algebra and basic Mathematics concepts.",
+
+            questions:15,
+
+            duration:25
+        },
+
+        {
+            id:4,
+
+            title:"Mid-Term Practice",
+
+            description:
+            "Practice with questions prepared in examination style.",
+
+            questions:30,
+
+            duration:45
+        }
+
+    ],
+
+
+    "Form Two":[
+
+        {
+            id:1,
+
+            title:"Special Test 1",
+
+            description:
+            "Test your understanding of Form Two Mathematics.",
+
+            questions:20,
+
+            duration:30
+        },
+
+        {
+            id:2,
+
+            title:"Special Test 2",
+
+            description:
+            "Challenge yourself with carefully selected Mathematics questions.",
+
+            questions:25,
+
+            duration:40
+        },
+
+        {
+            id:3,
+
+            title:"Algebra Challenge",
+
+            description:
+            "Improve your Algebra problem-solving skills.",
+
+            questions:20,
+
+            duration:30
+        },
+
+        {
+            id:4,
+
+            title:"Exam Preparation Test",
+
+            description:
+            "Practice examination-style Mathematics questions.",
+
+            questions:30,
+
+            duration:45
+        }
+
+    ],
+
+
+    "Form Three":[
+
+        {
+            id:1,
+
+            title:"Special Test 1",
+
+            description:
+            "Challenge yourself with Form Three Mathematics questions.",
+
+            questions:20,
+
+            duration:30
+        },
+
+        {
+            id:2,
+
+            title:"Special Test 2",
+
+            description:
+            "Practice advanced Mathematics concepts.",
+
+            questions:25,
+
+            duration:40
+        },
+
+        {
+            id:3,
+
+            title:"Advanced Challenge",
+
+            description:
+            "Test your deeper understanding of Mathematics.",
+
+            questions:20,
+
+            duration:35
+        },
+
+        {
+            id:4,
+
+            title:"Exam Preparation Test",
+
+            description:
+            "Prepare yourself with examination-style questions.",
+
+            questions:30,
+
+            duration:45
+        }
+
+    ],
+
+
+    "Form Four":[
+
+        {
+            id:1,
+
+            title:"Special Test 1",
+
+            description:
+            "Test your Form Four Mathematics knowledge.",
+
+            questions:25,
+
+            duration:40
+        },
+
+        {
+            id:2,
+
+            title:"Special Test 2",
+
+            description:
+            "Challenge yourself with advanced examination questions.",
+
+            questions:30,
+
+            duration:45
+        },
+
+        {
+            id:3,
+
+            title:"NECTA Challenge",
+
+            description:
+            "Practice questions inspired by national examinations.",
+
+            questions:30,
+
+            duration:50
+        },
+
+        {
+            id:4,
+
+            title:"Final Mathematics Challenge",
+
+            description:
+            "A challenging test covering important Form Four topics.",
+
+            questions:40,
+
+            duration:60
+        }
+
+    ]
+
+};
+
+
+/* =========================
+   LOAD TESTS
+========================= */
+
+function loadTests(){
+
+
+    const testsContainer =
+
+        document.getElementById(
+            "testsContainer"
+        );
+
+
+    const tests =
+
+        specialTests[
+            selectedForm
+        ];
+
+
+    /* IF NO TESTS */
+
+    if(
+
+        !tests ||
+
+        tests.length === 0
+
+    ){
+
+        testsContainer.innerHTML =
+
+            `
+            <div class="empty-message">
+
+            <h2>
+            No tests available yet.
+            </h2>
+
+            <p>
+            New Special Tests will be added soon.
+            </p>
+
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    /* CLEAR */
+
+    testsContainer.innerHTML = "";
+
+
+    /* CREATE CARDS */
+
+    tests.forEach(test => {
+
+
+        const testCard =
+
+            document.createElement(
+                "div"
+            );
+
+
+        testCard.className =
+            "test-card";
+
+
+        testCard.innerHTML =
+
+            `
+
+            <div class="test-icon">
+
+            📝
+
+            </div>
+
+
+            <h3>
+
+            ${test.title}
+
+            </h3>
+
+
+            <p>
+
+            ${test.description}
+
+            </p>
+
+
+            <div class="test-details">
+
+
+            <div class="detail">
+
+            📝 ${test.questions} Questions
+
+            </div>
+
+
+            <div class="detail">
+
+            ⏱️ ${test.duration} Minutes
+
+            </div>
+
+
+            </div>
+
+
+            <button
+            class="start-btn"
+            onclick="startTest(
+                '${selectedForm}',
+                ${test.id},
+                '${test.title}',
+                ${test.questions},
+                ${test.duration}
+            )">
+
+            Start Test →
+
+            </button>
+
+            `;
+
+
+        testsContainer.appendChild(
+            testCard
+        );
+
+
+    });
+
+
+}
+
+
+/* =========================
+   START TEST
+========================= */
+
+function startTest(
+
+    form,
+
+    testId,
+
+    title,
+
+    questions,
+
+    duration
+
+){
+
+
+    /* SAVE TEST DETAILS */
+
+    localStorage.setItem(
+
+        "selectedTestForm",
+
+        form
+
+    );
+
+
+    localStorage.setItem(
+
+        "selectedTestId",
+
+        testId
+
+    );
+
+
+    localStorage.setItem(
+
+        "selectedTestTitle",
+
+        title
+
+    );
+
+
+    localStorage.setItem(
+
+        "selectedTestQuestions",
+
+        questions
+
+    );
+
+
+    localStorage.setItem(
+
+        "selectedTestDuration",
+
+        duration
+
+    );
+
+
+    /* GO TO TEST PAGE */
+
+    window.location.href =
+        "special-test.html";
+
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadTests();
+
+
+</script>
+
+
+</body>
+
+</html>
