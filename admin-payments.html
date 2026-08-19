@@ -373,27 +373,22 @@ async function loadPayments(){
 
 async function approvePayment(paymentId){
 
-
     const confirmPayment = confirm(
         "Are you sure you want to approve this payment?"
     );
 
-
     if(!confirmPayment){
-
         return;
-
     }
 
 
-    /* GET PAYMENT DETAILS */
+    /* =========================
+       GET PAYMENT DETAILS
+    ========================= */
 
     const {
-
         data: payment,
-
         error: paymentError
-
     } = await window.supabaseClient
 
         .from("subscriptions")
@@ -417,18 +412,23 @@ async function approvePayment(paymentId){
         );
 
         return;
-
     }
 
 
-    /* CALCULATE EXPIRY DATE */
+    console.log(
+        "PAYMENT TO APPROVE:",
+        payment
+    );
 
-    const startDate =
-        new Date();
 
+    /* =========================
+       CALCULATE SUBSCRIPTION
+       EXPIRY DATE
+    ========================= */
 
-    const expiryDate =
-        new Date();
+    const startDate = new Date();
+
+    const expiryDate = new Date();
 
 
     let days = 0;
@@ -458,17 +458,14 @@ async function approvePayment(paymentId){
 
     }
 
-
-    /* CHECK VALID PLAN */
-
-    if(days === 0){
+    else{
 
         alert(
-            "Invalid subscription plan."
+            "Unknown subscription plan: " +
+            payment.plan
         );
 
         return;
-
     }
 
 
@@ -477,12 +474,23 @@ async function approvePayment(paymentId){
     );
 
 
-    /* UPDATE SUBSCRIPTION */
+    console.log(
+        "SUBSCRIPTION DAYS:",
+        days
+    );
+
+    console.log(
+        "EXPIRY DATE:",
+        expiryDate.toISOString()
+    );
+
+
+    /* =========================
+       UPDATE PAYMENT STATUS
+    ========================= */
 
     const {
-
-        error: updateError
-
+        error: subscriptionError
     } = await window.supabaseClient
 
         .from("subscriptions")
@@ -505,11 +513,11 @@ async function approvePayment(paymentId){
         );
 
 
-    if(updateError){
+    if(subscriptionError){
 
         console.error(
             "SUBSCRIPTION UPDATE ERROR:",
-            updateError
+            subscriptionError
         );
 
         alert(
@@ -517,13 +525,21 @@ async function approvePayment(paymentId){
         );
 
         return;
-
     }
 
 
-    /* UPDATE STUDENT PROFILE */
+    console.log(
+        "SUBSCRIPTION ACTIVATED"
+    );
+
+
+    /* =========================
+       UPDATE OR CREATE PROFILE
+    ========================= */
 
     const {
+
+        data: profileData,
 
         error: profileError
 
@@ -531,20 +547,31 @@ async function approvePayment(paymentId){
 
         .from("profiles")
 
-        .update({
+        .upsert(
 
-            subscription_plan:
-                "premium",
+            {
 
-            subscription_expires_at:
-                expiryDate.toISOString()
+                id:
+                    payment.user_id,
 
-        })
+                subscription_plan:
+                    "premium",
 
-        .eq(
-            "id",
-            payment.user_id
-        );
+                subscription_expires_at:
+                    expiryDate.toISOString()
+
+            },
+
+            {
+
+                onConflict:
+                    "id"
+
+            }
+
+        )
+
+        .select();
 
 
     if(profileError){
@@ -555,35 +582,45 @@ async function approvePayment(paymentId){
         );
 
         alert(
-            "Payment activated, but failed to update student profile."
+            "Payment was approved, but Premium profile update failed."
         );
 
         return;
-
     }
 
 
-    /* SUCCESS */
-
-    alert(
-        "✅ Payment approved successfully! Premium access has been activated for " +
-        days +
-        " days."
+    console.log(
+        "PROFILE UPDATED:",
+        profileData
     );
 
 
-    /* RELOAD PAYMENTS */
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    alert(
+
+        "✅ Payment approved successfully!\n\n" +
+
+        "Premium access has been activated for " +
+
+        days +
+
+        " days."
+
+    );
+
+
+    /* =========================
+       RELOAD PAYMENTS
+    ========================= */
 
     loadPayments();
 
 }
 
 
-/* =========================
-   START
-========================= */
-
-loadPayments();
 
 
 </script>
