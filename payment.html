@@ -297,9 +297,6 @@ class="message">
 
 <script src="supabase.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="supabase.js"></script>
 
 <script>
 
@@ -495,18 +492,21 @@ document.getElementById("payButton").addEventListener(
 
         /* SUCCESS */
 
-        console.log(
-            "Subscription created:",
-            data
-        );
+       /* SUCCESS */
 
-
-        document.getElementById("message").innerHTML =
-            "✅ Payment request created successfully. Preparing payment...";
-
-    }
+console.log(
+    "Subscription created:",
+    data
 );
 
+document.getElementById("message").innerHTML =
+    "✅ Payment request created successfully.";
+
+payButton.innerHTML =
+    "Payment Request Created";
+
+}
+);
 </script>
 </body>
 
