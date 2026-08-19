@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Special Tests | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#F4F7FB;
+    color:#0F172A;
+    min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+    background:#2563EB;
+    color:white;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo img{
+    height:55px;
+}
+
+.logo h2{
+    font-size:24px;
+}
+
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    padding:10px 18px;
+    border:1px solid rgba(255,255,255,.4);
+    border-radius:10px;
+    transition:.3s;
+}
+
+.back-btn:hover{
+    background:rgba(255,255,255,.15);
+}
+
+
+/* HERO */
+
+.hero{
+    background:linear-gradient(
+        135deg,
+        #2563EB,
+        #1E40AF
+    );
+
+    color:white;
+
+    text-align:center;
+
+    padding:70px 20px;
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    max-width:650px;
+    margin:auto;
+    font-size:17px;
+    opacity:.9;
+}
+
+
+/* CONTAINER */
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:60px 20px;
+}
+
+
+/* TITLE */
+
+.section-title{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.section-title h2{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.section-title p{
+    color:#64748B;
+}
+
+
+/* FORM GRID */
+
+.forms-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap:25px;
+}
+
+
+/* FORM CARD */
+
+.form-card{
+    background:white;
+
+    padding:35px 25px;
+
+    border-radius:22px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.08);
+
+    transition:.3s;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.form-card:hover{
+
+    transform:
+        translateY(-10px);
+
+    box-shadow:
+        0 20px 45px
+        rgba(37,99,235,.18);
+
+}
+
+.form-icon{
+    font-size:55px;
+    margin-bottom:15px;
+}
+
+.form-card h3{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.form-card p{
+    color:#64748B;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+
+/* BUTTON */
+
+.view-btn{
+
+    border:none;
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.view-btn:hover{
+
+    background:#1E40AF;
+
+}
+
+
+/* PREMIUM SECTION */
+
+.premium-box{
+
+    margin-top:70px;
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:40px;
+
+    display:flex;
+
+    justify-content:
+        space-between;
+
+    align-items:center;
+
+    gap:30px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.08);
+
+}
+
+.premium-info h2{
+
+    font-size:28px;
+
+    margin-bottom:10px;
+
+}
+
+.premium-info p{
+
+    color:#64748B;
+
+    max-width:600px;
+
+}
+
+.premium-btn{
+
+    background:#F59E0B;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:15px 25px;
+
+    border-radius:12px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    transition:.3s;
+
+}
+
+.premium-btn:hover{
+
+    background:#D97706;
+
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .forms-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+}
+
+
+@media(max-width:650px){
+
+    header{
+
+        padding:18px 20px;
+
+    }
+
+    .logo h2{
+
+        display:none;
+
+    }
+
+    .hero{
+
+        padding:55px 20px;
+
+    }
+
+    .hero h1{
+
+        font-size:32px;
+
+    }
+
+    .forms-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .premium-box{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+<div class="logo">
+
+<img
+src="assets/images/logo.png"
+alt="SHAVILmath Logo">
+
+<h2>SHAVILmath</h2>
+
+</div>
+
+
+<a
+href="dashboard.html"
+class="back-btn">
+
+← Dashboard
+
+</a>
+
+</header>
+
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>🎯 Special Tests</h1>
+
+<p>
+
+Challenge yourself with specially prepared Mathematics tests.
+Track your performance and discover your strengths and weaknesses.
+
+</p>
+
+</section>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+
+<div class="section-title">
+
+<h2>Choose Your Class</h2>
+
+<p>
+
+Select your class to view available Special Tests.
+
+</p>
+
+</div>
+
+
+
+<!-- FORM CARDS -->
+
+<div class="forms-grid">
+
+
+<!-- FORM ONE -->
+
+<div
+class="form-card"
+onclick="openForm('Form One')">
+
+<div class="form-icon">
+
+📘
+
+</div>
+
+<h3>Form One</h3>
+
+<p>
+
+Special Mathematics tests designed for Form One students.
+
+</p>
+
+<button class="view-btn">
+
+View Tests →
+
+</button>
+
+</div>
+
+
+
+<!-- FORM TWO -->
+
+<div
+class="form-card"
+onclick="openForm('Form Two')">
+
+<div class="form-icon">
+
+📗
+
+</div>
+
+<h3>Form Two</h3>
+
+<p>
+
+Challenge yourself with Form Two Mathematics tests.
+
+</p>
+
+<button class="view-btn">
+
+View Tests →
+
+</button>
+
+</div>
+
+
+
+<!-- FORM THREE -->
+
+<div
+class="form-card"
+onclick="openForm('Form Three')">
+
+<div class="form-icon">
+
+📙
+
+</div>
+
+<h3>Form Three</h3>
+
+<p>
+
+Practice advanced Mathematics with Special Tests.
+
+</p>
+
+<button class="view-btn">
+
+View Tests →
+
+</button>
+
+</div>
+
+
+
+<!-- FORM FOUR -->
+
+<div
+class="form-card"
+onclick="openForm('Form Four')">
+
+<div class="form-icon">
+
+📕</div>
+
+<h3>Form Four</h3>
+
+<p>
+
+Prepare yourself with challenging examination-style tests.
+
+</p>
+
+<button class="view-btn">
+
+View Tests →
+
+</button>
+
+</div>
+
+
+</div>
+
+
+
+<!-- PREMIUM BOX -->
+
+<div class="premium-box">
+
+<div class="premium-info">
+
+<h2>⭐ Unlock SHAVILmath Premium</h2>
+
+<p>
+
+Get access to all Special Tests, advanced Mathematics challenges,
+detailed performance tracking and more learning features.
+
+</p>
+
+</div>
+
+
+<a
+href="premium.html"
+class="premium-btn">
+
+Upgrade to Premium →
+
+</a>
+
+</div>
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+<script>
+
+
+/* =========================
+   OPEN SELECTED FORM
+========================= */
+
+async function openForm(formName){
+
+
+    /* SAVE SELECTED FORM */
+
+    localStorage.setItem(
+
+        "selectedSpecialTestForm",
+
+        formName
+
+    );
+
+
+    /* GET CURRENT USER */
+
+    const {
+
+        data:{user},
+
+        error:userError
+
+    } = await window.supabaseClient
+
+        .auth
+
+        .getUser();
+
+
+    /* USER NOT LOGGED IN */
+
+    if(userError || !user){
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    /* GET USER PROFILE */
+
+    const {
+
+        data:profile,
+
+        error:profileError
+
+    } = await window.supabaseClient
+
+        .from("profiles")
+
+        .select(
+
+            "subscription_plan, subscription_expires_at"
+
+        )
+
+        .eq(
+
+            "id",
+
+            user.id
+
+        )
+
+        .single();
+
+
+    if(profileError){
+
+        console.error(
+
+            "PROFILE ERROR:",
+
+            profileError
+
+        );
+
+    }
+
+
+    /* CHECK PREMIUM */
+
+    let isPremium = false;
+
+
+    if(
+
+        profile &&
+
+        profile.subscription_plan === "premium" &&
+
+        profile.subscription_expires_at
+
+    ){
+
+
+        const expiryDate =
+
+            new Date(
+
+                profile.subscription_expires_at
+
+            );
+
+
+        const today =
+
+            new Date();
+
+
+        if(expiryDate > today){
+
+            isPremium = true;
+
+        }
+
+    }
+
+
+    /*
+    SPECIAL TESTS
+    NI PREMIUM FEATURE
+    */
+
+
+    if(!isPremium){
+
+
+        alert(
+
+            "⭐ Special Tests are available for Premium students only. Upgrade your account to continue."
+
+        );
+
+
+        window.location.href =
+
+            "premium.html";
+
+
+        return;
+
+    }
+
+
+    /* GO TO TEST LIST */
+
+
+    window.location.href =
+
+        "special-test-list.html";
+
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
