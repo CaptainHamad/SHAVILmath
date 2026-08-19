@@ -423,30 +423,199 @@ async function loadPayments(){
    APPROVE PAYMENT
 ========================= */
 
-async function approvePayment(
-    paymentId
-){
+async function approvePayment(paymentId){
 
-
-    const confirmPayment =
-
-        confirm(
-            "Are you sure you want to approve this payment?"
-        );
-
+    const confirmPayment = confirm(
+        "Are you sure you want to approve this payment?"
+    );
 
     if(!confirmPayment){
+        return;
+    }
+
+
+    /* =========================
+       GET PAYMENT DETAILS
+    ========================= */
+
+    const {
+
+        data: payment,
+
+        error: paymentError
+
+    } = await window.supabaseClient
+
+        .from("subscriptions")
+
+        .select("*")
+
+        .eq("id", paymentId)
+
+        .single();
+
+
+    if(paymentError || !payment){
+
+        console.error(
+            "PAYMENT ERROR:",
+            paymentError
+        );
+
+        alert(
+            "Failed to get payment details."
+        );
 
         return;
 
     }
 
 
+    /* =========================
+       CALCULATE EXPIRY DATE
+    ========================= */
 
-    console.log(
-        "Approving payment:",
-        paymentId
+    const startDate = new Date();
+
+    const expiryDate = new Date();
+
+
+    let days = 0;
+
+
+    if(payment.plan === "weekly"){
+
+        days = 7;
+
+    }
+
+    else if(payment.plan === "monthly"){
+
+        days = 30;
+
+    }
+
+    else if(payment.plan === "3months"){
+
+        days = 90;
+
+    }
+
+    else if(payment.plan === "yearly"){
+
+        days = 365;
+
+    }
+
+
+    expiryDate.setDate(
+        expiryDate.getDate() + days
     );
+
+
+    /* =========================
+       ACTIVATE SUBSCRIPTION
+    ========================= */
+
+    const {
+
+        error: updateError
+
+    } = await window.supabaseClient
+
+        .from("subscriptions")
+
+        .update({
+
+            status: "active",
+
+            starts_at:
+                startDate.toISOString(),
+
+            expires_at:
+                expiryDate.toISOString()
+
+        })
+
+        .eq("id", paymentId);
+
+
+    if(updateError){
+
+        console.error(
+            "SUBSCRIPTION UPDATE ERROR:",
+            updateError
+        );
+
+        alert(
+            "Failed to activate subscription."
+        );
+
+        return;
+
+    }
+
+
+    /* =========================
+       UPDATE STUDENT PROFILE
+    ========================= */
+
+    const {
+
+        error: profileError
+
+    } = await window.supabaseClient
+
+        .from("profiles")
+
+        .update({
+
+            subscription_plan:
+                "premium",
+
+            subscription_expires_at:
+                expiryDate.toISOString()
+
+        })
+
+        .eq(
+            "id",
+            payment.user_id
+        );
+
+
+    if(profileError){
+
+        console.error(
+            "PROFILE UPDATE ERROR:",
+            profileError
+        );
+
+        alert(
+            "Payment activated, but failed to update student profile."
+        );
+
+        return;
+
+    }
+
+
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    alert(
+        "✅ Payment approved! Premium access has been activated for " +
+        days +
+        " days."
+    );
+
+
+    /* RELOAD TABLE */
+
+    loadPayments();
+
+}
 
 
 
