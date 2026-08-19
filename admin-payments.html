@@ -154,7 +154,6 @@ td{
 </header>
 
 
-
 <div class="container">
 
 
@@ -167,7 +166,6 @@ Review student payments and activate Premium access.
 </p>
 
 </div>
-
 
 
 <div class="table-container">
@@ -217,11 +215,9 @@ Loading payment requests...
 </div>
 
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="supabase.js"></script>
-
 
 
 <script>
@@ -233,12 +229,8 @@ Loading payment requests...
 
 async function loadPayments(){
 
-
     const paymentsBody =
-
-        document.getElementById(
-            "paymentsBody"
-        );
+        document.getElementById("paymentsBody");
 
 
     const {
@@ -247,8 +239,7 @@ async function loadPayments(){
 
         error
 
-    } = await window
-        .supabaseClient
+    } = await window.supabaseClient
 
         .from("subscriptions")
 
@@ -262,7 +253,6 @@ async function loadPayments(){
         );
 
 
-
     if(error){
 
         console.error(
@@ -271,149 +261,107 @@ async function loadPayments(){
         );
 
 
-        paymentsBody.innerHTML =
-
-            `
+        paymentsBody.innerHTML = `
             <tr>
-
-                <td
-                colspan="6"
-                class="empty">
-
-                ⚠️ Failed to load payments.
-
+                <td colspan="6" class="empty">
+                    ⚠️ Failed to load payments.
                 </td>
-
             </tr>
-            `;
+        `;
 
         return;
 
     }
-
 
 
     if(!payments || payments.length === 0){
 
-        paymentsBody.innerHTML =
-
-            `
+        paymentsBody.innerHTML = `
             <tr>
-
-                <td
-                colspan="6"
-                class="empty">
-
-                No payment requests yet.
-
+                <td colspan="6" class="empty">
+                    No payment requests yet.
                 </td>
-
             </tr>
-            `;
+        `;
 
         return;
 
     }
 
 
-
     paymentsBody.innerHTML = "";
-
 
 
     payments.forEach(payment => {
 
 
         const row =
-
-            document.createElement(
-                "tr"
-            );
+            document.createElement("tr");
 
 
+        row.innerHTML = `
 
-        row.innerHTML =
+            <td>
+                ${payment.user_id}
+            </td>
 
-            `
+
+            <td>
+                ${payment.plan}
+            </td>
+
+
+            <td>
+                TSh ${Number(payment.amount).toLocaleString()}
+            </td>
+
+
+            <td>
+                ${payment.payer_phone || "-"}
+            </td>
+
 
             <td>
 
-            ${payment.user_id}
+                <span class="status ${payment.status}">
+
+                    ${payment.status}
+
+                </span>
 
             </td>
 
 
             <td>
 
-            ${payment.plan}
+                ${
+                    payment.status === "pending"
+
+                    ?
+
+                    `
+                    <button
+                    class="approve-btn"
+                    onclick="approvePayment('${payment.id}')">
+
+                        ✓ Approve
+
+                    </button>
+                    `
+
+                    :
+
+                    "—"
+                }
 
             </td>
 
-
-            <td>
-
-            TSh ${Number(payment.amount).toLocaleString()}
-
-            </td>
+        `;
 
 
-            <td>
-
-            ${payment.payer_phone || "-"}
-
-            </td>
-
-
-            <td>
-
-            <span class="status ${payment.status}">
-
-            ${payment.status}
-
-            </span>
-
-            </td>
-
-
-            <td>
-
-            ${
-
-                payment.status === "pending"
-
-                ?
-
-                `
-
-                <button
-                class="approve-btn"
-                onclick="approvePayment(${payment.id})">
-
-                ✓ Approve
-
-                </button>
-
-                `
-
-                :
-
-                "—"
-
-            }
-
-            </td>
-
-            `;
-
-
-
-        paymentsBody.appendChild(
-            row
-        );
-
+        paymentsBody.appendChild(row);
 
     });
-
 
 }
 
@@ -425,18 +373,20 @@ async function loadPayments(){
 
 async function approvePayment(paymentId){
 
+
     const confirmPayment = confirm(
         "Are you sure you want to approve this payment?"
     );
 
+
     if(!confirmPayment){
+
         return;
+
     }
 
 
-    /* =========================
-       GET PAYMENT DETAILS
-    ========================= */
+    /* GET PAYMENT DETAILS */
 
     const {
 
@@ -471,13 +421,14 @@ async function approvePayment(paymentId){
     }
 
 
-    /* =========================
-       CALCULATE EXPIRY DATE
-    ========================= */
+    /* CALCULATE EXPIRY DATE */
 
-    const startDate = new Date();
+    const startDate =
+        new Date();
 
-    const expiryDate = new Date();
+
+    const expiryDate =
+        new Date();
 
 
     let days = 0;
@@ -508,14 +459,25 @@ async function approvePayment(paymentId){
     }
 
 
+    /* CHECK VALID PLAN */
+
+    if(days === 0){
+
+        alert(
+            "Invalid subscription plan."
+        );
+
+        return;
+
+    }
+
+
     expiryDate.setDate(
         expiryDate.getDate() + days
     );
 
 
-    /* =========================
-       ACTIVATE SUBSCRIPTION
-    ========================= */
+    /* UPDATE SUBSCRIPTION */
 
     const {
 
@@ -537,7 +499,10 @@ async function approvePayment(paymentId){
 
         })
 
-        .eq("id", paymentId);
+        .eq(
+            "id",
+            paymentId
+        );
 
 
     if(updateError){
@@ -556,9 +521,7 @@ async function approvePayment(paymentId){
     }
 
 
-    /* =========================
-       UPDATE STUDENT PROFILE
-    ========================= */
+    /* UPDATE STUDENT PROFILE */
 
     const {
 
@@ -600,35 +563,18 @@ async function approvePayment(paymentId){
     }
 
 
-    /* =========================
-       SUCCESS
-    ========================= */
+    /* SUCCESS */
 
     alert(
-        "✅ Payment approved! Premium access has been activated for " +
+        "✅ Payment approved successfully! Premium access has been activated for " +
         days +
         " days."
     );
 
 
-    /* RELOAD TABLE */
+    /* RELOAD PAYMENTS */
 
     loadPayments();
-
-}
-
-
-
-    /*
-    HAPA HATUA INAYOFUATA
-    TUTAWEKA CODE YA:
-
-    1. Kusoma payment
-    2. Kujua plan
-    3. Kuhesabu expiry date
-    4. Kubadilisha status kuwa active
-    5. Kumpa user Premium
-    */
 
 }
 
