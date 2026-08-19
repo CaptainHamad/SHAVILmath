@@ -293,7 +293,11 @@ class="message">
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script src="supabase.js"></script>
+
+<script>
 <script>
 
 /* READ SELECTED PLAN */
@@ -421,7 +425,7 @@ document.getElementById(
     "payButton"
 ).addEventListener(
     "click",
-    function(){
+    async function(){
 
         const selectedPayment =
 
@@ -443,42 +447,133 @@ document.getElementById(
         }
 
 
+        /* Pata user aliye-login */
+
+        const {
+
+            data:{user},
+
+            error:userError
+
+        } = await window.supabaseClient
+            .auth
+            .getUser();
+
+
+        if(userError || !user){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        /* Disable button wakati inahifadhi */
+
+        const payButton =
+
+            document.getElementById(
+                "payButton"
+            );
+
+
+        payButton.disabled = true;
+
+        payButton.innerHTML =
+            "Preparing payment...";
+
+
         /*
-        HII SEHEMU TUTAUNGANISHA
-        PAYMENT GATEWAY BAADAYE
+        Hifadhi subscription
+        kama pending
         */
 
-        console.log(
-            "PLAN:",
-            selectedPlan
-        );
+        const {
+
+            data,
+
+            error
+
+        } = await window.supabaseClient
+
+            .from("subscriptions")
+
+            .insert({
+
+                user_id:
+                    user.id,
+
+                plan:
+                    selectedPlan,
+
+                amount:
+                    Number(selectedPrice),
+
+                payment_method:
+                    selectedPayment.value,
+
+                status:
+                    "pending"
+
+            })
+
+            .select()
+            .single();
+
+
+        if(error){
+
+            console.error(
+                "SUBSCRIPTION INSERT ERROR:",
+                error
+            );
+
+
+            document.getElementById(
+                "message"
+            ).innerHTML =
+
+                "⚠️ Something went wrong. Please try again.";
+
+
+            payButton.disabled = false;
+
+            payButton.innerHTML =
+                "Proceed to Payment";
+
+            return;
+
+        }
+
 
         console.log(
-            "PRICE:",
-            selectedPrice
+            "Subscription created:",
+            data
         );
 
-        console.log(
-            "DAYS:",
-            selectedDays
-        );
 
-        console.log(
-            "PAYMENT METHOD:",
-            selectedPayment.value
-        );
-
+        /*
+        Kwa sasa bado
+        hatujaunganisha gateway.
+        */
 
         document.getElementById(
             "message"
         ).innerHTML =
 
-            "Payment system is being prepared...";
+            "✅ Payment request created successfully. Preparing payment...";
+
+
+        /*
+        Hapa ndipo baadaye
+        tutaunganisha payment gateway
+        */
 
     }
 
 );
-
 </script>
 
 </body>
