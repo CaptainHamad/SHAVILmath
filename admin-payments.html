@@ -97,6 +97,7 @@ td{
     font-size:13px;
     font-weight:600;
     display:inline-block;
+    text-transform:capitalize;
 }
 
 .pending{
@@ -223,9 +224,9 @@ Loading payment requests...
 <script>
 
 
-/* =========================
+/* =====================================
    LOAD PAYMENT REQUESTS
-========================= */
+===================================== */
 
 async function loadPayments(){
 
@@ -233,10 +234,18 @@ async function loadPayments(){
         document.getElementById("paymentsBody");
 
 
+    paymentsBody.innerHTML = `
+        <tr>
+            <td colspan="6" class="loading">
+                Loading payment requests...
+            </td>
+        </tr>
+    `;
+
+
     const {
 
         data: payments,
-
         error
 
     } = await window.supabaseClient
@@ -270,7 +279,6 @@ async function loadPayments(){
         `;
 
         return;
-
     }
 
 
@@ -285,7 +293,6 @@ async function loadPayments(){
         `;
 
         return;
-
     }
 
 
@@ -307,12 +314,12 @@ async function loadPayments(){
 
 
             <td>
-                ${payment.plan}
+                ${payment.plan || "-"}
             </td>
 
 
             <td>
-                TSh ${Number(payment.amount).toLocaleString()}
+                TSh ${Number(payment.amount || 0).toLocaleString()}
             </td>
 
 
@@ -323,9 +330,9 @@ async function loadPayments(){
 
             <td>
 
-                <span class="status ${payment.status}">
+                <span class="status ${payment.status || "pending"}">
 
-                    ${payment.status}
+                    ${payment.status || "pending"}
 
                 </span>
 
@@ -342,7 +349,7 @@ async function loadPayments(){
                     `
                     <button
                     class="approve-btn"
-                    onclick="approvePayment('${payment.id}')">
+                    onclick="approvePayment('${payment.id}', this)">
 
                         ✓ Approve
 
@@ -367,258 +374,475 @@ async function loadPayments(){
 
 
 
-/* =========================
+/* =====================================
    APPROVE PAYMENT
-========================= */
+===================================== */
 
-async function approvePayment(paymentId){
+async function approvePayment(paymentId, button){
+
 
     const confirmPayment = confirm(
+
         "Are you sure you want to approve this payment?"
+
     );
+
 
     if(!confirmPayment){
-        return;
-    }
-
-
-    /* =========================
-       GET PAYMENT DETAILS
-    ========================= */
-
-    const {
-        data: payment,
-        error: paymentError
-    } = await window.supabaseClient
-
-        .from("subscriptions")
-
-        .select("*")
-
-        .eq("id", paymentId)
-
-        .single();
-
-
-    if(paymentError || !payment){
-
-        console.error(
-            "PAYMENT ERROR:",
-            paymentError
-        );
-
-        alert(
-            "Failed to get payment details."
-        );
 
         return;
-    }
-
-
-    console.log(
-        "PAYMENT TO APPROVE:",
-        payment
-    );
-
-
-    /* =========================
-       CALCULATE SUBSCRIPTION
-       EXPIRY DATE
-    ========================= */
-
-    const startDate = new Date();
-
-    const expiryDate = new Date();
-
-
-    let days = 0;
-
-
-    if(payment.plan === "weekly"){
-
-        days = 7;
 
     }
 
-    else if(payment.plan === "monthly"){
 
-        days = 30;
+    /* DISABLE BUTTON */
 
-    }
+    if(button){
 
-    else if(payment.plan === "3months"){
+        button.disabled = true;
 
-        days = 90;
-
-    }
-
-    else if(payment.plan === "yearly"){
-
-        days = 365;
+        button.innerHTML =
+            "Approving...";
 
     }
 
-    else{
 
-        alert(
-            "Unknown subscription plan: " +
-            payment.plan
-        );
-
-        return;
-    }
+    try{
 
 
-    expiryDate.setDate(
-        expiryDate.getDate() + days
-    );
+        /* =====================================
+           GET PAYMENT
+        ===================================== */
+
+        const {
+
+            data: payment,
+            error: paymentError
+
+        } = await window.supabaseClient
+
+            .from("subscriptions")
+
+            .select("*")
+
+            .eq("id", paymentId)
+
+            .single();
 
 
-    console.log(
-        "SUBSCRIPTION DAYS:",
-        days
-    );
+        if(paymentError){
 
-    console.log(
-        "EXPIRY DATE:",
-        expiryDate.toISOString()
-    );
+            throw new Error(
+
+                "Failed to get payment: " +
+                paymentError.message
+
+            );
+
+        }
 
 
-    /* =========================
-       UPDATE PAYMENT STATUS
-    ========================= */
+        if(!payment){
 
-    const {
-        error: subscriptionError
-    } = await window.supabaseClient
+            throw new Error(
+                "Payment was not found."
+            );
 
-        .from("subscriptions")
+        }
 
-        .update({
 
-            status: "active",
-
-            starts_at:
-                startDate.toISOString(),
-
-            expires_at:
-                expiryDate.toISOString()
-
-        })
-
-        .eq(
-            "id",
-            paymentId
+        console.log(
+            "PAYMENT:",
+            payment
         );
 
 
-    if(subscriptionError){
+        /* =====================================
+           CALCULATE DAYS
+        ===================================== */
 
-        console.error(
-            "SUBSCRIPTION UPDATE ERROR:",
-            subscriptionError
+        let days = 0;
+
+
+        const plan =
+            String(payment.plan || "")
+            .trim()
+            .toLowerCase();
+
+
+        if(plan === "weekly"){
+
+            days = 7;
+
+        }
+
+        else if(plan === "monthly"){
+
+            days = 30;
+
+        }
+
+        else if(
+            plan === "3months" ||
+            plan === "3 months"
+        ){
+
+            days = 90;
+
+        }
+
+        else if(plan === "yearly"){
+
+            days = 365;
+
+        }
+
+        else{
+
+            throw new Error(
+
+                "Unknown subscription plan: " +
+                payment.plan
+
+            );
+
+        }
+
+
+        /* =====================================
+           CREATE DATES
+        ===================================== */
+
+        const startDate =
+            new Date();
+
+
+        const expiryDate =
+            new Date();
+
+
+        expiryDate.setDate(
+
+            expiryDate.getDate() + days
+
         );
 
-        alert(
-            "Failed to activate subscription."
+
+        console.log(
+            "START:",
+            startDate.toISOString()
         );
 
-        return;
-    }
+
+        console.log(
+            "EXPIRY:",
+            expiryDate.toISOString()
+        );
 
 
-    console.log(
-        "SUBSCRIPTION ACTIVATED"
-    );
+        /* =====================================
+           UPDATE SUBSCRIPTION
 
+           IMPORTANT:
+           .select() makes Supabase return
+           the updated row.
 
-    /* =========================
-       UPDATE OR CREATE PROFILE
-    ========================= */
+           This allows us to confirm that
+           status really changed.
+        ===================================== */
 
-    const {
+        const {
 
-        data: profileData,
+            data: updatedSubscription,
+            error: subscriptionError
 
-        error: profileError
+        } = await window.supabaseClient
 
-    } = await window.supabaseClient
+            .from("subscriptions")
 
-        .from("profiles")
+            .update({
 
-        .upsert(
+                status: "active",
 
-            {
+                starts_at:
+                    startDate.toISOString(),
 
-                id:
-                    payment.user_id,
-
-                subscription_plan:
-                    "premium",
-
-                subscription_expires_at:
+                expires_at:
                     expiryDate.toISOString()
 
-            },
+            })
 
-            {
+            .eq(
+                "id",
+                paymentId
+            )
 
-                onConflict:
-                    "id"
+            .select()
 
-            }
-
-        )
-
-        .select();
+            .single();
 
 
-    if(profileError){
+        if(subscriptionError){
 
-        console.error(
-            "PROFILE UPDATE ERROR:",
-            profileError
+            throw new Error(
+
+                "Subscription update failed: " +
+                subscriptionError.message
+
+            );
+
+        }
+
+
+        if(!updatedSubscription){
+
+            throw new Error(
+
+                "Subscription was not updated. Check your Supabase RLS policies."
+
+            );
+
+        }
+
+
+        if(updatedSubscription.status !== "active"){
+
+            throw new Error(
+
+                "Subscription status is still not active."
+
+            );
+
+        }
+
+
+        console.log(
+            "UPDATED SUBSCRIPTION:",
+            updatedSubscription
         );
+
+
+        /* =====================================
+           GET EXISTING PROFILE
+        ===================================== */
+
+        const {
+
+            data: existingProfile,
+            error: profileCheckError
+
+        } = await window.supabaseClient
+
+            .from("profiles")
+
+            .select("*")
+
+            .eq(
+                "id",
+                payment.user_id
+            )
+
+            .maybeSingle();
+
+
+        if(profileCheckError){
+
+            throw new Error(
+
+                "Profile check failed: " +
+                profileCheckError.message
+
+            );
+
+        }
+
+
+        console.log(
+            "EXISTING PROFILE:",
+            existingProfile
+        );
+
+
+        /* =====================================
+           CREATE PROFILE IF MISSING
+           OR UPDATE IF IT EXISTS
+        ===================================== */
+
+        let profileResult;
+
+
+        if(existingProfile){
+
+
+            profileResult =
+                await window.supabaseClient
+
+                    .from("profiles")
+
+                    .update({
+
+                        subscription_plan:
+                            "premium",
+
+                        subscription_expires_at:
+                            expiryDate.toISOString()
+
+                    })
+
+                    .eq(
+                        "id",
+                        payment.user_id
+                    )
+
+                    .select()
+
+                    .single();
+
+
+        }else{
+
+
+            profileResult =
+                await window.supabaseClient
+
+                    .from("profiles")
+
+                    .insert({
+
+                        id:
+                            payment.user_id,
+
+                        subscription_plan:
+                            "premium",
+
+                        subscription_expires_at:
+                            expiryDate.toISOString()
+
+                    })
+
+                    .select()
+
+                    .single();
+
+        }
+
+
+        const {
+
+            data: updatedProfile,
+            error: profileError
+
+        } = profileResult;
+
+
+        if(profileError){
+
+            throw new Error(
+
+                "Premium profile update failed: " +
+                profileError.message
+
+            );
+
+        }
+
+
+        if(!updatedProfile){
+
+            throw new Error(
+
+                "Profile was not created or updated."
+
+            );
+
+        }
+
+
+        console.log(
+            "UPDATED PROFILE:",
+            updatedProfile
+        );
+
+
+        /* =====================================
+           VERIFY PREMIUM
+        ===================================== */
+
+        if(
+
+            updatedProfile.subscription_plan !==
+            "premium"
+
+        ){
+
+            throw new Error(
+
+                "Profile plan is not Premium after update."
+
+            );
+
+        }
+
+
+        /* =====================================
+           SUCCESS
+        ===================================== */
 
         alert(
-            "Payment was approved, but Premium profile update failed."
+
+            "✅ Payment approved successfully!\n\n" +
+
+            "Premium access has been activated for " +
+
+            days +
+
+            " days."
+
         );
 
-        return;
+
+        await loadPayments();
+
+
     }
 
 
-    console.log(
-        "PROFILE UPDATED:",
-        profileData
-    );
+    catch(error){
 
 
-    /* =========================
-       SUCCESS
-    ========================= */
-
-    alert(
-
-        "✅ Payment approved successfully!\n\n" +
-
-        "Premium access has been activated for " +
-
-        days +
-
-        " days."
-
-    );
+        console.error(
+            "APPROVAL ERROR:",
+            error
+        );
 
 
-    /* =========================
-       RELOAD PAYMENTS
-    ========================= */
+        alert(
 
-    loadPayments();
+            "❌ Approval failed:\n\n" +
+
+            error.message
+
+        );
+
+
+        if(button){
+
+            button.disabled = false;
+
+            button.innerHTML =
+                "✓ Approve";
+
+        }
+
+    }
 
 }
+
+
+
+/* =====================================
+   START
+===================================== */
 
 loadPayments();
 
