@@ -297,42 +297,32 @@ class="message">
 
 <script src="supabase.js"></script>
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
 <script>
 
 /* READ SELECTED PLAN */
 
 const selectedPlan =
-    localStorage.getItem(
-        "selectedPlan"
-    );
+    localStorage.getItem("selectedPlan");
 
 const selectedPrice =
-    localStorage.getItem(
-        "selectedPrice"
-    );
+    localStorage.getItem("selectedPrice");
 
 const selectedDays =
-    localStorage.getItem(
-        "selectedDays"
-    );
+    localStorage.getItem("selectedDays");
 
 
 /* CHECK IF USER SELECTED A PLAN */
 
 if(
-
     !selectedPlan ||
-
     !selectedPrice ||
-
     !selectedDays
-
 ){
-
-    window.location.href =
-        "premium.html";
-
+    window.location.href = "premium.html";
 }
 
 
@@ -340,55 +330,37 @@ if(
 
 const planNames = {
 
-    weekly:
-        "Weekly Premium",
+    weekly: "Weekly Premium",
 
-    monthly:
-        "Monthly Premium",
+    monthly: "Monthly Premium",
 
-    "3months":
-        "3 Months Premium",
+    "3months": "3 Months Premium",
 
-    yearly:
-        "Yearly Premium"
+    yearly: "Yearly Premium"
 
 };
 
 
 /* DISPLAY PLAN */
 
-document.getElementById(
-    "planName"
-).innerHTML =
-
+document.getElementById("planName").innerHTML =
     planNames[selectedPlan] ||
     selectedPlan;
 
 
-document.getElementById(
-    "planDays"
-).innerHTML =
-
+document.getElementById("planDays").innerHTML =
     selectedDays + " Days";
 
 
-document.getElementById(
-    "planPrice"
-).innerHTML =
-
+document.getElementById("planPrice").innerHTML =
     "TSh " +
-    Number(
-        selectedPrice
-    ).toLocaleString();
+    Number(selectedPrice).toLocaleString();
 
 
 /* SELECT PAYMENT OPTION */
 
 const paymentOptions =
-
-    document.querySelectorAll(
-        ".payment-option"
-    );
+    document.querySelectorAll(".payment-option");
 
 
 paymentOptions.forEach(option => {
@@ -397,23 +369,17 @@ paymentOptions.forEach(option => {
         "click",
         function(){
 
-            paymentOptions.forEach(
-                item =>
-                item.classList.remove(
-                    "selected"
-                )
-            );
+            paymentOptions.forEach(item => {
 
-            this.classList.add(
-                "selected"
-            );
+                item.classList.remove("selected");
 
-            this.querySelector(
-                "input"
-            ).checked = true;
+            });
+
+            this.classList.add("selected");
+
+            this.querySelector("input").checked = true;
 
         }
-
     );
 
 });
@@ -421,14 +387,11 @@ paymentOptions.forEach(option => {
 
 /* PROCEED BUTTON */
 
-document.getElementById(
-    "payButton"
-).addEventListener(
+document.getElementById("payButton").addEventListener(
     "click",
     async function(){
 
         const selectedPayment =
-
             document.querySelector(
                 'input[name="payment"]:checked'
             );
@@ -436,10 +399,7 @@ document.getElementById(
 
         if(!selectedPayment){
 
-            document.getElementById(
-                "message"
-            ).innerHTML =
-
+            document.getElementById("message").innerHTML =
                 "⚠️ Please choose a payment method.";
 
             return;
@@ -447,13 +407,11 @@ document.getElementById(
         }
 
 
-        /* Pata user aliye-login */
+        /* PATA USER ALIYE LOGIN */
 
         const {
-
-            data:{user},
-
-            error:userError
+            data: { user },
+            error: userError
 
         } = await window.supabaseClient
             .auth
@@ -462,21 +420,17 @@ document.getElementById(
 
         if(userError || !user){
 
-            window.location.href =
-                "login.html";
+            window.location.href = "login.html";
 
             return;
 
         }
 
 
-        /* Disable button wakati inahifadhi */
+        /* BUTTON */
 
         const payButton =
-
-            document.getElementById(
-                "payButton"
-            );
+            document.getElementById("payButton");
 
 
         payButton.disabled = true;
@@ -485,15 +439,10 @@ document.getElementById(
             "Preparing payment...";
 
 
-        /*
-        Hifadhi subscription
-        kama pending
-        */
+        /* HIFADHI SUBSCRIPTION */
 
         const {
-
             data,
-
             error
 
         } = await window.supabaseClient
@@ -502,26 +451,25 @@ document.getElementById(
 
             .insert({
 
-                user_id:
-                    user.id,
+                user_id: user.id,
 
-                plan:
-                    selectedPlan,
+                plan: selectedPlan,
 
-                amount:
-                    Number(selectedPrice),
+                amount: Number(selectedPrice),
 
                 payment_method:
                     selectedPayment.value,
 
-                status:
-                    "pending"
+                status: "pending"
 
             })
 
             .select()
+
             .single();
 
+
+        /* KAMA KUNA ERROR */
 
         if(error){
 
@@ -531,10 +479,7 @@ document.getElementById(
             );
 
 
-            document.getElementById(
-                "message"
-            ).innerHTML =
-
+            document.getElementById("message").innerHTML =
                 "⚠️ Something went wrong. Please try again.";
 
 
@@ -548,34 +493,21 @@ document.getElementById(
         }
 
 
+        /* SUCCESS */
+
         console.log(
             "Subscription created:",
             data
         );
 
 
-        /*
-        Kwa sasa bado
-        hatujaunganisha gateway.
-        */
-
-        document.getElementById(
-            "message"
-        ).innerHTML =
-
+        document.getElementById("message").innerHTML =
             "✅ Payment request created successfully. Preparing payment...";
 
-
-        /*
-        Hapa ndipo baadaye
-        tutaunganisha payment gateway
-        */
-
     }
-
 );
-</script>
 
+</script>
 </body>
 
 </html>
