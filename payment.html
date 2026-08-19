@@ -315,18 +315,17 @@ HAMAD MUSA MKALAVILE
 
 <p class="instruction">
 
-Baada ya kufanya malipo, weka Transaction ID
-uliyopewa kwenye SMS ya malipo hapa chini.
+Baada ya kufanya malipo, weka namba ya simu
+iliyotumika kufanya malipo ili tuweze kuthibitisha.
 
 </p>
 
 
 <input
 type="text"
-id="transactionId"
+id="payerPhone"
 class="transaction-input"
-placeholder="Enter Transaction ID">
-
+placeholder="Weka namba iliyofanya malipo, mfano 0712XXXXXX">
 </div>
 
 
@@ -463,31 +462,29 @@ document.getElementById(
     async function(){
 
 
-        const transactionId =
+       const payerPhone =
 
-            document
-                .getElementById(
-                    "transactionId"
-                )
-                .value
-                .trim();
-
+    document
+        .getElementById(
+            "payerPhone"
+        )
+        .value
+        .trim();
 
 
         /* CHECK TRANSACTION ID */
 
-        if(!transactionId){
+if(!payerPhone){
 
-            document.getElementById(
-                "message"
-            ).innerHTML =
+    document.getElementById(
+        "message"
+    ).innerHTML =
 
-                "⚠️ Please enter your Transaction ID after making payment.";
+        "⚠️ Tafadhali weka namba iliyotumika kufanya malipo.";
 
-            return;
+    return;
 
-        }
-
+}
 
 
         /* GET LOGGED IN USER */
@@ -560,8 +557,8 @@ document.getElementById(
                 payment_method:
                     "lipa_namba",
 
-                transaction_id:
-                    transactionId,
+              payer_phone:
+    payerPhone,
 
                 status:
                     "pending"
