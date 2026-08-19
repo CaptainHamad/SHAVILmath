@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SHAVILmath Premium</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#F4F7FB;
+    color:#0F172A;
+}
+
+header{
+    background:#2563EB;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:white;
+}
+
+header img{
+    height:55px;
+}
+
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.hero{
+    text-align:center;
+    padding:70px 20px 50px;
+    background:linear-gradient(135deg,#2563EB,#1E40AF);
+    color:white;
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:17px;
+    opacity:.9;
+    max-width:600px;
+    margin:auto;
+}
+
+.container{
+    max-width:1150px;
+    margin:auto;
+    padding:50px 20px 80px;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.section-title h2{
+    font-size:30px;
+}
+
+.section-title p{
+    color:#64748B;
+    margin-top:8px;
+}
+
+.plans{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.plan{
+    background:white;
+    border-radius:20px;
+    padding:30px 22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    text-align:center;
+    transition:.3s;
+    position:relative;
+}
+
+.plan:hover{
+    transform:translateY(-8px);
+}
+
+.plan.popular{
+    border:2px solid #2563EB;
+}
+
+.badge{
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#2563EB;
+    color:white;
+    padding:6px 16px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.plan h3{
+    font-size:21px;
+    margin-bottom:12px;
+}
+
+.price{
+    font-size:30px;
+    font-weight:800;
+    color:#2563EB;
+    margin-bottom:5px;
+}
+
+.duration{
+    color:#64748B;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.features{
+    list-style:none;
+    text-align:left;
+    margin-bottom:28px;
+}
+
+.features li{
+    padding:8px 0;
+    font-size:14px;
+    color:#475569;
+}
+
+.features li::before{
+    content:"✓";
+    color:#16A34A;
+    font-weight:bold;
+    margin-right:8px;
+}
+
+.choose-btn{
+    width:100%;
+    border:none;
+    background:#2563EB;
+    color:white;
+    padding:14px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.choose-btn:hover{
+    background:#1E40AF;
+}
+
+.note{
+    text-align:center;
+    color:#64748B;
+    margin-top:35px;
+    font-size:14px;
+}
+
+@media(max-width:900px){
+
+    .plans{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:550px){
+
+    .plans{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:32px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<img src="assets/images/logo.png" alt="SHAVILmath">
+
+<a href="dashboard.html" class="back-btn">
+← Back to Dashboard
+</a>
+
+</header>
+
+
+<section class="hero">
+
+<h1>Unlock Your Full Potential ⭐</h1>
+
+<p>
+Get unlimited Mathematics practice, Special Tests,
+detailed progress tracking and more with SHAVILmath Premium.
+</p>
+
+</section>
+
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>Choose Your Plan</h2>
+
+<p>Start learning smarter today.</p>
+
+</div>
+
+
+<div class="plans">
+
+
+<!-- WEEKLY -->
+
+<div class="plan">
+
+<h3>Weekly</h3>
+
+<div class="price">TSh 2,000</div>
+
+<div class="duration">7 Days Access</div>
+
+<ul class="features">
+
+<li>Unlimited Exercises</li>
+<li>Premium Quizzes</li>
+<li>Special Tests</li>
+<li>Progress Tracking</li>
+
+</ul>
+
+<button class="choose-btn" onclick="selectPlan('weekly', 2000, 7)">
+Choose Weekly
+</button>
+
+</div>
+
+
+<!-- MONTHLY -->
+
+<div class="plan popular">
+
+<div class="badge">
+MOST POPULAR 🔥
+</div>
+
+<h3>Monthly</h3>
+
+<div class="price">TSh 5,000</div>
+
+<div class="duration">30 Days Access</div>
+
+<ul class="features">
+
+<li>Unlimited Exercises</li>
+<li>Premium Quizzes</li>
+<li>Special Tests</li>
+<li>Detailed Progress</li>
+<li>Weak Topic Analysis</li>
+
+</ul>
+
+<button class="choose-btn" onclick="selectPlan('monthly', 5000, 30)">
+Choose Monthly
+</button>
+
+</div>
+
+
+<!-- 3 MONTHS -->
+
+<div class="plan">
+
+<h3>3 Months</h3>
+
+<div class="price">TSh 12,000</div>
+
+<div class="duration">90 Days Access</div>
+
+<ul class="features">
+
+<li>Everything in Monthly</li>
+<li>Save TSh 3,000</li>
+<li>Full Progress Analysis</li>
+
+</ul>
+
+<button class="choose-btn" onclick="selectPlan('3months', 12000, 90)">
+Choose 3 Months
+</button>
+
+</div>
+
+
+<!-- YEARLY -->
+
+<div class="plan">
+
+<h3>Yearly</h3>
+
+<div class="price">TSh 40,000</div>
+
+<div class="duration">365 Days Access</div>
+
+<ul class="features">
+
+<li>Everything in Premium</li>
+<li>Best Value</li>
+<li>Full Year Access</li>
+
+</ul>
+
+<button class="choose-btn" onclick="selectPlan('yearly', 40000, 365)">
+Choose Yearly
+</button>
+
+</div>
+
+</div>
+
+
+<p class="note">
+🔒 Secure payment • Instant Premium activation after payment confirmation
+</p>
+
+</div>
+
+
+<script>
+
+function selectPlan(plan, price, days){
+
+    localStorage.setItem(
+        "selectedPlan",
+        plan
+    );
+
+    localStorage.setItem(
+        "selectedPrice",
+        price
+    );
+
+    localStorage.setItem(
+        "selectedDays",
+        days
+    );
+
+    window.location.href =
+        "payment.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
