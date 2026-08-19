@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Payments | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#F4F7FB;
+    color:#0F172A;
+}
+
+header{
+    background:#2563EB;
+    color:white;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    font-size:22px;
+}
+
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.container{
+    max-width:1200px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.title{
+    margin-bottom:30px;
+}
+
+.title h1{
+    margin-bottom:8px;
+}
+
+.title p{
+    color:#64748B;
+}
+
+.table-container{
+    background:white;
+    border-radius:20px;
+    overflow-x:auto;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:900px;
+}
+
+th{
+    background:#EFF6FF;
+    padding:18px;
+    text-align:left;
+    color:#1E40AF;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #E2E8F0;
+}
+
+.status{
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    display:inline-block;
+}
+
+.pending{
+    background:#FEF3C7;
+    color:#92400E;
+}
+
+.active{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.approve-btn{
+    border:none;
+    background:#16A34A;
+    color:white;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.approve-btn:hover{
+    background:#15803D;
+}
+
+.approve-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.loading,
+.empty{
+    text-align:center;
+    padding:40px;
+    color:#64748B;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h2>SHAVILmath Admin</h2>
+
+<a href="dashboard.html" class="back-btn">
+← Back to Dashboard
+</a>
+
+</header>
+
+
+
+<div class="container">
+
+
+<div class="title">
+
+<h1>Payment Requests 💳</h1>
+
+<p>
+Review student payments and activate Premium access.
+</p>
+
+</div>
+
+
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Student ID</th>
+
+<th>Plan</th>
+
+<th>Amount</th>
+
+<th>Payment Number</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="paymentsBody">
+
+<tr>
+
+<td colspan="6" class="loading">
+
+Loading payment requests...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+
+<script>
+
+
+/* =========================
+   LOAD PAYMENT REQUESTS
+========================= */
+
+async function loadPayments(){
+
+
+    const paymentsBody =
+
+        document.getElementById(
+            "paymentsBody"
+        );
+
+
+    const {
+
+        data: payments,
+
+        error
+
+    } = await window
+        .supabaseClient
+
+        .from("subscriptions")
+
+        .select("*")
+
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+
+    if(error){
+
+        console.error(
+            "LOAD PAYMENTS ERROR:",
+            error
+        );
+
+
+        paymentsBody.innerHTML =
+
+            `
+            <tr>
+
+                <td
+                colspan="6"
+                class="empty">
+
+                ⚠️ Failed to load payments.
+
+                </td>
+
+            </tr>
+            `;
+
+        return;
+
+    }
+
+
+
+    if(!payments || payments.length === 0){
+
+        paymentsBody.innerHTML =
+
+            `
+            <tr>
+
+                <td
+                colspan="6"
+                class="empty">
+
+                No payment requests yet.
+
+                </td>
+
+            </tr>
+            `;
+
+        return;
+
+    }
+
+
+
+    paymentsBody.innerHTML = "";
+
+
+
+    payments.forEach(payment => {
+
+
+        const row =
+
+            document.createElement(
+                "tr"
+            );
+
+
+
+        row.innerHTML =
+
+            `
+
+            <td>
+
+            ${payment.user_id}
+
+            </td>
+
+
+            <td>
+
+            ${payment.plan}
+
+            </td>
+
+
+            <td>
+
+            TSh ${Number(payment.amount).toLocaleString()}
+
+            </td>
+
+
+            <td>
+
+            ${payment.payer_phone || "-"}
+
+            </td>
+
+
+            <td>
+
+            <span class="status ${payment.status}">
+
+            ${payment.status}
+
+            </span>
+
+            </td>
+
+
+            <td>
+
+            ${
+
+                payment.status === "pending"
+
+                ?
+
+                `
+
+                <button
+                class="approve-btn"
+                onclick="approvePayment(${payment.id})">
+
+                ✓ Approve
+
+                </button>
+
+                `
+
+                :
+
+                "—"
+
+            }
+
+            </td>
+
+            `;
+
+
+
+        paymentsBody.appendChild(
+            row
+        );
+
+
+    });
+
+
+}
+
+
+
+/* =========================
+   APPROVE PAYMENT
+========================= */
+
+async function approvePayment(
+    paymentId
+){
+
+
+    const confirmPayment =
+
+        confirm(
+            "Are you sure you want to approve this payment?"
+        );
+
+
+    if(!confirmPayment){
+
+        return;
+
+    }
+
+
+
+    console.log(
+        "Approving payment:",
+        paymentId
+    );
+
+
+
+    /*
+    HAPA HATUA INAYOFUATA
+    TUTAWEKA CODE YA:
+
+    1. Kusoma payment
+    2. Kujua plan
+    3. Kuhesabu expiry date
+    4. Kubadilisha status kuwa active
+    5. Kumpa user Premium
+    */
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadPayments();
+
+
+</script>
+
+
+</body>
+
+</html>
