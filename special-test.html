@@ -952,32 +952,17 @@ async function loadTest(){
        LOAD QUESTIONS
     ===================================== */
 
-    const {
-
-        data:questionData,
-
-        error:questionError
-
+     const {
+        data: questionData,
+        error: questionError
     } = await window.supabaseClient
-
         .from("special_test_questions")
-
         .select("*")
-
         .eq(
             "test_id",
             selectedTestId
-        )
-
-        .order(
-            "question_number",
-            {
-                ascending:true
-            }
         );
-
-
-    if(questionError){
+     if(questionError){
 
         console.error(
             "QUESTION ERROR:",
