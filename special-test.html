@@ -368,6 +368,50 @@ header{
     background:#2563EB;
     color:white;
 }
+
+.wrong-question{
+    background:#FEF2F2;
+    border:1px solid #FECACA;
+    border-left:5px solid #DC2626;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.wrong-question-number{
+    font-weight:700;
+    color:#DC2626;
+    margin-bottom:10px;
+}
+
+.wrong-question-text{
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:15px;
+    line-height:1.6;
+}
+
+.answer-row{
+    padding:12px 15px;
+    border-radius:10px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.your-answer{
+    background:#FEE2E2;
+    color:#991B1B;
+}
+
+.correct-answer{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.no-answer{
+    background:#FEF3C7;
+    color:#92400E;
+}
 </style>
 
 </head>
@@ -615,7 +659,25 @@ Total Questions
 
 
 </div>
+<div
+id="reviewSection"
+style="display:none; text-align:left; margin-top:30px;">
 
+    <h2
+    style="
+        margin-bottom:20px;
+        text-align:center;
+    ">
+
+        📝 Questions You Missed
+
+    </h2>
+
+    <div id="wrongQuestionsList">
+
+    </div>
+
+</div>
 
 <a
 href="special-test-list.html"
@@ -1450,37 +1512,44 @@ async function finishTest(){
 
     let correct = 0;
 
-    let wrong = 0;
+let wrong = 0;
+
+let wrongQuestions = [];
 
 
     questions.forEach(
-        function(question){
+    function(question){
 
-            const userAnswer =
-                answers[
-                    question.id
-                ];
+        const userAnswer =
+            answers[
+                question.id
+            ];
 
+        if(
+            userAnswer ===
+            question.correct_answer
+        ){
 
-            if(
-                userAnswer ===
-                question.correct_answer
-            ){
-
-                correct++;
-
-            }
-
-            else{
-
-                wrong++;
-
-            }
+            correct++;
 
         }
-    );
 
+        else{
 
+            wrong++;
+
+            wrongQuestions.push({
+
+                question: question,
+
+                userAnswer: userAnswer
+
+            });
+
+        }
+
+    }
+);
     const total =
         questions.length;
 
@@ -1550,6 +1619,163 @@ async function finishTest(){
         "resultMessage"
     ).innerHTML =
         message;
+
+    /* =====================================
+   SHOW WRONG QUESTIONS
+===================================== */
+
+const reviewSection =
+    document.getElementById(
+        "reviewSection"
+    );
+
+
+const wrongQuestionsList =
+    document.getElementById(
+        "wrongQuestionsList"
+    );
+
+
+if(wrongQuestions.length > 0){
+
+    reviewSection.style.display =
+        "block";
+
+
+    wrongQuestionsList.innerHTML =
+        "";
+
+
+    wrongQuestions.forEach(
+        function(item, index){
+
+            const question =
+                item.question;
+
+
+            const userAnswer =
+                item.userAnswer;
+
+
+            const optionMap = {
+
+                A: question.option_a,
+
+                B: question.option_b,
+
+                C: question.option_c,
+
+                D: question.option_d
+
+            };
+
+
+            const userAnswerText =
+                userAnswer
+                ?
+                optionMap[userAnswer]
+                :
+                "No answer";
+
+
+            const correctAnswerText =
+                optionMap[
+                    question.correct_answer
+                ];
+
+
+            const questionBox =
+                document.createElement(
+                    "div"
+                );
+
+
+            questionBox.className =
+                "wrong-question";
+
+
+            questionBox.innerHTML = `
+
+                <div
+                class="wrong-question-number">
+
+                    ❌ Question ${questions.indexOf(question) + 1}
+
+                </div>
+
+
+                <div
+                class="wrong-question-text">
+
+                    ${question.question}
+
+                </div>
+
+
+                <div
+                class="answer-row your-answer">
+
+                    <strong>Your Answer:</strong>
+
+                    ${
+                        userAnswer
+                        ?
+                        userAnswer + ". " +
+                        userAnswerText
+                        :
+                        "Not answered"
+                    }
+
+                </div>
+
+
+                <div
+                class="answer-row correct-answer">
+
+                    <strong>Correct Answer:</strong>
+
+                    ${question.correct_answer}.
+                    ${correctAnswerText}
+
+                </div>
+
+            `;
+
+
+            wrongQuestionsList.appendChild(
+                questionBox
+            );
+
+        }
+    );
+
+}
+
+else{
+
+    reviewSection.style.display =
+        "block";
+
+
+    wrongQuestionsList.innerHTML = `
+
+        <div
+        style="
+            background:#DCFCE7;
+            color:#166534;
+            padding:25px;
+            border-radius:15px;
+            text-align:center;
+            font-weight:600;
+        ">
+
+            🎉 Perfect! You answered all questions correctly!
+
+        </div>
+
+    `;
+
+}
 
 
     /* =====================================
