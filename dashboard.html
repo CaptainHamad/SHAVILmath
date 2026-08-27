@@ -544,11 +544,15 @@ async function loadUser(){
 
 async function loadProgress(userId){
 
+    // =====================================
+    // 1. LOAD EXERCISE PROGRESS
+    // =====================================
+
     const {
 
-        data: answers,
+        data: exerciseAnswers,
 
-        error
+        error: exerciseError
 
     } = await window.supabaseClient
 
@@ -562,11 +566,11 @@ async function loadProgress(userId){
         .eq("user_id", userId);
 
 
-    if(error){
+    if(exerciseError){
 
         console.error(
-            "PROGRESS ERROR:",
-            error
+            "EXERCISE PROGRESS ERROR:",
+            exerciseError
         );
 
         return;
@@ -574,28 +578,117 @@ async function loadProgress(userId){
     }
 
 
-    console.log(
-        "PROGRESS DATA:",
-        answers
-    );
+    // =====================================
+    // EXERCISE STATISTICS
+    // =====================================
+
+    const exerciseQuestionsSolved =
+        exerciseAnswers.length;
 
 
-    /* Questions Solved */
-
-    const questionsSolved =
-        answers.length;
-
-
-    /* Correct Answers */
-
-    const correctAnswers =
-        answers.filter(
+    const exerciseCorrectAnswers =
+        exerciseAnswers.filter(
             answer =>
                 answer.is_correct === true
         ).length;
 
 
-    /* Accuracy */
+    // =====================================
+    // 2. LOAD SPECIAL TEST RESULTS
+    // =====================================
+
+    const {
+
+        data: specialTestResults,
+
+        error: specialTestError
+
+    } = await window.supabaseClient
+
+        .from("special_test_results")
+
+        .select(`
+            total_questions,
+            correct_answers
+        `)
+
+        .eq("user_id", userId);
+
+
+    if(specialTestError){
+
+        console.error(
+            "SPECIAL TEST ERROR:",
+            specialTestError
+        );
+
+    }
+
+
+    // =====================================
+    // SPECIAL TEST STATISTICS
+    // =====================================
+
+    let specialTestQuestionsSolved = 0;
+
+    let specialTestCorrectAnswers = 0;
+
+
+    if(specialTestResults){
+
+        specialTestQuestionsSolved =
+            specialTestResults.reduce(
+
+                (total, test) =>
+
+                    total +
+                    Number(
+                        test.total_questions || 0
+                    ),
+
+                0
+
+            );
+
+
+        specialTestCorrectAnswers =
+            specialTestResults.reduce(
+
+                (total, test) =>
+
+                    total +
+                    Number(
+                        test.correct_answers || 0
+                    ),
+
+                0
+
+            );
+
+    }
+
+
+    // =====================================
+    // 3. COMBINE EXERCISES + SPECIAL TESTS
+    // =====================================
+
+    const questionsSolved =
+
+        exerciseQuestionsSolved +
+
+        specialTestQuestionsSolved;
+
+
+    const correctAnswers =
+
+        exerciseCorrectAnswers +
+
+        specialTestCorrectAnswers;
+
+
+    // =====================================
+    // CALCULATE ACCURACY
+    // =====================================
 
     let accuracy = 0;
 
@@ -614,7 +707,9 @@ async function loadProgress(userId){
     }
 
 
-    /* Update Dashboard */
+    // =====================================
+    // UPDATE DASHBOARD
+    // =====================================
 
     document.getElementById(
         "questionsSolved"
@@ -634,7 +729,9 @@ async function loadProgress(userId){
         accuracy + "%";
 
 
-    /* Current Level */
+    // =====================================
+    // CURRENT LEVEL
+    // =====================================
 
     let level = "Beginner";
 
@@ -675,13 +772,30 @@ async function loadProgress(userId){
         level;
 
 
+    // =====================================
+    // DEBUG
+    // =====================================
+
     console.log(
-        "Progress loaded:",
+        "DASHBOARD PROGRESS:",
         {
+
+            exerciseQuestionsSolved,
+
+            exerciseCorrectAnswers,
+
+            specialTestQuestionsSolved,
+
+            specialTestCorrectAnswers,
+
             questionsSolved,
+
             correctAnswers,
+
             accuracy,
+
             level
+
         }
     );
 
