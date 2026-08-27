@@ -1397,40 +1397,79 @@ async function loadTopicPerformance(userId){
 
 
         // =====================================
-        // STRONGEST TOPICS
-        // =====================================
+// SORT TOPICS BY PERFORMANCE
+// =====================================
 
-        const strongestTopics =
-
-            [...topicArray]
-
-            .sort(
-                (a,b) =>
-
-                    b.accuracy -
-                    a.accuracy
-            )
-
-            .slice(0,3);
+const sortedTopics =
+    [...topicArray]
+    .sort(
+        (a,b) =>
+            b.accuracy -
+            a.accuracy
+    );
 
 
-        // =====================================
-        // WEAKEST TOPICS
-        // =====================================
+// =====================================
+// DECIDE HOW MANY TO SHOW
+// =====================================
 
-        const weakestTopics =
+const totalTopics =
+    sortedTopics.length;
 
-            [...topicArray]
 
-            .sort(
-                (a,b) =>
+let strongestCount;
 
-                    a.accuracy -
-                    b.accuracy
-            )
 
-            .slice(0,3);
+if(totalTopics === 1){
 
+    strongestCount = 1;
+
+}
+else if(totalTopics === 2){
+
+    strongestCount = 1;
+
+}
+else if(totalTopics === 3){
+
+    strongestCount = 1;
+
+}
+else if(totalTopics === 4){
+
+    strongestCount = 2;
+
+}
+else{
+
+    strongestCount =
+        Math.ceil(
+            totalTopics / 2
+        );
+
+}
+
+
+// =====================================
+// STRONGEST TOPICS
+// =====================================
+
+const strongestTopics =
+    sortedTopics.slice(
+        0,
+        strongestCount
+    );
+
+
+// =====================================
+// WEAKEST TOPICS
+// =====================================
+
+const weakestTopics =
+    sortedTopics.slice(
+        strongestCount
+    )
+    .reverse();
 
         // =====================================
         // CLEAR CONTAINERS
