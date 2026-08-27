@@ -289,6 +289,200 @@ grid-template-columns:1fr;
 
 }
 
+/* =========================
+   TOPIC PERFORMANCE
+========================= */
+
+.section-title{
+
+    margin-top:45px;
+    margin-bottom:25px;
+
+    color:#0F172A;
+
+    font-size:26px;
+
+}
+
+
+.topic-performance{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:25px;
+
+}
+
+
+.performance-card{
+
+    background:white;
+
+    padding:28px;
+
+    border-radius:20px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+}
+
+
+.performance-header{
+
+    margin-bottom:20px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid #E2E8F0;
+
+}
+
+
+.performance-header h3{
+
+    color:#0F172A;
+
+    font-size:20px;
+
+    margin-bottom:5px;
+
+}
+
+
+.performance-header span{
+
+    color:#64748B;
+
+    font-size:13px;
+
+}
+
+
+.topics-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+
+.topic-row{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:14px;
+
+    background:#F8FAFC;
+
+    border-radius:14px;
+
+}
+
+
+.topic-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+.topic-number{
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:50%;
+
+    background:#EFF6FF;
+
+    color:#2563EB;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:700;
+
+    font-size:14px;
+
+}
+
+
+.topic-name{
+
+    color:#0F172A;
+
+    font-weight:600;
+
+    font-size:14px;
+
+}
+
+
+.topic-stats{
+
+    text-align:right;
+
+}
+
+
+.topic-accuracy{
+
+    color:#2563EB;
+
+    font-weight:700;
+
+    font-size:15px;
+
+}
+
+
+.topic-questions{
+
+    color:#64748B;
+
+    font-size:11px;
+
+}
+
+
+.loading-topic,
+.empty-topic{
+
+    color:#64748B;
+
+    padding:20px 0;
+
+    font-size:14px;
+
+}
+
+
+@media(max-width:900px){
+
+    .topic-performance{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
 </style>
 
 </head>
@@ -484,8 +678,82 @@ Unlock unlimited practice, Special Tests and advanced learning features.
 </div>
 
 </div>
-</div>
 
+<!-- TOPIC PERFORMANCE -->
+
+<h2 class="section-title">
+
+    📚 Topic Performance
+
+</h2>
+
+<div class="topic-performance">
+
+
+    <!-- STRONGEST TOPICS -->
+
+    <div class="performance-card">
+
+        <div class="performance-header">
+
+            <h3>
+                💪 Strongest Topics
+            </h3>
+
+            <span>
+                Your best performance
+            </span>
+
+        </div>
+
+
+        <div
+            id="strongestTopics"
+            class="topics-list"
+        >
+
+            <div class="loading-topic">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- WEAKEST TOPICS -->
+
+    <div class="performance-card">
+
+        <div class="performance-header">
+
+            <h3>
+                📈 Weakest Topics
+            </h3>
+
+            <span>
+                Topics to improve
+            </span>
+
+        </div>
+
+
+        <div
+            id="weakestTopics"
+            class="topics-list"
+        >
+
+            <div class="loading-topic">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="supabase.js"></script>
@@ -535,7 +803,9 @@ async function loadUser(){
     }
 
 
-    await loadProgress(user.id);
+   await loadProgress(user.id);
+
+await loadTopicPerformance(user.id);
 
 }
 
@@ -808,7 +1078,344 @@ await window.supabaseClient.auth.signOut();
 window.location.href="login.html";
 
 });
+async function loadTopicPerformance(userId){
 
+    const strongestContainer =
+        document.getElementById(
+            "strongestTopics"
+        );
+
+
+    const weakestContainer =
+        document.getElementById(
+            "weakestTopics"
+        );
+
+
+    try{
+
+
+        // =========================
+        // GET USER ANSWERS
+        // =========================
+
+        const {
+
+            data:answers,
+
+            error
+
+        } = await window.supabaseClient
+
+            .from("user_question_progress")
+
+            .select(`
+                question_id,
+                is_correct,
+                questions (
+                    topic_id,
+                    topics (
+                        topic_name
+                    )
+                )
+            `)
+
+            .eq(
+                "user_id",
+                userId
+            );
+
+
+        if(error){
+
+            console.error(
+                "TOPIC PERFORMANCE ERROR:",
+                error
+            );
+
+            strongestContainer.innerHTML =
+                "<div class='empty-topic'>Unable to load topic performance.</div>";
+
+            weakestContainer.innerHTML =
+                "<div class='empty-topic'>Unable to load topic performance.</div>";
+
+            return;
+
+        }
+
+
+        // =========================
+        // GROUP BY TOPIC
+        // =========================
+
+        const topicStats = {};
+
+
+        answers.forEach(answer => {
+
+
+            if(
+                !answer.questions ||
+                !answer.questions.topics
+            ){
+
+                return;
+
+            }
+
+
+            const topicName =
+                answer.questions
+                .topics
+                .topic_name;
+
+
+            if(!topicStats[topicName]){
+
+                topicStats[topicName] = {
+
+                    name:
+                        topicName,
+
+                    total:
+                        0,
+
+                    correct:
+                        0
+
+                };
+
+            }
+
+
+            topicStats[topicName].total++;
+
+
+            if(
+                answer.is_correct === true
+            ){
+
+                topicStats[topicName].correct++;
+
+            }
+
+
+        });
+
+
+        // =========================
+        // CALCULATE ACCURACY
+        // =========================
+
+        const topicArray =
+
+            Object.values(
+                topicStats
+            )
+
+            .map(topic => ({
+
+                ...topic,
+
+                accuracy:
+                    Math.round(
+
+                        (
+                            topic.correct /
+                            topic.total
+                        ) * 100
+
+                    )
+
+            }));
+
+
+        // =========================
+        // CHECK EMPTY
+        // =========================
+
+        if(topicArray.length === 0){
+
+            strongestContainer.innerHTML =
+                "<div class='empty-topic'>Start practicing to see your strongest topics.</div>";
+
+
+            weakestContainer.innerHTML =
+                "<div class='empty-topic'>Practice more topics to discover where you can improve.</div>";
+
+            return;
+
+        }
+
+
+        // =========================
+        // SORT
+        // =========================
+
+        const strongestTopics =
+
+            [...topicArray]
+
+            .sort(
+                (a,b) =>
+
+                    b.accuracy -
+                    a.accuracy
+            )
+
+            .slice(
+                0,
+                3
+            );
+
+
+        const weakestTopics =
+
+            [...topicArray]
+
+            .sort(
+                (a,b) =>
+
+                    a.accuracy -
+                    b.accuracy
+            )
+
+            .slice(
+                0,
+                3
+            );
+
+
+        // =========================
+        // DISPLAY
+        // =========================
+
+        strongestContainer.innerHTML = "";
+
+
+        weakestContainer.innerHTML = "";
+
+
+        strongestTopics.forEach(
+            (topic,index) => {
+
+                strongestContainer.innerHTML += `
+
+                    <div class="topic-row">
+
+                        <div class="topic-left">
+
+                            <div class="topic-number">
+
+                                ${index + 1}
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="topic-name">
+
+                                    ${topic.name}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="topic-stats">
+
+                            <div class="topic-accuracy">
+
+                                ${topic.accuracy}%
+
+                            </div>
+
+
+                            <div class="topic-questions">
+
+                                ${topic.correct}/${topic.total}
+                                correct
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        weakestTopics.forEach(
+            (topic,index) => {
+
+                weakestContainer.innerHTML += `
+
+                    <div class="topic-row">
+
+                        <div class="topic-left">
+
+                            <div class="topic-number">
+
+                                ${index + 1}
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="topic-name">
+
+                                    ${topic.name}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="topic-stats">
+
+                            <div class="topic-accuracy">
+
+                                ${topic.accuracy}%
+
+                            </div>
+
+
+                            <div class="topic-questions">
+
+                                ${topic.correct}/${topic.total}
+                                correct
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+    }catch(err){
+
+        console.error(
+            "TOPIC PERFORMANCE ERROR:",
+            err
+        );
+
+    }
+
+}
 </script>
 
 </body>
