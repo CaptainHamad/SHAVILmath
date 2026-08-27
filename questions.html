@@ -577,7 +577,10 @@ const topicName =
 const difficulty =
     localStorage.getItem("difficulty");
 
-
+const dailyQuestionId =
+    localStorage.getItem(
+        "dailyQuestionId"
+    );
 console.log("TOPIC ID =", topicId);
 console.log("TOPIC =", topicName);
 console.log("DIFFICULTY =", difficulty);
@@ -617,37 +620,60 @@ let answerReview = [];
    TOPIC
 ========================= */
 
-topicTitle.textContent =
-    topicName || "Practice Questions";
+if(dailyQuestionId){
 
-
-if (difficulty == "1") {
-
-    difficultyTitle.textContent =
-        "Easy Level • 15 Questions";
-
-} else if (difficulty == "2") {
+    topicTitle.textContent =
+        "📅 Question of the Day";
 
     difficultyTitle.textContent =
-        "Medium Level • 15 Questions";
-
-} else if (difficulty == "3") {
-
-    difficultyTitle.textContent =
-        "Hard Level • 15 Questions";
-
-} else if (difficulty == "Mixed") {
-
-    difficultyTitle.textContent =
-        "Mixed Level • 15 Questions";
-
-} else {
-
-    difficultyTitle.textContent =
-        "Practice Questions";
+        topicName ||
+        "Today's Mathematics Challenge";
 
 }
 
+else{
+
+    topicTitle.textContent =
+        topicName ||
+        "Practice Questions";
+
+
+    if(difficulty == "1"){
+
+        difficultyTitle.textContent =
+            "Easy Level • 15 Questions";
+
+    }
+
+    else if(difficulty == "2"){
+
+        difficultyTitle.textContent =
+            "Medium Level • 15 Questions";
+
+    }
+
+    else if(difficulty == "3"){
+
+        difficultyTitle.textContent =
+            "Hard Level • 15 Questions";
+
+    }
+
+    else if(difficulty == "Mixed"){
+
+        difficultyTitle.textContent =
+            "Mixed Level • 15 Questions";
+
+    }
+
+    else{
+
+        difficultyTitle.textContent =
+            "Practice Questions";
+
+    }
+
+}
 
 
 /* =========================
@@ -658,33 +684,116 @@ async function loadQuestions() {
 
     try {
 
-        if (!topicId) {
+        // =====================================
+// QUESTION OF THE DAY
+// =====================================
 
-            questionContainer.innerHTML = `
-                <div class="error">
+if(dailyQuestionId){
 
-                    <h2>No topic selected</h2>
+    const {
 
-                    <p>
-                        Please go back and select a topic.
-                    </p>
+        data,
 
-                </div>
-            `;
+        error
 
-            return;
+    } = await window.supabaseClient
 
-        }
+        .from("questions")
+
+        .select("*")
+
+        .eq(
+            "id",
+            Number(dailyQuestionId)
+        )
+
+        .eq(
+            "status",
+            "Published"
+        );
 
 
-        if (
+    if(error){
+
+        throw error;
+
+    }
+
+
+    if(!data || data.length === 0){
+
+        questionContainer.innerHTML = `
+
+            <div class="error">
+
+                <h2>Question not available</h2>
+
+                <p>
+                    Today's question could not be found.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    questions = data;
+
+
+    currentQuestionIndex = 0;
+
+    score = 0;
+
+    answerReview = [];
+
+
+    showQuestion();
+
+    return;
+
+}
+
+
+// =====================================
+// NORMAL EXERCISES
+// =====================================
+
+if(!topicId){
+
+    questionContainer.innerHTML = `
+
+        <div class="error">
+
+            <h2>No topic selected</h2>
+
+            <p>
+                Please go back and select a topic.
+            </p>
+
+        </div>
+
+    `;
+
+    return;
+
+}
+
+
+if(
+
     difficulty !== "1" &&
     difficulty !== "2" &&
     difficulty !== "3" &&
     difficulty !== "Mixed"
-) {
+
+){
 
     questionContainer.innerHTML = `
+
         <div class="error">
 
             <h2>Invalid difficulty</h2>
@@ -695,6 +804,7 @@ async function loadQuestions() {
             </p>
 
         </div>
+
     `;
 
     return;
@@ -702,32 +812,63 @@ async function loadQuestions() {
 }
 
 
-        let query = window.supabaseClient
+let query = window.supabaseClient
+
     .from("questions")
+
     .select("*")
-    .eq("topic_id", Number(topicId))
-    .eq("status", "Published");
 
-if (difficulty === "Mixed") {
+    .eq(
+        "topic_id",
+        Number(topicId)
+    )
+
+    .eq(
+        "status",
+        "Published"
+    );
+
+
+if(difficulty === "Mixed"){
 
     query = query
-        .eq("set_name", "Mixed");
 
-} else {
-
-    query = query
-        .eq("difficulty", Number(difficulty))
-        .neq("set_name", "Mixed");
+        .eq(
+            "set_name",
+            "Mixed"
+        );
 
 }
 
-const {
-    data,
-    error
-} = await query.order("question_order", {
-    ascending: true
-});
+else{
 
+    query = query
+
+        .eq(
+            "difficulty",
+            Number(difficulty)
+        )
+
+        .neq(
+            "set_name",
+            "Mixed"
+        );
+
+}
+
+
+const {
+
+    data,
+
+    error
+
+} = await query.order(
+    "question_order",
+    {
+        ascending:true
+    }
+);
         console.log("QUESTIONS =", data);
 
         console.log("QUESTION ERROR =", error);
