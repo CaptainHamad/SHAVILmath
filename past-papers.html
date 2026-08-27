@@ -496,50 +496,53 @@ async function loadPapers(form){
     papersGrid.innerHTML = "";
 
 
-    papers.forEach(paper => {
+   papers.forEach(paper => {
 
-        papersGrid.innerHTML += `
-
-            <div class="paper-card">
-
-                <div class="paper-year">
-
-                    ${paper.year}
-
-                </div>
+    const {
+        data: publicUrlData
+    } = window.supabaseClient
+        .storage
+        .from("past-papers")
+        .getPublicUrl(paper.file_url);
 
 
-                <h3>
-
-                    ${paper.title}
-
-                </h3>
+    const publicUrl =
+        publicUrlData.publicUrl;
 
 
-                <p>
+    papersGrid.innerHTML += `
 
-                    ${paper.description || ""}
+        <div class="paper-card">
 
-                </p>
-
-
-                <a
-                    href="${paper.file_url}"
-                    target="_blank"
-                >
-
-                    View Paper →
-
-                </a>
-
+            <div class="paper-year">
+                ${paper.year}
             </div>
 
-        `;
 
-    });
+            <h3>
+                ${paper.title}
+            </h3>
+
+
+            <p>
+                ${paper.description || ""}
+            </p>
+
+
+            <a
+                href="${publicUrl}"
+                target="_blank"
+            >
+                View Paper →
+            </a>
+
+        </div>
+
+    `;
+
+});
 
 }
-
 
 
 // =====================================
