@@ -248,6 +248,9 @@ document.getElementById("topicTitle").innerHTML=topic;
 
 async function chooseDifficulty(level){
 
+localStorage.removeItem(
+    "dailyQuestionId"
+);
     /* Pata user aliye-login */
 
     const {
