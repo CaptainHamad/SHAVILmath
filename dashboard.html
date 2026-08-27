@@ -556,12 +556,11 @@ Solve today's mathematics challenge.
 
 </p>
 
-<button>
+<button onclick="startQuestionOfTheDay()">
 
-Start Solving
+    Start Solving
 
 </button>
-
 </div>
 
 <div class="cards">
@@ -1630,6 +1629,208 @@ const weakestTopics =
                 Unable to load topic performance.
             </div>
         `;
+
+    }
+
+}
+
+// =====================================
+// QUESTION OF THE DAY
+// =====================================
+
+async function startQuestionOfTheDay(){
+
+    try{
+
+        const button =
+            document.querySelector(".question button");
+
+        button.innerHTML =
+            "Loading...";
+
+        button.disabled = true;
+
+
+        // GET ALL PUBLISHED QUESTIONS
+
+        const {
+
+            data: allQuestions,
+
+            error
+
+        } = await window.supabaseClient
+
+            .from("questions")
+
+            .select("*")
+
+            .eq("status", "Published")
+
+            .order("id",{ascending:true});
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        if(
+            !allQuestions ||
+            allQuestions.length === 0
+        ){
+
+            alert(
+                "No questions are available yet."
+            );
+
+            button.innerHTML =
+                "Start Solving";
+
+            button.disabled = false;
+
+            return;
+
+        }
+
+
+        // =====================================
+        // SELECT QUESTION BASED ON TODAY'S DATE
+        // =====================================
+
+        const today =
+            new Date();
+
+
+        const startOfYear =
+            new Date(
+                today.getFullYear(),
+                0,
+                0
+            );
+
+
+        const difference =
+            today - startOfYear;
+
+
+        const oneDay =
+            1000 * 60 * 60 * 24;
+
+
+        const dayNumber =
+            Math.floor(
+                difference / oneDay
+            );
+
+
+        const questionIndex =
+            dayNumber %
+            allQuestions.length;
+
+
+        const dailyQuestion =
+            allQuestions[
+                questionIndex
+            ];
+
+
+        // =====================================
+        // GET TOPIC NAME
+        // =====================================
+
+        const {
+
+            data: topic,
+
+            error: topicError
+
+        } = await window.supabaseClient
+
+            .from("topics")
+
+            .select("topic_name")
+
+            .eq(
+                "id",
+                dailyQuestion.topic_id
+            )
+
+            .single();
+
+
+        if(topicError){
+
+            throw topicError;
+
+        }
+
+
+        // =====================================
+        // SAVE QUESTION DATA
+        // =====================================
+
+        localStorage.setItem(
+            "dailyQuestionId",
+            dailyQuestion.id
+        );
+
+
+        localStorage.setItem(
+            "selectedTopicId",
+            dailyQuestion.topic_id
+        );
+
+
+        localStorage.setItem(
+            "selectedTopic",
+            topic.topic_name
+        );
+
+
+        localStorage.setItem(
+            "difficulty",
+            String(
+                dailyQuestion.difficulty
+            )
+        );
+
+
+        // =====================================
+        // OPEN QUESTION PAGE
+        // =====================================
+
+        window.location.href =
+            "questions.html";
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "QUESTION OF THE DAY ERROR:",
+            error
+        );
+
+
+        alert(
+            "Failed to load today's question."
+        );
+
+
+        const button =
+            document.querySelector(
+                ".question button"
+            );
+
+
+        button.innerHTML =
+            "Start Solving";
+
+        button.disabled = false;
 
     }
 
