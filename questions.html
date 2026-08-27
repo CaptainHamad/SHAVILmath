@@ -660,7 +660,7 @@ header a{
 ========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script src="supabase.js"></script>
 
@@ -1543,6 +1543,8 @@ function escapeValue(value) {
 ========================= */
 
 
+/* GET ALL TOPIC QUESTIONS */
+
 async function getAllTopicQuestions(){
 
     const {
@@ -1596,23 +1598,61 @@ async function getAllTopicQuestions(){
 }
 
 
+
 /* =========================
-   LOAD LOGO
+   LOAD LOGO AS BASE64
 ========================= */
 
-function loadLogo(){
+function getLogoBase64(){
 
     return new Promise(
         (resolve,reject)=>{
 
-            const image = new Image();
+            const image =
+                new Image();
+
+            image.crossOrigin =
+                "anonymous";
 
             image.src =
                 "assets/images/logo.png";
 
 
             image.onload =
-                () => resolve(image);
+                function(){
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+                    canvas.width =
+                        image.width;
+
+                    canvas.height =
+                        image.height;
+
+
+                    const ctx =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+
+                    ctx.drawImage(
+                        image,
+                        0,
+                        0
+                    );
+
+
+                    resolve(
+                        canvas.toDataURL(
+                            "image/png"
+                        )
+                    );
+
+                };
 
 
             image.onerror =
@@ -1624,64 +1664,74 @@ function loadLogo(){
 }
 
 
+
 /* =========================
-   ADD PDF HEADER
+   CREATE PDF CONTAINER
 ========================= */
 
-function addPDFHeader(
-    doc,
+function createPDFContainer(){
+
+    const container =
+        document.createElement(
+            "div"
+        );
+
+
+    container.style.width =
+        "794px";
+
+
+    container.style.background =
+        "white";
+
+
+    container.style.color =
+        "#0F172A";
+
+
+    container.style.fontFamily =
+        "Poppins, Arial, sans-serif";
+
+
+    container.style.position =
+        "absolute";
+
+
+    container.style.left =
+        "-10000px";
+
+
+    container.style.top =
+        "0";
+
+
+    container.style.padding =
+        "50px 55px";
+
+
+    container.style.boxSizing =
+        "border-box";
+
+
+    document.body.appendChild(
+        container
+    );
+
+
+    return container;
+
+}
+
+
+
+/* =========================
+   CREATE PDF HEADER
+========================= */
+
+function createPDFHeader(
     logo,
     title
 ){
-
-    const pageWidth =
-        doc.internal.pageSize.getWidth();
-
-
-    /* LOGO */
-
-    doc.addImage(
-
-        logo,
-
-        "PNG",
-
-        pageWidth / 2 - 25,
-
-        12,
-
-        50,
-
-        30
-
-    );
-
-
-    /* TITLE */
-
-    doc.setFont(
-        "helvetica",
-        "bold"
-    );
-
-    doc.setFontSize(16);
-
-    doc.text(
-
-        title,
-
-        pageWidth / 2,
-
-        52,
-
-        {
-            align:"center"
-        }
-
-    );
-
-
-    /* FORM */
 
     const form =
         localStorage.getItem(
@@ -1689,195 +1739,206 @@ function addPDFHeader(
         ) || "";
 
 
-    doc.setFont(
-        "helvetica",
-        "normal"
-    );
+    return `
 
-    doc.setFontSize(11);
+        <div
+            style="
+                text-align:center;
+                margin-bottom:30px;
+                border-bottom:1px solid #CBD5E1;
+                padding-bottom:18px;
+            "
+        >
 
-    doc.text(
-
-        form.toUpperCase(),
-
-        pageWidth / 2,
-
-        60,
-
-        {
-            align:"center"
-        }
-
-    );
-
-
-    /* TOPIC */
-
-    doc.setFontSize(12);
-
-    doc.text(
-
-        `TOPIC: ${
-            (topicName || "")
-            .toUpperCase()
-        }`,
-
-        pageWidth / 2,
-
-        68,
-
-        {
-            align:"center"
-        }
-
-    );
+            <img
+                src="${logo}"
+                style="
+                    width:110px;
+                    height:auto;
+                    margin-bottom:12px;
+                "
+            >
 
 
-    doc.line(
+            <h1
+                style="
+                    font-size:22px;
+                    margin:0 0 8px 0;
+                    color:#0F172A;
+                "
+            >
 
-        20,
+                ${title}
 
-        74,
+            </h1>
 
-        pageWidth - 20,
 
-        74
+            <div
+                style="
+                    font-size:14px;
+                    margin-bottom:5px;
+                    color:#475569;
+                "
+            >
 
-    );
+                ${form.toUpperCase()}
+
+            </div>
+
+
+            <div
+                style="
+                    font-size:14px;
+                    color:#475569;
+                "
+            >
+
+                TOPIC:
+                ${(topicName || "").toUpperCase()}
+
+            </div>
+
+        </div>
+
+    `;
 
 }
 
 
+
 /* =========================
-   ADD WATERMARK
+   CREATE WATERMARK
 ========================= */
 
-function addWatermark(
-    doc,
+function createWatermark(
     logo
 ){
 
-    const pageWidth =
-        doc.internal.pageSize.getWidth();
+    return `
 
-    const pageHeight =
-        doc.internal.pageSize.getHeight();
+        <img
 
+            src="${logo}"
 
-    /*
-    Watermark kubwa
-    katikati ya page
-    */
+            style="
+                position:fixed;
 
-    doc.saveGraphicsState();
+                width:300px;
 
+                height:auto;
 
-    doc.setGState(
-        new doc.GState({
-            opacity:0.08
-        })
-    );
+                left:50%;
 
+                top:50%;
 
-    doc.addImage(
+                transform:
+                    translate(-50%,-50%);
 
-        logo,
+                opacity:0.07;
 
-        "PNG",
+                z-index:0;
 
-        pageWidth / 2 - 55,
+                pointer-events:none;
+            "
 
-        pageHeight / 2 - 35,
+        >
 
-        110,
-
-        70
-
-    );
-
-
-    doc.restoreGraphicsState();
+    `;
 
 }
 
 
+
 /* =========================
-   ADD FOOTER
+   CREATE FOOTER
 ========================= */
 
-function addPDFFooter(
-    doc
+function createPDFFooter(){
+
+    return `
+
+        <div
+
+            style="
+                margin-top:40px;
+
+                padding-top:15px;
+
+                border-top:1px solid #E2E8F0;
+
+                text-align:center;
+
+                font-size:12px;
+
+                color:#64748B;
+            "
+
+        >
+
+            SHAVILmath | 0676 998 549
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================
+   PDF SETTINGS
+========================= */
+
+function getPDFOptions(
+    filename
 ){
 
-    const pageWidth =
-        doc.internal.pageSize.getWidth();
+    return {
 
-    const pageHeight =
-        doc.internal.pageSize.getHeight();
+        margin:0,
 
+        filename:filename,
 
-    doc.setFontSize(9);
+        image:{
+            type:"jpeg",
+            quality:0.98
+        },
 
-    doc.setTextColor(
-        100,
-        116,
-        139
-    );
+        html2canvas:{
 
+            scale:2,
 
-    doc.text(
+            useCORS:true,
 
-        "SHAVILmath | 0676 998 549",
+            letterRendering:true,
 
-        pageWidth / 2,
+            backgroundColor:"#FFFFFF"
 
-        pageHeight - 12,
+        },
 
-        {
-            align:"center"
+        jsPDF:{
+
+            unit:"px",
+
+            format:"a4",
+
+            orientation:"portrait"
+
+        },
+
+        pagebreak:{
+
+            mode:[
+                "css",
+                "legacy"
+            ]
+
         }
 
-    );
-
-
-    doc.setTextColor(
-        0,
-        0,
-        0
-    );
+    };
 
 }
 
-
-/* =========================
-   NEW PAGE
-========================= */
-
-function addNewPDFPage(
-    doc,
-    logo,
-    title
-){
-
-    doc.addPage();
-
-    addWatermark(
-        doc,
-        logo
-    );
-
-    addPDFHeader(
-        doc,
-        logo,
-        title
-    );
-
-    addPDFFooter(doc);
-
-
-    return 82;
-
-}
 
 
 /* =========================
@@ -1888,11 +1949,15 @@ async function downloadQuestionsPDF(){
 
     try{
 
+
         const allQuestions =
             await getAllTopicQuestions();
 
 
-        if(allQuestions.length === 0){
+        if(
+            !allQuestions ||
+            allQuestions.length === 0
+        ){
 
             alert(
                 "No questions found for this topic."
@@ -1903,131 +1968,106 @@ async function downloadQuestionsPDF(){
         }
 
 
-        const {
-
-            jsPDF
-
-        } = window.jspdf;
-
-
-        const doc =
-            new jsPDF();
-
-
         const logo =
-            await loadLogo();
+            await getLogoBase64();
 
 
-        const title =
-            "MATHEMATICS QUESTIONS";
+        const container =
+            createPDFContainer();
 
 
-        /* FIRST PAGE */
+        container.innerHTML = `
 
-        addWatermark(
-            doc,
-            logo
-        );
+            ${createWatermark(logo)}
+
+            <div
+                style="
+                    position:relative;
+                    z-index:1;
+                "
+            >
+
+                ${createPDFHeader(
+                    logo,
+                    "MATHEMATICS QUESTIONS"
+                )}
+
+                <div id="questionsPDF"></div>
+
+                ${createPDFFooter()}
+
+            </div>
+
+        `;
 
 
-        addPDFHeader(
-            doc,
-            logo,
-            title
-        );
-
-
-        addPDFFooter(doc);
-
-
-        let y = 86;
-
-
-        const pageHeight =
-            doc.internal.pageSize.getHeight();
-
-
-        const pageWidth =
-            doc.internal.pageSize.getWidth();
+        const questionsArea =
+            container.querySelector(
+                "#questionsPDF"
+            );
 
 
         allQuestions.forEach(
-            (question,index)=>{
+            (
+                question,
+                index
+            ) => {
 
 
-                const number =
-                    index + 1;
-
-
-                const questionText =
-                    `${number}. ${question.question}`;
-
-
-                doc.setFont(
-                    "helvetica",
-                    "normal"
-                );
-
-                doc.setFontSize(12);
-
-
-                const lines =
-                    doc.splitTextToSize(
-
-                        questionText,
-
-                        pageWidth - 40
-
+                const questionBlock =
+                    document.createElement(
+                        "div"
                     );
 
 
+                questionBlock.style.marginBottom =
+                    "22px";
+
+
+                questionBlock.style.fontSize =
+                    "16px";
+
+
+                questionBlock.style.lineHeight =
+                    "1.8";
+
+
+                questionBlock.style.whiteSpace =
+                    "pre-wrap";
+
+
+                questionBlock.style.pageBreakInside =
+                    "avoid";
+
+
                 /*
-                Check kama kuna
-                nafasi kwenye page
+                IMPORTANT:
+
+                textContent ndiyo
+                inalinda mathematical
+                signs kama:
+
+                ² ³ √ ÷ ± × ≤ ≥
                 */
 
-                if(
 
-                    y +
-                    (lines.length * 7) >
-                    pageHeight - 25
+                questionBlock.textContent =
 
-                ){
-
-                    y =
-                        addNewPDFPage(
-
-                            doc,
-
-                            logo,
-
-                            title
-
-                        );
-
-                }
+                    `${index + 1}. ${
+                        question.question || ""
+                    }`;
 
 
-                doc.text(
-
-                    lines,
-
-                    20,
-
-                    y
-
+                questionsArea.appendChild(
+                    questionBlock
                 );
-
-
-                y +=
-                    lines.length * 7 +
-                    8;
 
             }
         );
 
 
         const safeTopicName =
+
             (topicName || "topic")
 
             .replace(
@@ -2036,29 +2076,99 @@ async function downloadQuestionsPDF(){
             );
 
 
-        doc.save(
+        await html2pdf()
 
-            `SHAVILmath_${safeTopicName}_Questions.pdf`
+            .set(
 
+                getPDFOptions(
+
+                    `SHAVILmath_${safeTopicName}_Questions.pdf`
+
+                )
+
+            )
+
+            .from(container)
+
+            .save();
+
+
+        document.body.removeChild(
+            container
         );
+
 
     }
 
     catch(error){
 
         console.error(
-            "PDF ERROR:",
+            "QUESTIONS PDF ERROR:",
             error
         );
 
 
         alert(
-            "Failed to generate PDF."
+            "Failed to generate Questions PDF."
         );
 
     }
 
 }
+
+
+
+/* =========================
+   GET CORRECT ANSWER
+========================= */
+
+async function getCorrectAnswer(
+    question
+){
+
+    const {
+
+        data,
+
+        error
+
+    } = await window.supabaseClient
+
+        .from(
+            "question_options"
+        )
+
+        .select("*")
+
+        .eq(
+            "question_id",
+            question.id
+        )
+
+        .eq(
+            "option_letter",
+            question.correct_answer
+        )
+
+        .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "ANSWER ERROR:",
+            error
+        );
+
+    }
+
+
+    return data
+        ? data.option_text
+        : question.correct_answer;
+
+}
+
 
 
 /* =========================
@@ -2069,11 +2179,15 @@ async function downloadAnswersPDF(){
 
     try{
 
+
         const allQuestions =
             await getAllTopicQuestions();
 
 
-        if(allQuestions.length === 0){
+        if(
+            !allQuestions ||
+            allQuestions.length === 0
+        ){
 
             alert(
                 "No questions found."
@@ -2084,52 +2198,43 @@ async function downloadAnswersPDF(){
         }
 
 
-        const {
-
-            jsPDF
-
-        } = window.jspdf;
-
-
-        const doc =
-            new jsPDF();
-
-
         const logo =
-            await loadLogo();
+            await getLogoBase64();
 
 
-        const title =
-            "ANSWERS & SOLUTIONS";
+        const container =
+            createPDFContainer();
 
 
-        /* FIRST PAGE */
+        container.innerHTML = `
 
-        addWatermark(
-            doc,
-            logo
-        );
+            ${createWatermark(logo)}
+
+            <div
+                style="
+                    position:relative;
+                    z-index:1;
+                "
+            >
+
+                ${createPDFHeader(
+                    logo,
+                    "ANSWERS & SOLUTIONS"
+                )}
+
+                <div id="answersPDF"></div>
+
+                ${createPDFFooter()}
+
+            </div>
+
+        `;
 
 
-        addPDFHeader(
-            doc,
-            logo,
-            title
-        );
-
-
-        addPDFFooter(doc);
-
-
-        let y = 86;
-
-
-        const pageHeight =
-            doc.internal.pageSize.getHeight();
-
-
-        const pageWidth =
-            doc.internal.pageSize.getWidth();
+        const answersArea =
+            container.querySelector(
+                "#answersPDF"
+            );
 
 
         for(
@@ -2147,258 +2252,211 @@ async function downloadAnswersPDF(){
                 allQuestions[index];
 
 
-            const number =
-                index + 1;
+            const answerText =
+                await getCorrectAnswer(
+                    question
+                );
+
+
+            const answerBlock =
+                document.createElement(
+                    "div"
+                );
+
+
+            answerBlock.style.marginBottom =
+                "28px";
+
+
+            answerBlock.style.paddingBottom =
+                "20px";
+
+
+            answerBlock.style.borderBottom =
+                "1px solid #E2E8F0";
+
+
+            answerBlock.style.pageBreakInside =
+                "avoid";
 
 
             /*
             QUESTION
             */
 
-            const questionLines =
-                doc.splitTextToSize(
 
-                    `QUESTION ${number}\n${question.question}`,
-
-                    pageWidth - 40
-
+            const questionTitle =
+                document.createElement(
+                    "div"
                 );
 
 
-            if(
-
-                y +
-                (questionLines.length * 7) >
-                pageHeight - 70
-
-            ){
-
-                y =
-                    addNewPDFPage(
-
-                        doc,
-
-                        logo,
-
-                        title
-
-                    );
-
-            }
+            questionTitle.style.fontWeight =
+                "700";
 
 
-            doc.setFont(
-                "helvetica",
-                "bold"
+            questionTitle.style.fontSize =
+                "16px";
+
+
+            questionTitle.style.lineHeight =
+                "1.8";
+
+
+            questionTitle.style.whiteSpace =
+                "pre-wrap";
+
+
+            questionTitle.style.marginBottom =
+                "12px";
+
+
+            questionTitle.textContent =
+
+                `QUESTION ${index + 1}
+
+${question.question || ""}`;
+
+
+            answerBlock.appendChild(
+                questionTitle
             );
-
-            doc.setFontSize(12);
-
-
-            doc.text(
-
-                questionLines,
-
-                20,
-
-                y
-
-            );
-
-
-            y +=
-                questionLines.length * 7 +
-                8;
 
 
             /*
-            CORRECT ANSWER
+            ANSWER
             */
 
-            const {
 
-                data:options,
-
-                error
-
-            } = await window.supabaseClient
-
-                .from(
-                    "question_options"
-                )
-
-                .select("*")
-
-                .eq(
-                    "question_id",
-                    question.id
-                )
-
-
-                .eq(
-                    "option_letter",
-                    question.correct_answer
-                )
-
-                .maybeSingle();
-
-
-            if(error){
-
-                console.error(
-                    error
-                );
-
-            }
-
-
-            const answerText =
-                options
-                    ? options.option_text
-                    : question.correct_answer;
-
-
-            const answerLines =
-                doc.splitTextToSize(
-
-                    `ANSWER:\n${answerText}`,
-
-                    pageWidth - 40
-
+            const answerTitle =
+                document.createElement(
+                    "div"
                 );
 
 
-            if(
-
-                y +
-                (answerLines.length * 7) >
-                pageHeight - 60
-
-            ){
-
-                y =
-                    addNewPDFPage(
-
-                        doc,
-
-                        logo,
-
-                        title
-
-                    );
-
-            }
+            answerTitle.style.fontWeight =
+                "700";
 
 
-            doc.setFont(
-                "helvetica",
-                "bold"
+            answerTitle.style.color =
+                "#2563EB";
+
+
+            answerTitle.style.marginBottom =
+                "8px";
+
+
+            answerTitle.textContent =
+                "ANSWER";
+
+
+            answerBlock.appendChild(
+                answerTitle
             );
 
 
-            doc.text(
+            const answerContent =
+                document.createElement(
+                    "div"
+                );
 
-                answerLines,
 
-                20,
+            answerContent.style.fontSize =
+                "15px";
 
-                y
 
+            answerContent.style.lineHeight =
+                "1.8";
+
+
+            answerContent.style.whiteSpace =
+                "pre-wrap";
+
+
+            answerContent.style.marginBottom =
+                "18px";
+
+
+            answerContent.textContent =
+                answerText || "";
+
+
+            answerBlock.appendChild(
+                answerContent
             );
-
-
-            y +=
-                answerLines.length * 7 +
-                8;
 
 
             /*
             SOLUTION
             */
 
-            const explanation =
+
+            const solutionTitle =
+                document.createElement(
+                    "div"
+                );
+
+
+            solutionTitle.style.fontWeight =
+                "700";
+
+
+            solutionTitle.style.color =
+                "#2563EB";
+
+
+            solutionTitle.style.marginBottom =
+                "8px";
+
+
+            solutionTitle.textContent =
+                "SOLUTION";
+
+
+            answerBlock.appendChild(
+                solutionTitle
+            );
+
+
+            const solutionContent =
+                document.createElement(
+                    "div"
+                );
+
+
+            solutionContent.style.fontSize =
+                "15px";
+
+
+            solutionContent.style.lineHeight =
+                "1.8";
+
+
+            solutionContent.style.whiteSpace =
+                "pre-wrap";
+
+
+            solutionContent.textContent =
+
                 question.explanation ||
+
                 "Solution not available yet.";
 
 
-            const solutionLines =
-                doc.splitTextToSize(
-
-                    `SOLUTION:\n${explanation}`,
-
-                    pageWidth - 40
-
-                );
-
-
-            if(
-
-                y +
-                (solutionLines.length * 7) >
-                pageHeight - 35
-
-            ){
-
-                y =
-                    addNewPDFPage(
-
-                        doc,
-
-                        logo,
-
-                        title
-
-                    );
-
-            }
-
-
-            doc.setFont(
-                "helvetica",
-                "normal"
+            answerBlock.appendChild(
+                solutionContent
             );
 
 
-            doc.text(
-
-                solutionLines,
-
-                20,
-
-                y
-
+            answersArea.appendChild(
+                answerBlock
             );
-
-
-            y +=
-                solutionLines.length * 7 +
-                15;
-
-
-            /*
-            SEPARATOR
-            */
-
-            if(y < pageHeight - 25){
-
-                doc.line(
-
-                    20,
-
-                    y - 8,
-
-                    pageWidth - 20,
-
-                    y - 8
-
-                );
-
-            }
 
         }
 
 
         const safeTopicName =
+
             (topicName || "topic")
 
             .replace(
@@ -2407,11 +2465,27 @@ async function downloadAnswersPDF(){
             );
 
 
-        doc.save(
+        await html2pdf()
 
-            `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`
+            .set(
 
+                getPDFOptions(
+
+                    `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`
+
+                )
+
+            )
+
+            .from(container)
+
+            .save();
+
+
+        document.body.removeChild(
+            container
         );
+
 
     }
 
