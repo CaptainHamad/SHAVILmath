@@ -128,187 +128,331 @@ box-shadow:0 10px 25px rgba(37,99,235,.35);
 
 /*================ HERO ================*/
 
-.hero{
+/* =========================
+   PREMIUM HERO SECTION
+========================= */
 
-padding:150px 8% 90px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:60px;
-flex-wrap:wrap;
-background:linear-gradient(180deg,#f8fbff 0%,#eef5ff 100%);
+.hero{
+    min-height:650px;
+    padding:150px 8% 120px;
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    align-items:center;
+    gap:70px;
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(96,165,250,.25), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(37,99,235,.18), transparent 35%),
+        linear-gradient(135deg,#eff6ff 0%,#ffffff 50%,#dbeafe 100%);
 }
 
+
+/* LEFT SIDE */
+
 .left{
-
-flex:1;
-min-width:320px;
-
+    position:relative;
+    z-index:2;
 }
 
 .badge{
-
-display:inline-block;
-padding:10px 18px;
-background:#dbeafe;
-color:#2563EB;
-border-radius:30px;
-font-size:14px;
-font-weight:600;
-margin-bottom:25px;
-
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:white;
+    color:#2563eb;
+    border:1px solid #bfdbfe;
+    padding:10px 18px;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:25px;
+    box-shadow:0 10px 30px rgba(37,99,235,.08);
 }
 
 .left h1{
-
-font-size:68px;
-line-height:1.15;
-margin-bottom:20px;
-
+    font-size:clamp(48px,5vw,76px);
+    line-height:1.08;
+    color:#0f172a;
+    margin-bottom:25px;
+    letter-spacing:-2px;
 }
 
 .left h1 span{
-
-color:#2563EB;
-
+    color:#2563eb;
+    position:relative;
 }
 
 .left p{
-
-font-size:20px;
-line-height:1.8;
-color:#64748b;
-margin-bottom:40px;
-
+    font-size:18px;
+    line-height:1.8;
+    color:#64748b;
+    max-width:620px;
+    margin-bottom:32px;
 }
 
+
+/* BUTTONS */
+
 .buttons{
-
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
 }
 
 .btn{
-
-text-decoration:none;
-padding:16px 35px;
-border-radius:12px;
-font-weight:600;
-transition:.3s;
-
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:15px 28px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
 }
 
 .primary{
-
-background:#2563EB;
-color:white;
-
+    background:#2563eb;
+    color:white;
+    box-shadow:0 12px 30px rgba(37,99,235,.3);
 }
 
 .primary:hover{
-
-transform:translateY(-4px);
-
+    transform:translateY(-4px);
+    background:#1d4ed8;
+    box-shadow:0 20px 40px rgba(37,99,235,.35);
 }
 
 .secondary{
-
-border:2px solid #2563EB;
-color:#2563EB;
-
+    color:#1e3a8a;
+    background:white;
+    border:1px solid #cbd5e1;
 }
 
 .secondary:hover{
-
-background:#2563EB;
-color:white;
-
+    transform:translateY(-4px);
+    border-color:#2563eb;
+    box-shadow:0 15px 30px rgba(15,23,42,.1);
 }
 
-/*================ RIGHT ================*/
+
+/* RIGHT SIDE */
 
 .right{
-
-flex:1;
-display:flex;
-justify-content:center;
-
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .hero-card{
-
-width:500px;
-height:500px;
-
-border-radius:40px;
-
-background:linear-gradient(135deg,#2563EB,#60A5FA);
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-position:relative;
-
-overflow:hidden;
-
-box-shadow:0 40px 80px rgba(37,99,235,.30);
-
+    width:100%;
+    max-width:500px;
+    min-height:430px;
+    border-radius:32px;
+    position:relative;
+    overflow:hidden;
+    padding:35px;
+    background:linear-gradient(145deg,#2563eb,#1d4ed8);
+    box-shadow:0 35px 70px rgba(37,99,235,.3);
 }
 
-.hero-card h2{
 
-font-size:160px;
-
-color:white;
-
-z-index:2;
-
-}
+/* DECORATIVE CIRCLES */
 
 .circle{
-
-position:absolute;
-
-border-radius:50%;
-
-background:rgba(255,255,255,.15);
-
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
 }
 
 .c1{
-
-width:250px;
-height:250px;
-
-top:-80px;
-right:-80px;
-
+    width:260px;
+    height:260px;
+    top:-100px;
+    right:-80px;
 }
 
 .c2{
-
-width:180px;
-height:180px;
-
-bottom:-50px;
-left:-40px;
-
+    width:200px;
+    height:200px;
+    bottom:-100px;
+    left:-80px;
 }
 
+
+/* MATH SYMBOLS */
+
 .math{
+    position:absolute;
+    color:rgba(255,255,255,.2);
+    font-weight:700;
+    pointer-events:none;
+}
 
-position:absolute;
+.m1{
+    font-size:80px;
+    top:35px;
+    right:60px;
+}
 
-font-size:34px;
+.m2{
+    font-size:65px;
+    bottom:50px;
+    right:45px;
+}
 
-font-weight:bold;
+.m3{
+    font-size:70px;
+    bottom:90px;
+    left:50px;
+}
 
-color:white;
 
-opacity:.18;
+/* DASHBOARD MOCKUP */
+
+.hero-dashboard{
+    position:relative;
+    z-index:2;
+    background:rgba(255,255,255,.96);
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 25px 50px rgba(15,23,42,.2);
+}
+
+.dashboard-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.dashboard-title{
+    font-size:17px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.live-badge{
+    background:#dcfce7;
+    color:#16a34a;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.question-box{
+    background:#f8fafc;
+    border-radius:16px;
+    padding:22px;
+    border:1px solid #e2e8f0;
+}
+
+.question-label{
+    color:#2563eb;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.math-question{
+    font-size:24px;
+    font-weight:700;
+    color:#0f172a;
+    margin-bottom:20px;
+}
+
+.answer-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.option{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:14px;
+    font-weight:600;
+}
+
+.option.active{
+    background:#2563eb;
+    color:white;
+    border-color:#2563eb;
+}
+
+.progress-bar{
+    height:8px;
+    background:#e2e8f0;
+    border-radius:20px;
+    margin-top:25px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:70%;
+    background:#2563eb;
+    border-radius:20px;
+}
+
+
+/* FLOATING CARDS */
+
+.floating-card{
+    position:absolute;
+    z-index:4;
+    background:white;
+    padding:15px 18px;
+    border-radius:16px;
+    box-shadow:0 18px 40px rgba(15,23,42,.18);
+    font-size:13px;
+    font-weight:600;
+    color:#0f172a;
+}
+
+.score-card{
+    top:20px;
+    left:-45px;
+}
+
+.progress-card{
+    bottom:20px;
+    right:-40px;
+}
+
+.floating-card span{
+    display:block;
+    color:#2563eb;
+    font-size:20px;
+    font-weight:800;
+}
+
+
+/* RESPONSIVE HERO */
+
+@media(max-width:900px){
+
+    .hero{
+        grid-template-columns:1fr;
+        padding:130px 7% 80px;
+        gap:50px;
+    }
+
+    .left h1{
+        font-size:52px;
+    }
+
+    .right{
+        order:2;
+    }
+
+    .floating-card{
+        display:none;
+    }
 
 }
 
@@ -1049,58 +1193,188 @@ height:120px;
 
 <section class="hero">
 
-<div class="left">
+    <!-- LEFT SIDE -->
 
-<div class="badge">
+    <div class="left">
 
-🚀 Tanzania's Modern Mathematics Platform
+        <div class="badge">
+            🚀 Tanzania's Modern Mathematics Platform
+        </div>
 
-</div>
 
-<h1>
+        <h1>
 
-Master <span>Math.</span><br>
+            Master <span>Mathematics.</span>
 
-Shape Your Future.
+            <br>
 
-</h1>
-<p>
-Practice Mathematics, test your understanding, and improve your
-skills with interactive questions designed around the Tanzanian
-secondary school curriculum.
-</p>
+            Shape Your Future.
 
-<div class="buttons">
+        </h1>
 
-<a href="exercises.html" class="btn primary">
-    Start Practicing
-</a>
 
-<a href="special-tests.html" class="btn secondary">
-    Take a Special Test
-</a>
-</div>
-</div>
+        <p>
 
-<div class="right">
+            Learn, practice and challenge yourself with interactive
+            mathematics questions designed around the Tanzanian
+            secondary school curriculum.
 
-<div class="hero-card">
+        </p>
 
-<div class="circle c1"></div>
 
-<div class="circle c2"></div>
+        <div class="buttons">
 
-<div class="math m1">π</div>
+            <a
+                href="exercises.html"
+                class="btn primary"
+            >
+                Start Practicing →
+            </a>
 
-<div class="math m2">√x</div>
 
-<div class="math m3">∑</div>
+            <a
+                href="special-tests.html"
+                class="btn secondary"
+            >
+                🎯 Take a Special Test
+            </a>
 
-<h2>📘</h2>
+        </div>
 
-</div>
+    </div>
 
-</div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="right">
+
+
+        <div class="floating-card score-card">
+
+            🔥 Your Accuracy
+
+            <span>98%</span>
+
+        </div>
+
+
+        <div class="hero-card">
+
+
+            <div class="circle c1"></div>
+
+            <div class="circle c2"></div>
+
+
+            <div class="math m1">π</div>
+
+            <div class="math m2">√x</div>
+
+            <div class="math m3">Σ</div>
+
+
+
+            <!-- DASHBOARD MOCKUP -->
+
+            <div class="hero-dashboard">
+
+
+                <div class="dashboard-top">
+
+                    <div class="dashboard-title">
+
+                        SHAVILmath Challenge
+
+                    </div>
+
+
+                    <div class="live-badge">
+
+                        ● LIVE
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="question-box">
+
+                    <div class="question-label">
+
+                        QUESTION 07
+
+                    </div>
+
+
+                    <div class="math-question">
+
+                        Solve:
+
+                        3x² − 5x − 2 = 0
+
+                    </div>
+
+
+                    <div class="answer-options">
+
+                        <div class="option">
+
+                            A. x = 2, −⅓
+
+                        </div>
+
+
+                        <div class="option active">
+
+                            B. x = 2, −⅓
+
+                        </div>
+
+
+                        <div class="option">
+
+                            C. x = 1, −2
+
+                        </div>
+
+
+                        <div class="option">
+
+                            D. x = 3, −1
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill"></div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="floating-card progress-card">
+
+            📈 Questions Solved
+
+            <span>1,000+</span>
+
+        </div>
+
+
+    </div>
 
 </section>
 <div class="wave-divider">
