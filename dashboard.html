@@ -1081,29 +1081,24 @@ window.location.href="login.html";
 async function loadTopicPerformance(userId){
 
     const strongestContainer =
-        document.getElementById(
-            "strongestTopics"
-        );
-
+        document.getElementById("strongestTopics");
 
     const weakestContainer =
-        document.getElementById(
-            "weakestTopics"
-        );
+        document.getElementById("weakestTopics");
 
 
     try{
 
 
-        // =========================
-        // GET USER ANSWERS
-        // =========================
+        // =====================================
+        // 1. GET USER ANSWERS
+        // =====================================
 
         const {
 
-            data:answers,
+            data: answers,
 
-            error
+            error: progressError
 
         } = await window.supabaseClient
 
@@ -1111,13 +1106,7 @@ async function loadTopicPerformance(userId){
 
             .select(`
                 question_id,
-                is_correct,
-                questions (
-                    topic_id,
-                    topics (
-                        topic_name
-                    )
-                )
+                is_correct
             `)
 
             .eq(
@@ -1126,27 +1115,172 @@ async function loadTopicPerformance(userId){
             );
 
 
-        if(error){
+        if(progressError){
 
             console.error(
-                "TOPIC PERFORMANCE ERROR:",
-                error
+                "PROGRESS ERROR:",
+                progressError
             );
 
-            strongestContainer.innerHTML =
-                "<div class='empty-topic'>Unable to load topic performance.</div>";
+            throw progressError;
 
-            weakestContainer.innerHTML =
-                "<div class='empty-topic'>Unable to load topic performance.</div>";
+        }
+
+
+        // =====================================
+        // CHECK IF USER HAS ANSWERS
+        // =====================================
+
+        if(!answers || answers.length === 0){
+
+            strongestContainer.innerHTML = `
+                <div class="empty-topic">
+                    Start practicing to see your strongest topics.
+                </div>
+            `;
+
+
+            weakestContainer.innerHTML = `
+                <div class="empty-topic">
+                    Practice more topics to discover where you can improve.
+                </div>
+            `;
 
             return;
 
         }
 
 
-        // =========================
-        // GROUP BY TOPIC
-        // =========================
+        // =====================================
+        // GET QUESTION IDS
+        // =====================================
+
+        const questionIds =
+            answers.map(
+                answer => answer.question_id
+            );
+
+
+        // =====================================
+        // 2. GET QUESTIONS
+        // =====================================
+
+        const {
+
+            data: questions,
+
+            error: questionsError
+
+        } = await window.supabaseClient
+
+            .from("questions")
+
+            .select(`
+                id,
+                topic_id
+            `)
+
+            .in(
+                "id",
+                questionIds
+            );
+
+
+        if(questionsError){
+
+            console.error(
+                "QUESTIONS ERROR:",
+                questionsError
+            );
+
+            throw questionsError;
+
+        }
+
+
+        // =====================================
+        // GET TOPIC IDS
+        // =====================================
+
+        const topicIds =
+            [...new Set(
+
+                questions
+                    .map(
+                        question =>
+                            question.topic_id
+                    )
+                    .filter(Boolean)
+
+            )];
+
+
+        // =====================================
+        // 3. GET TOPICS
+        // =====================================
+
+        const {
+
+            data: topics,
+
+            error: topicsError
+
+        } = await window.supabaseClient
+
+            .from("topics")
+
+            .select(`
+                id,
+                topic_name
+            `)
+
+            .in(
+                "id",
+                topicIds
+            );
+
+
+        if(topicsError){
+
+            console.error(
+                "TOPICS ERROR:",
+                topicsError
+            );
+
+            throw topicsError;
+
+        }
+
+
+        // =====================================
+        // CREATE LOOKUP MAPS
+        // =====================================
+
+        const questionMap = {};
+
+
+        questions.forEach(question => {
+
+            questionMap[question.id] =
+                question.topic_id;
+
+        });
+
+
+        const topicMap = {};
+
+
+        topics.forEach(topic => {
+
+            topicMap[topic.id] =
+                topic.topic_name;
+
+        });
+
+
+        // =====================================
+        // GROUP PERFORMANCE BY TOPIC
+        // =====================================
 
         const topicStats = {};
 
@@ -1154,20 +1288,23 @@ async function loadTopicPerformance(userId){
         answers.forEach(answer => {
 
 
-            if(
-                !answer.questions ||
-                !answer.questions.topics
-            ){
+            const topicId =
+                questionMap[
+                    answer.question_id
+                ];
+
+
+            const topicName =
+                topicMap[
+                    topicId
+                ];
+
+
+            if(!topicName){
 
                 return;
 
             }
-
-
-            const topicName =
-                answer.questions
-                .topics
-                .topic_name;
 
 
             if(!topicStats[topicName]){
@@ -1188,14 +1325,18 @@ async function loadTopicPerformance(userId){
             }
 
 
-            topicStats[topicName].total++;
+            topicStats[
+                topicName
+            ].total++;
 
 
             if(
                 answer.is_correct === true
             ){
 
-                topicStats[topicName].correct++;
+                topicStats[
+                    topicName
+                ].correct++;
 
             }
 
@@ -1203,9 +1344,9 @@ async function loadTopicPerformance(userId){
         });
 
 
-        // =========================
-        // CALCULATE ACCURACY
-        // =========================
+        // =====================================
+        // CONVERT TO ARRAY + ACCURACY
+        // =====================================
 
         const topicArray =
 
@@ -1218,6 +1359,7 @@ async function loadTopicPerformance(userId){
                 ...topic,
 
                 accuracy:
+
                     Math.round(
 
                         (
@@ -1230,27 +1372,33 @@ async function loadTopicPerformance(userId){
             }));
 
 
-        // =========================
-        // CHECK EMPTY
-        // =========================
+        // =====================================
+        // CHECK IF NO TOPICS
+        // =====================================
 
         if(topicArray.length === 0){
 
-            strongestContainer.innerHTML =
-                "<div class='empty-topic'>Start practicing to see your strongest topics.</div>";
+            strongestContainer.innerHTML = `
+                <div class="empty-topic">
+                    No topic performance found yet.
+                </div>
+            `;
 
 
-            weakestContainer.innerHTML =
-                "<div class='empty-topic'>Practice more topics to discover where you can improve.</div>";
+            weakestContainer.innerHTML = `
+                <div class="empty-topic">
+                    Start practicing more topics to see your performance.
+                </div>
+            `;
 
             return;
 
         }
 
 
-        // =========================
-        // SORT
-        // =========================
+        // =====================================
+        // STRONGEST TOPICS
+        // =====================================
 
         const strongestTopics =
 
@@ -1263,11 +1411,12 @@ async function loadTopicPerformance(userId){
                     a.accuracy
             )
 
-            .slice(
-                0,
-                3
-            );
+            .slice(0,3);
 
+
+        // =====================================
+        // WEAKEST TOPICS
+        // =====================================
 
         const weakestTopics =
 
@@ -1280,24 +1429,25 @@ async function loadTopicPerformance(userId){
                     b.accuracy
             )
 
-            .slice(
-                0,
-                3
-            );
+            .slice(0,3);
 
 
-        // =========================
-        // DISPLAY
-        // =========================
+        // =====================================
+        // CLEAR CONTAINERS
+        // =====================================
 
         strongestContainer.innerHTML = "";
-
 
         weakestContainer.innerHTML = "";
 
 
+        // =====================================
+        // DISPLAY STRONGEST TOPICS
+        // =====================================
+
         strongestTopics.forEach(
             (topic,index) => {
+
 
                 strongestContainer.innerHTML += `
 
@@ -1347,12 +1497,19 @@ async function loadTopicPerformance(userId){
 
                 `;
 
+
             }
+
         );
 
 
+        // =====================================
+        // DISPLAY WEAKEST TOPICS
+        // =====================================
+
         weakestTopics.forEach(
             (topic,index) => {
+
 
                 weakestContainer.innerHTML += `
 
@@ -1402,7 +1559,15 @@ async function loadTopicPerformance(userId){
 
                 `;
 
+
             }
+
+        );
+
+
+        console.log(
+            "TOPIC PERFORMANCE:",
+            topicArray
         );
 
 
@@ -1412,6 +1577,20 @@ async function loadTopicPerformance(userId){
             "TOPIC PERFORMANCE ERROR:",
             err
         );
+
+
+        strongestContainer.innerHTML = `
+            <div class="empty-topic">
+                Unable to load topic performance.
+            </div>
+        `;
+
+
+        weakestContainer.innerHTML = `
+            <div class="empty-topic">
+                Unable to load topic performance.
+            </div>
+        `;
 
     }
 
