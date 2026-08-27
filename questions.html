@@ -1672,17 +1672,19 @@ function getLogoBase64(){
 function createPDFContainer(){
 
     const container =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
 
     container.style.width =
         "794px";
 
 
+    container.style.minHeight =
+        "1123px";
+
+
     container.style.background =
-        "white";
+        "#FFFFFF";
 
 
     container.style.color =
@@ -1693,16 +1695,26 @@ function createPDFContainer(){
         "Poppins, Arial, sans-serif";
 
 
+    /*
+    IMPORTANT:
+    Container iwe ndani ya screen
+    ili html2canvas iweze kuiona
+    */
+
     container.style.position =
         "absolute";
 
 
     container.style.left =
-        "-10000px";
+        "0";
 
 
     container.style.top =
         "0";
+
+
+    container.style.zIndex =
+        "-9999";
 
 
     container.style.padding =
@@ -1721,7 +1733,6 @@ function createPDFContainer(){
     return container;
 
 }
-
 
 
 /* =========================
@@ -1810,9 +1821,7 @@ function createPDFHeader(
    CREATE WATERMARK
 ========================= */
 
-function createWatermark(
-    logo
-){
+function createWatermark(logo){
 
     return `
 
@@ -1821,24 +1830,26 @@ function createWatermark(
             src="${logo}"
 
             style="
-                position:fixed;
 
-                width:300px;
+                position:absolute;
+
+                width:260px;
 
                 height:auto;
 
                 left:50%;
 
-                top:50%;
+                top:350px;
 
                 transform:
-                    translate(-50%,-50%);
+                    translateX(-50%);
 
                 opacity:0.07;
 
                 z-index:0;
 
                 pointer-events:none;
+
             "
 
         >
@@ -1846,8 +1857,6 @@ function createWatermark(
     `;
 
 }
-
-
 
 /* =========================
    CREATE FOOTER
@@ -1889,42 +1898,62 @@ function createPDFFooter(){
    PDF SETTINGS
 ========================= */
 
-function getPDFOptions(
-    filename
-){
+function getPDFOptions(filename){
 
     return {
 
         margin:0,
 
+
         filename:filename,
+
 
         image:{
             type:"jpeg",
-            quality:0.98
+            quality:1
         },
+
 
         html2canvas:{
 
             scale:2,
 
+
             useCORS:true,
 
-            letterRendering:true,
 
-            backgroundColor:"#FFFFFF"
+            allowTaint:true,
+
+
+            backgroundColor:"#FFFFFF",
+
+
+            scrollX:0,
+
+
+            scrollY:0,
+
+
+            windowWidth:794,
+
+
+            letterRendering:true
 
         },
 
+
         jsPDF:{
 
-            unit:"px",
+            unit:"mm",
+
 
             format:"a4",
+
 
             orientation:"portrait"
 
         },
+
 
         pagebreak:{
 
@@ -1938,7 +1967,6 @@ function getPDFOptions(
     };
 
 }
-
 
 
 /* =========================
