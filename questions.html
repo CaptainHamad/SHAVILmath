@@ -125,6 +125,80 @@ header a{
 
 }
 
+/* =========================
+   DOWNLOAD BUTTONS
+========================= */
+
+.download-actions{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+
+}
+
+.download-btn{
+
+    border:none;
+
+    padding:13px 18px;
+
+    border-radius:12px;
+
+    background:#2563EB;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.download-btn:hover{
+
+    background:#1D4ED8;
+
+    transform:translateY(-2px);
+
+}
+
+.download-btn.answers{
+
+    background:#0F172A;
+
+}
+
+.download-btn.answers:hover{
+
+    background:#334155;
+
+}
+
+
+@media(max-width:600px){
+
+    .download-actions{
+
+        flex-direction:column;
+
+    }
+
+    .download-btn{
+
+        width:100%;
+
+    }
+
+}
 
 /* =========================
    PROGRESS
@@ -509,7 +583,31 @@ header a{
 
         </p>
 
+<div
+    id="downloadActions"
+    class="download-actions"
+>
 
+    <button
+        class="download-btn"
+        onclick="downloadQuestionsPDF()"
+    >
+
+        📥 Download Questions
+
+    </button>
+
+
+    <button
+        class="download-btn answers"
+        onclick="downloadAnswersPDF()"
+    >
+
+        📄 Download Answers & Solutions
+
+    </button>
+
+</div>
         <div class="progress-info">
 
             <span id="questionNumber">
@@ -562,6 +660,7 @@ header a{
 ========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="supabase.js"></script>
 
@@ -604,7 +703,18 @@ const progressBar =
 const questionContainer =
     document.getElementById("questionContainer");
 
+const downloadActions =
+    document.getElementById(
+        "downloadActions"
+    );
 
+
+if(dailyQuestionId){
+
+    downloadActions.style.display =
+        "none";
+
+}
 let questions = [];
 
 let currentQuestionIndex = 0;
@@ -1428,7 +1538,898 @@ function escapeValue(value) {
 
 }
 
+/* =========================
+   PDF FUNCTIONS
+========================= */
 
+
+async function getAllTopicQuestions(){
+
+    const {
+
+        data,
+
+        error
+
+    } = await window.supabaseClient
+
+        .from("questions")
+
+        .select("*")
+
+        .eq(
+            "topic_id",
+            Number(topicId)
+        )
+
+        .eq(
+            "status",
+            "Published"
+        )
+
+        .order(
+            "question_order",
+            {
+                ascending:true
+            }
+        );
+
+
+    if(error){
+
+        console.error(
+            "PDF QUESTIONS ERROR:",
+            error
+        );
+
+        alert(
+            "Failed to load questions."
+        );
+
+        return [];
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* =========================
+   LOAD LOGO
+========================= */
+
+function loadLogo(){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+            const image = new Image();
+
+            image.src =
+                "assets/images/logo.png";
+
+
+            image.onload =
+                () => resolve(image);
+
+
+            image.onerror =
+                reject;
+
+        }
+    );
+
+}
+
+
+/* =========================
+   ADD PDF HEADER
+========================= */
+
+function addPDFHeader(
+    doc,
+    logo,
+    title
+){
+
+    const pageWidth =
+        doc.internal.pageSize.getWidth();
+
+
+    /* LOGO */
+
+    doc.addImage(
+
+        logo,
+
+        "PNG",
+
+        pageWidth / 2 - 25,
+
+        12,
+
+        50,
+
+        30
+
+    );
+
+
+    /* TITLE */
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    doc.setFontSize(16);
+
+    doc.text(
+
+        title,
+
+        pageWidth / 2,
+
+        52,
+
+        {
+            align:"center"
+        }
+
+    );
+
+
+    /* FORM */
+
+    const form =
+        localStorage.getItem(
+            "selectedForm"
+        ) || "";
+
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+    doc.setFontSize(11);
+
+    doc.text(
+
+        form.toUpperCase(),
+
+        pageWidth / 2,
+
+        60,
+
+        {
+            align:"center"
+        }
+
+    );
+
+
+    /* TOPIC */
+
+    doc.setFontSize(12);
+
+    doc.text(
+
+        `TOPIC: ${
+            (topicName || "")
+            .toUpperCase()
+        }`,
+
+        pageWidth / 2,
+
+        68,
+
+        {
+            align:"center"
+        }
+
+    );
+
+
+    doc.line(
+
+        20,
+
+        74,
+
+        pageWidth - 20,
+
+        74
+
+    );
+
+}
+
+
+/* =========================
+   ADD WATERMARK
+========================= */
+
+function addWatermark(
+    doc,
+    logo
+){
+
+    const pageWidth =
+        doc.internal.pageSize.getWidth();
+
+    const pageHeight =
+        doc.internal.pageSize.getHeight();
+
+
+    /*
+    Watermark kubwa
+    katikati ya page
+    */
+
+    doc.saveGraphicsState();
+
+
+    doc.setGState(
+        new doc.GState({
+            opacity:0.08
+        })
+    );
+
+
+    doc.addImage(
+
+        logo,
+
+        "PNG",
+
+        pageWidth / 2 - 55,
+
+        pageHeight / 2 - 35,
+
+        110,
+
+        70
+
+    );
+
+
+    doc.restoreGraphicsState();
+
+}
+
+
+/* =========================
+   ADD FOOTER
+========================= */
+
+function addPDFFooter(
+    doc
+){
+
+    const pageWidth =
+        doc.internal.pageSize.getWidth();
+
+    const pageHeight =
+        doc.internal.pageSize.getHeight();
+
+
+    doc.setFontSize(9);
+
+    doc.setTextColor(
+        100,
+        116,
+        139
+    );
+
+
+    doc.text(
+
+        "SHAVILmath | 0676 998 549",
+
+        pageWidth / 2,
+
+        pageHeight - 12,
+
+        {
+            align:"center"
+        }
+
+    );
+
+
+    doc.setTextColor(
+        0,
+        0,
+        0
+    );
+
+}
+
+
+/* =========================
+   NEW PAGE
+========================= */
+
+function addNewPDFPage(
+    doc,
+    logo,
+    title
+){
+
+    doc.addPage();
+
+    addWatermark(
+        doc,
+        logo
+    );
+
+    addPDFHeader(
+        doc,
+        logo,
+        title
+    );
+
+    addPDFFooter(doc);
+
+
+    return 82;
+
+}
+
+
+/* =========================
+   DOWNLOAD QUESTIONS PDF
+========================= */
+
+async function downloadQuestionsPDF(){
+
+    try{
+
+        const allQuestions =
+            await getAllTopicQuestions();
+
+
+        if(allQuestions.length === 0){
+
+            alert(
+                "No questions found for this topic."
+            );
+
+            return;
+
+        }
+
+
+        const {
+
+            jsPDF
+
+        } = window.jspdf;
+
+
+        const doc =
+            new jsPDF();
+
+
+        const logo =
+            await loadLogo();
+
+
+        const title =
+            "MATHEMATICS QUESTIONS";
+
+
+        /* FIRST PAGE */
+
+        addWatermark(
+            doc,
+            logo
+        );
+
+
+        addPDFHeader(
+            doc,
+            logo,
+            title
+        );
+
+
+        addPDFFooter(doc);
+
+
+        let y = 86;
+
+
+        const pageHeight =
+            doc.internal.pageSize.getHeight();
+
+
+        const pageWidth =
+            doc.internal.pageSize.getWidth();
+
+
+        allQuestions.forEach(
+            (question,index)=>{
+
+
+                const number =
+                    index + 1;
+
+
+                const questionText =
+                    `${number}. ${question.question}`;
+
+
+                doc.setFont(
+                    "helvetica",
+                    "normal"
+                );
+
+                doc.setFontSize(12);
+
+
+                const lines =
+                    doc.splitTextToSize(
+
+                        questionText,
+
+                        pageWidth - 40
+
+                    );
+
+
+                /*
+                Check kama kuna
+                nafasi kwenye page
+                */
+
+                if(
+
+                    y +
+                    (lines.length * 7) >
+                    pageHeight - 25
+
+                ){
+
+                    y =
+                        addNewPDFPage(
+
+                            doc,
+
+                            logo,
+
+                            title
+
+                        );
+
+                }
+
+
+                doc.text(
+
+                    lines,
+
+                    20,
+
+                    y
+
+                );
+
+
+                y +=
+                    lines.length * 7 +
+                    8;
+
+            }
+        );
+
+
+        const safeTopicName =
+            (topicName || "topic")
+
+            .replace(
+                /[^a-z0-9]/gi,
+                "_"
+            );
+
+
+        doc.save(
+
+            `SHAVILmath_${safeTopicName}_Questions.pdf`
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "PDF ERROR:",
+            error
+        );
+
+
+        alert(
+            "Failed to generate PDF."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   DOWNLOAD ANSWERS PDF
+========================= */
+
+async function downloadAnswersPDF(){
+
+    try{
+
+        const allQuestions =
+            await getAllTopicQuestions();
+
+
+        if(allQuestions.length === 0){
+
+            alert(
+                "No questions found."
+            );
+
+            return;
+
+        }
+
+
+        const {
+
+            jsPDF
+
+        } = window.jspdf;
+
+
+        const doc =
+            new jsPDF();
+
+
+        const logo =
+            await loadLogo();
+
+
+        const title =
+            "ANSWERS & SOLUTIONS";
+
+
+        /* FIRST PAGE */
+
+        addWatermark(
+            doc,
+            logo
+        );
+
+
+        addPDFHeader(
+            doc,
+            logo,
+            title
+        );
+
+
+        addPDFFooter(doc);
+
+
+        let y = 86;
+
+
+        const pageHeight =
+            doc.internal.pageSize.getHeight();
+
+
+        const pageWidth =
+            doc.internal.pageSize.getWidth();
+
+
+        for(
+
+            let index = 0;
+
+            index < allQuestions.length;
+
+            index++
+
+        ){
+
+
+            const question =
+                allQuestions[index];
+
+
+            const number =
+                index + 1;
+
+
+            /*
+            QUESTION
+            */
+
+            const questionLines =
+                doc.splitTextToSize(
+
+                    `QUESTION ${number}\n${question.question}`,
+
+                    pageWidth - 40
+
+                );
+
+
+            if(
+
+                y +
+                (questionLines.length * 7) >
+                pageHeight - 70
+
+            ){
+
+                y =
+                    addNewPDFPage(
+
+                        doc,
+
+                        logo,
+
+                        title
+
+                    );
+
+            }
+
+
+            doc.setFont(
+                "helvetica",
+                "bold"
+            );
+
+            doc.setFontSize(12);
+
+
+            doc.text(
+
+                questionLines,
+
+                20,
+
+                y
+
+            );
+
+
+            y +=
+                questionLines.length * 7 +
+                8;
+
+
+            /*
+            CORRECT ANSWER
+            */
+
+            const {
+
+                data:options,
+
+                error
+
+            } = await window.supabaseClient
+
+                .from(
+                    "question_options"
+                )
+
+                .select("*")
+
+                .eq(
+                    "question_id",
+                    question.id
+                )
+
+
+                .eq(
+                    "option_letter",
+                    question.correct_answer
+                )
+
+                .maybeSingle();
+
+
+            if(error){
+
+                console.error(
+                    error
+                );
+
+            }
+
+
+            const answerText =
+                options
+                    ? options.option_text
+                    : question.correct_answer;
+
+
+            const answerLines =
+                doc.splitTextToSize(
+
+                    `ANSWER:\n${answerText}`,
+
+                    pageWidth - 40
+
+                );
+
+
+            if(
+
+                y +
+                (answerLines.length * 7) >
+                pageHeight - 60
+
+            ){
+
+                y =
+                    addNewPDFPage(
+
+                        doc,
+
+                        logo,
+
+                        title
+
+                    );
+
+            }
+
+
+            doc.setFont(
+                "helvetica",
+                "bold"
+            );
+
+
+            doc.text(
+
+                answerLines,
+
+                20,
+
+                y
+
+            );
+
+
+            y +=
+                answerLines.length * 7 +
+                8;
+
+
+            /*
+            SOLUTION
+            */
+
+            const explanation =
+                question.explanation ||
+                "Solution not available yet.";
+
+
+            const solutionLines =
+                doc.splitTextToSize(
+
+                    `SOLUTION:\n${explanation}`,
+
+                    pageWidth - 40
+
+                );
+
+
+            if(
+
+                y +
+                (solutionLines.length * 7) >
+                pageHeight - 35
+
+            ){
+
+                y =
+                    addNewPDFPage(
+
+                        doc,
+
+                        logo,
+
+                        title
+
+                    );
+
+            }
+
+
+            doc.setFont(
+                "helvetica",
+                "normal"
+            );
+
+
+            doc.text(
+
+                solutionLines,
+
+                20,
+
+                y
+
+            );
+
+
+            y +=
+                solutionLines.length * 7 +
+                15;
+
+
+            /*
+            SEPARATOR
+            */
+
+            if(y < pageHeight - 25){
+
+                doc.line(
+
+                    20,
+
+                    y - 8,
+
+                    pageWidth - 20,
+
+                    y - 8
+
+                );
+
+            }
+
+        }
+
+
+        const safeTopicName =
+            (topicName || "topic")
+
+            .replace(
+                /[^a-z0-9]/gi,
+                "_"
+            );
+
+
+        doc.save(
+
+            `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "ANSWERS PDF ERROR:",
+            error
+        );
+
+
+        alert(
+            "Failed to generate Answers PDF."
+        );
+
+    }
+
+}
 /* =========================
    START
 ========================= */
