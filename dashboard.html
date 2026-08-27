@@ -1735,7 +1735,12 @@ async function startQuestionOfTheDay(){
             allQuestions[
                 questionIndex
             ];
-
+localStorage.setItem(
+    "dailyQuestionId",
+    dailyQuestion.id
+);
+      window.location.href =
+    "questions.html";
 
         // =====================================
         // GET TOPIC NAME
