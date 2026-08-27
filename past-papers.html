@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Past Papers | SHAVILmath</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    background:#2563EB;
+    color:white;
+    padding:30px 20px;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.logo img{
+    height:65px;
+    margin-bottom:10px;
+}
+
+.logo h2{
+    font-size:24px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    padding:14px 18px;
+    border-radius:12px;
+    transition:.3s;
+    font-weight:500;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:rgba(255,255,255,.15);
+}
+
+
+/* MAIN CONTENT */
+
+.content{
+    flex:1;
+    padding:40px;
+}
+
+.header{
+    margin-bottom:35px;
+}
+
+.header h1{
+    font-size:34px;
+    color:#0F172A;
+}
+
+.header p{
+    color:#64748B;
+    margin-top:8px;
+}
+
+
+/* FORM CARDS */
+
+.forms{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+    max-width:900px;
+}
+
+.form-card{
+    background:white;
+    padding:40px;
+    border-radius:22px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    cursor:pointer;
+    transition:.3s;
+}
+
+.form-card:hover{
+    transform:translateY(-8px);
+}
+
+.form-icon{
+    font-size:48px;
+    margin-bottom:20px;
+}
+
+.form-card h2{
+    color:#0F172A;
+    margin-bottom:10px;
+}
+
+.form-card p{
+    color:#64748B;
+    margin-bottom:25px;
+}
+
+.form-card button{
+    background:#2563EB;
+    color:white;
+    border:none;
+    padding:13px 25px;
+    border-radius:10px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+
+/* PAPERS SECTION */
+
+#papersSection{
+    display:none;
+}
+
+.back-btn{
+    background:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    margin-bottom:25px;
+    font-weight:600;
+}
+
+.papers-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.paper-card{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.07);
+}
+
+.paper-card h3{
+    color:#0F172A;
+    margin-bottom:8px;
+}
+
+.paper-card p{
+    color:#64748B;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.paper-year{
+    display:inline-block;
+    background:#EFF6FF;
+    color:#2563EB;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:15px;
+}
+
+.paper-card a{
+    display:inline-block;
+    background:#2563EB;
+    color:white;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:14px;
+}
+
+
+/* EMPTY STATE */
+
+.empty{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    color:#64748B;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    body{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .forms{
+        grid-template-columns:1fr;
+    }
+
+    .content{
+        padding:25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+
+        <img src="assets/images/logo.png">
+
+        <h2>SHAVILmath</h2>
+
+    </div>
+
+
+    <div class="menu">
+
+        <a href="dashboard.html">🏠 Dashboard</a>
+
+        <a href="exercises.html">📝 Exercises</a>
+
+        <a href="quizzes.html">⚡ Quizzes</a>
+
+        <a href="special-tests.html">🎯 Special Tests</a>
+
+        <a href="past-papers.html" class="active">📄 Past Papers</a>
+
+        <a href="profile.html">👤 My Profile</a>
+
+        <a href="premium.html">⭐ Upgrade to Premium</a>
+
+        <a href="#" id="logoutBtn">🚪 Logout</a>
+
+    </div>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="content">
+
+
+    <!-- FORM SELECTION -->
+
+    <div id="formSelection">
+
+        <div class="header">
+
+            <h1>📄 Past Papers</h1>
+
+            <p>
+                Practice with previous national examination papers.
+            </p>
+
+        </div>
+
+
+        <div class="forms">
+
+
+            <!-- FORM TWO -->
+
+            <div
+                class="form-card"
+                onclick="loadPapers('Form Two')"
+            >
+
+                <div class="form-icon">
+                    📘
+                </div>
+
+                <h2>Form Two</h2>
+
+                <p>
+                    Practice previous Form Two National Assessment papers.
+                </p>
+
+                <button>
+                    View Papers →
+                </button>
+
+            </div>
+
+
+
+            <!-- FORM FOUR -->
+
+            <div
+                class="form-card"
+                onclick="loadPapers('Form Four')"
+            >
+
+                <div class="form-icon">
+                    📕
+                </div>
+
+                <h2>Form Four</h2>
+
+                <p>
+                    Practice previous CSEE examination papers.
+                </p>
+
+                <button>
+                    View Papers →
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PAPERS LIST -->
+
+    <div id="papersSection">
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+
+            ← Back to Forms
+
+        </button>
+
+
+        <div class="header">
+
+            <h1 id="selectedFormTitle">
+
+                Past Papers
+
+            </h1>
+
+            <p>
+
+                Select a paper to view and practice.
+
+            </p>
+
+        </div>
+
+
+        <div
+            id="papersGrid"
+            class="papers-grid"
+        >
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+<script>
+
+
+// =====================================
+// LOAD PAPERS
+// =====================================
+
+async function loadPapers(form){
+
+    document.getElementById(
+        "formSelection"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "papersSection"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "selectedFormTitle"
+    ).innerHTML =
+        form + " Past Papers";
+
+
+    const papersGrid =
+        document.getElementById(
+            "papersGrid"
+        );
+
+
+    papersGrid.innerHTML =
+        "<div class='empty'>Loading papers...</div>";
+
+
+    const {
+
+        data:papers,
+
+        error
+
+    } = await window.supabaseClient
+
+        .from("past_papers")
+
+        .select("*")
+
+        .eq("form",form)
+
+        .order("year",{ascending:false});
+
+
+    if(error){
+
+        console.error(
+            "PAST PAPERS ERROR:",
+            error
+        );
+
+
+        papersGrid.innerHTML =
+            "<div class='empty'>Failed to load papers.</div>";
+
+        return;
+
+    }
+
+
+    if(!papers || papers.length === 0){
+
+        papersGrid.innerHTML =
+            "<div class='empty'>No past papers available yet.</div>";
+
+        return;
+
+    }
+
+
+    papersGrid.innerHTML = "";
+
+
+    papers.forEach(paper => {
+
+        papersGrid.innerHTML += `
+
+            <div class="paper-card">
+
+                <div class="paper-year">
+
+                    ${paper.year}
+
+                </div>
+
+
+                <h3>
+
+                    ${paper.title}
+
+                </h3>
+
+
+                <p>
+
+                    ${paper.description || ""}
+
+                </p>
+
+
+                <a
+                    href="${paper.file_url}"
+                    target="_blank"
+                >
+
+                    View Paper →
+
+                </a>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+
+// =====================================
+// BACK TO FORM SELECTION
+// =====================================
+
+function goBack(){
+
+    document.getElementById(
+        "papersSection"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "formSelection"
+    ).style.display = "block";
+
+}
+
+
+
+// =====================================
+// CHECK LOGIN
+// =====================================
+
+async function checkUser(){
+
+    const {
+
+        data:{user}
+
+    } = await window.supabaseClient
+        .auth
+        .getUser();
+
+
+    if(!user){
+
+        window.location.href =
+            "login.html";
+
+    }
+
+}
+
+
+checkUser();
+
+
+
+// =====================================
+// LOGOUT
+// =====================================
+
+document
+.getElementById("logoutBtn")
+.addEventListener(
+    "click",
+    async(e)=>{
+
+        e.preventDefault();
+
+        await window
+            .supabaseClient
+            .auth
+            .signOut();
+
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
