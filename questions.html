@@ -2092,21 +2092,49 @@ function cleanPDFText(value){
         value === null ||
         value === undefined
     ){
-
         return "";
-
     }
-
 
     return String(value)
 
-        .replace(
-            /\u00A0/g,
-            " "
-        )
+        // spaces
+        .replace(/\u00A0/g, " ")
+
+        // multiplication and division
+        .replace(/×/g, " x ")
+        .replace(/÷/g, " / ")
+
+        // minus signs
+        .replace(/[−–—]/g, "-")
+
+        // superscripts
+        .replace(/⁰/g, "^0")
+        .replace(/¹/g, "^1")
+        .replace(/²/g, "^2")
+        .replace(/³/g, "^3")
+        .replace(/⁴/g, "^4")
+        .replace(/⁵/g, "^5")
+        .replace(/⁶/g, "^6")
+        .replace(/⁷/g, "^7")
+        .replace(/⁸/g, "^8")
+        .replace(/⁹/g, "^9")
+
+        // superscript minus
+        .replace(/⁻/g, "^-")
+
+        // square root
+        .replace(/√/g, "sqrt")
+
+        // fractions
+        .replace(/½/g, "1/2")
+        .replace(/⅓/g, "1/3")
+        .replace(/¼/g, "1/4")
+        .replace(/¾/g, "3/4")
+
+        // clean spaces
+        .replace(/\s+/g, " ")
 
         .trim();
-
 }
 
 
@@ -2131,13 +2159,14 @@ function addTextToPDF(
 
 
     // Margins za kushoto na kulia
-    const margin = 20;
+    const margin =
+    options.margin || 22;
 
     const fontSize =
         options.fontSize || 11;
 
     const lineHeight =
-        options.lineHeight || 7;
+        options.lineHeight || 7.5;
 
     const bottomSpace = 28;
 
