@@ -1763,34 +1763,57 @@ function createPDFContainer(){
     const container =
         document.createElement("div");
 
-    container.style.position = "fixed";
 
-    container.style.left = "-10000px";
+    container.style.position =
+        "absolute";
 
-    container.style.top = "0";
+    container.style.left =
+        "0";
 
-    container.style.width = "794px";
+    container.style.top =
+        "0";
 
-    container.style.minHeight = "1123px";
+    container.style.width =
+        "794px";
 
-    container.style.background = "white";
+    container.style.minHeight =
+        "1123px";
 
-    container.style.padding = "45px 40px";
+    container.style.background =
+        "#FFFFFF";
 
-    container.style.color = "#0F172A";
+    container.style.padding =
+        "45px 40px";
+
+    container.style.color =
+        "#0F172A";
 
     container.style.fontFamily =
-        "Arial, sans-serif";
+        "Poppins, Arial, sans-serif";
 
-    container.style.zIndex = "-1";
 
-    document.body.appendChild(container);
+    /*
+    IMPORTANT:
+
+    Container ibaki ndani ya page
+    lakini isiwe visible kwa user.
+    */
+
+    container.style.opacity =
+        "0";
+
+    container.style.pointerEvents =
+        "none";
+
+
+    document.body.appendChild(
+        container
+    );
+
 
     return container;
 
 }
-
-
 /* =========================
    CREATE WATERMARK
 ========================= */
@@ -2070,21 +2093,30 @@ async function downloadQuestionsPDF(){
             );
 
 
-        await html2pdf()
+      await new Promise(resolve =>
+    setTimeout(resolve, 500)
+);
 
-            .set(
 
-                getPDFOptions(
+container.style.opacity = "1";
 
-                    `SHAVILmath_${safeTopicName}_Questions.pdf`
 
-                )
+await html2pdf()
 
-            )
+    .set(
+        getPDFOptions(
+            `SHAVILmath_${safeTopicName}_Questions.pdf`
+        )
+    )
 
-            .from(container)
+    .from(container)
 
-            .save();
+    .save();
+
+
+document.body.removeChild(
+    container
+);
 
 
         document.body.removeChild(
@@ -2459,23 +2491,30 @@ ${question.question || ""}`;
             );
 
 
-        await html2pdf()
-
-            .set(
-
-                getPDFOptions(
-
-                    `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`
-
-                )
-
-            )
-
-            .from(container)
-
-            .save();
+        await new Promise(resolve =>
+    setTimeout(resolve, 500)
+);
 
 
+container.style.opacity = "1";
+
+
+await html2pdf()
+
+    .set(
+        getPDFOptions(
+            `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`
+        )
+    )
+
+    .from(container)
+
+    .save();
+
+
+document.body.removeChild(
+    container
+);
         document.body.removeChild(
             container
         );
