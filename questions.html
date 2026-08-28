@@ -2219,48 +2219,6 @@ function addTextToPDF(
 
         
 
-        pageHeight -
-        bottomSpace
-
-    ){
-
-        y =
-            createPDFPage(
-
-                doc,
-
-                logo,
-
-                title
-
-            );
-
-    }
-
-
-    doc.text(
-
-        lines,
-
-        margin,
-
-        y
-
-    );
-
-
-    return (
-
-        y +
-
-        (
-            lines.length *
-            lineHeight
-        )
-
-    );
-
-}
 
 
 /* =========================
