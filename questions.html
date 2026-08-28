@@ -2215,52 +2215,7 @@ function addTextToPDF(
     );
 
 }
-    const pageWidth =
-        doc.internal.pageSize.getWidth();
-
-
-    const pageHeight =
-        doc.internal.pageSize.getHeight();
-
-
-    const margin =
-        options.margin || 20;
-
-
-    const fontSize =
-        options.fontSize || 12;
-
-
-    const lineHeight =
-        options.lineHeight || 7;
-
-
-    const bottomSpace =
-        options.bottomSpace || 25;
-
-
-    doc.setFontSize(
-        fontSize
-    );
-
-
-    const lines =
-        doc.splitTextToSize(
-
-            cleanPDFText(text),
-
-            pageWidth - (margin * 2)
-
-        );
-
-
-    if(
-
-        y +
-        (
-            lines.length *
-            lineHeight
-        )
+    
 
         >
 
