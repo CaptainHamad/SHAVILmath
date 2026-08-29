@@ -1920,10 +1920,10 @@ function addPDFHeader(
     );
 
 
-    doc.setFont(
-        "helvetica",
-        "bold"
-    );
+   doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
     doc.setFontSize(16);
@@ -1956,10 +1956,10 @@ function addPDFHeader(
         ) || "";
 
 
-    doc.setFont(
-        "helvetica",
-        "normal"
-    );
+   doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
     doc.setFontSize(11);
@@ -2171,6 +2171,65 @@ function cleanPDFText(value){
    ADD TEXT WITH PAGE CHECK
 ========================= */
 
+async function loadNotoSans(doc){
+
+    const response = await fetch(
+        "assets/fonts/NotoSans-Regular.ttf"
+    );
+
+    if(!response.ok){
+        throw new Error(
+            "Failed to load Noto Sans font."
+        );
+    }
+
+    const arrayBuffer =
+        await response.arrayBuffer();
+
+    const bytes =
+        new Uint8Array(arrayBuffer);
+
+    let binary = "";
+
+    const chunkSize = 0x8000;
+
+    for(
+        let i = 0;
+        i < bytes.length;
+        i += chunkSize
+    ){
+
+        binary += String.fromCharCode(
+            ...bytes.subarray(
+                i,
+                Math.min(
+                    i + chunkSize,
+                    bytes.length
+                )
+            )
+        );
+
+    }
+
+    const base64 =
+        btoa(binary);
+
+    doc.addFileToVFS(
+        "NotoSans-Regular.ttf",
+        base64
+    );
+
+    doc.addFont(
+        "NotoSans-Regular.ttf",
+        "NotoSans",
+        "normal"
+    );
+
+    doc.setFont(
+        "NotoSans",
+        "normal"
+    );
+}
 function addTextToPDF(
     doc,
     text,
@@ -2202,10 +2261,10 @@ function addTextToPDF(
 
     doc.setFontSize(fontSize);
 
-    doc.setFont(
-        "helvetica",
-        "normal"
-    );
+   doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
     /*
@@ -2353,7 +2412,7 @@ async function downloadQuestionsPDF(){
 
             });
 
-
+await loadNotoSans(doc);
         /*
         Logo isiwe sababu
         ya PDF kushindwa
@@ -2399,13 +2458,10 @@ async function downloadQuestionsPDF(){
         let y = 86;
 
 
-        doc.setFont(
-
-            "helvetica",
-
-            "normal"
-
-        );
+      doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
         doc.setFontSize(12);
@@ -2661,7 +2717,7 @@ async function downloadAnswersPDF(){
 
             });
 
-
+await loadNotoSans(doc);
         const logo =
             await loadLogoData();
 
@@ -2722,10 +2778,10 @@ async function downloadAnswersPDF(){
             QUESTION
             */
 
-            doc.setFont(
-                "helvetica",
-                "bold"
-            );
+           doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
             y =
@@ -2792,10 +2848,10 @@ async function downloadAnswersPDF(){
             ANSWER
             */
 
-            doc.setFont(
-                "helvetica",
-                "bold"
-            );
+   doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
             y =
@@ -2833,10 +2889,10 @@ async function downloadAnswersPDF(){
             SOLUTION
             */
 
-            doc.setFont(
-                "helvetica",
-                "normal"
-            );
+           doc.setFont(
+    "NotoSans",
+    "normal"
+);
 
 
             const explanation =
