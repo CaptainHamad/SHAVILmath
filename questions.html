@@ -1550,10 +1550,7 @@ function escapeValue(value) {
 
 async function getAllTopicQuestions(){
 
-    const {
-        data,
-        error
-    } = await window.supabaseClient
+    let query = window.supabaseClient
 
         .from("questions")
 
@@ -1567,14 +1564,56 @@ async function getAllTopicQuestions(){
         .eq(
             "status",
             "Published"
-        )
-
-        .order(
-            "question_order",
-            {
-                ascending:true
-            }
         );
+
+
+    /*
+    =========================
+    SAME FILTER AS EXERCISE
+    =========================
+    */
+
+    if(difficulty === "Mixed"){
+
+        query = query.eq(
+            "set_name",
+            "Mixed"
+        );
+
+    }
+
+    else{
+
+        query = query
+
+            .eq(
+                "difficulty",
+                Number(difficulty)
+            )
+
+            .neq(
+                "set_name",
+                "Mixed"
+            );
+
+    }
+
+
+    /*
+    =========================
+    SAME ORDER AS EXERCISE
+    =========================
+    */
+
+    const {
+        data,
+        error
+    } = await query.order(
+        "question_order",
+        {
+            ascending:true
+        }
+    );
 
 
     if(error){
@@ -1589,11 +1628,22 @@ async function getAllTopicQuestions(){
     }
 
 
-    return data || [];
+    /*
+    =========================
+    SAME NUMBER AS EXERCISE
+    =========================
+    
+    Exercise yako ina:
+    
+    questions = data.slice(0, 15)
+    
+    Kwa hiyo PDF pia ichukue
+    maximum 15.
+    */
+
+    return (data || []).slice(0, 15);
 
 }
-
-
 /* =========================
    LOAD LOGO SAFELY
 ========================= */
