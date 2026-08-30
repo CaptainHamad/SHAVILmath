@@ -2230,6 +2230,105 @@ async function loadNotoSans(doc){
         "normal"
     );
 }
+
+async function svgToPNG(svgString){
+
+    if(!svgString){
+        return null;
+    }
+
+    return new Promise((resolve, reject) => {
+
+        try{
+
+            const svgBlob = new Blob(
+                [svgString],
+                {
+                    type:"image/svg+xml;charset=utf-8"
+                }
+            );
+
+            const url =
+                URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+
+            img.onload = function(){
+
+                try{
+
+                    const scale = 2;
+
+                    const canvas =
+                        document.createElement("canvas");
+
+                    canvas.width =
+                        img.naturalWidth * scale;
+
+                    canvas.height =
+                        img.naturalHeight * scale;
+
+                    const ctx =
+                        canvas.getContext("2d");
+
+                    ctx.fillStyle = "#FFFFFF";
+
+                    ctx.fillRect(
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+                    ctx.drawImage(
+                        img,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+                    URL.revokeObjectURL(url);
+
+                    resolve(
+                        canvas.toDataURL("image/png")
+                    );
+
+                }
+                catch(error){
+
+                    URL.revokeObjectURL(url);
+
+                    reject(error);
+
+                }
+
+            };
+
+            img.onerror = function(){
+
+                URL.revokeObjectURL(url);
+
+                reject(
+                    new Error(
+                        "Failed to render question figure."
+                    )
+                );
+
+            };
+
+            img.src = url;
+
+        }
+        catch(error){
+
+            reject(error);
+
+        }
+
+    });
+
+}
 function addTextToPDF(
     doc,
     text,
@@ -2467,13 +2566,14 @@ await loadNotoSans(doc);
         doc.setFontSize(12);
 
 
-        allQuestions.forEach(
+      for(
+    let index = 0;
+    index < allQuestions.length;
+    index++
+){
 
-            (
-                question,
-                index
-            ) => {
-
+    const question =
+        allQuestions[index];
 
                 const questionNumber =
                     index + 1;
@@ -2493,32 +2593,124 @@ await loadNotoSans(doc);
 
 
                 y =
-                    addTextToPDF(
+    addTextToPDF(
+        doc,
+        questionText,
+        y,
+        logo,
+        title,
+        {
+            fontSize:11,
+            lineHeight:7,
+            bottomSpace:45
+        }
+    );
 
+y += 8;
+
+
+/*
+=========================
+QUESTION FIGURE
+=========================
+*/
+
+if(question.diagram_svg){
+
+    try{
+
+        const figurePNG =
+            await svgToPNG(
+                question.diagram_svg
+            );
+
+        if(figurePNG){
+
+            const pageWidth =
+                doc.internal.pageSize.getWidth();
+
+            const pageHeight =
+                doc.internal.pageSize.getHeight();
+
+            const margin = 20;
+
+            const maxWidth =
+                pageWidth - (margin * 2);
+
+            /*
+            Figure size
+            */
+
+            const figureWidth =
+                Math.min(
+                    maxWidth,
+                    130
+                );
+
+            const figureHeight =
+                70;
+
+
+            /*
+            Check if figure fits
+            */
+
+            if(
+                y + figureHeight >
+                pageHeight - 30
+            ){
+
+                y =
+                    createPDFPage(
                         doc,
-
-                        questionText,
-
-                        y,
-
                         logo,
-
-                        title,
-
-                       {
-    fontSize:11,
-    lineHeight:7,
-    bottomSpace:28
-}
+                        title
                     );
-
-
-                y += 8;
-
 
             }
 
+
+            /*
+            Center figure
+            */
+
+            const figureX =
+                (pageWidth -
+                    figureWidth) / 2;
+
+
+            doc.addImage(
+                figurePNG,
+                "PNG",
+                figureX,
+                y,
+                figureWidth,
+                figureHeight
+            );
+
+
+            y +=
+                figureHeight + 12;
+
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "QUESTION FIGURE ERROR:",
+            error
         );
+
+    }
+
+}
+
+
+y += 5;
+
+
+            }
 
 
         const safeTopicName =
@@ -2854,35 +3046,113 @@ await loadNotoSans(doc);
 );
 
 
-            y =
-                addTextToPDF(
+y =
+    addTextToPDF(
 
-                    doc,
+        doc,
 
-                    `ANSWER:\n${cleanPDFText(
-                        answerText
-                    )}`,
+        `ANSWER:\n${cleanPDFText(
+            answerText
+        )}`,
 
-                    y,
+        y,
 
-                    logo,
+        logo,
 
-                    title,
+        title,
 
-                    {
+        {
+            fontSize:11,
+            lineHeight:7,
+            bottomSpace:55
+        }
 
-                        fontSize:11,
+    );
 
-                        lineHeight:7,
 
-                        bottomSpace:55
+/*
+=========================
+QUESTION FIGURE
+=========================
+*/
 
-                    }
+if(question.diagram_svg){
 
+    try{
+
+        const figurePNG =
+            await svgToPNG(
+                question.diagram_svg
+            );
+
+        if(figurePNG){
+
+            const pageWidth =
+                doc.internal.pageSize.getWidth();
+
+            const pageHeight =
+                doc.internal.pageSize.getHeight();
+
+            const figureWidth =
+                Math.min(
+                    pageWidth - 40,
+                    130
                 );
 
+            const figureHeight =
+                70;
 
-            y += 6;
+
+            if(
+                y + figureHeight >
+                pageHeight - 30
+            ){
+
+                y =
+                    createPDFPage(
+                        doc,
+                        logo,
+                        title
+                    );
+
+            }
+
+
+            const figureX =
+                (pageWidth -
+                    figureWidth) / 2;
+
+
+            doc.addImage(
+                figurePNG,
+                "PNG",
+                figureX,
+                y,
+                figureWidth,
+                figureHeight
+            );
+
+
+            y +=
+                figureHeight + 12;
+
+        }
+
+    }
+    catch(error){
+
+        console.warn(
+            "ANSWER PDF FIGURE ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+y += 6;
+          
 
 
             /*
