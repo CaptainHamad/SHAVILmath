@@ -2704,19 +2704,16 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
     printable.id = "shavil-pdf-container";
 
     printable.style.cssText = `
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: relative;
     width: 794px;
     min-height: 1123px;
-    background: white;
-    color: #000;
+    margin: 0 auto;
+    background: #ffffff;
+    color: #000000;
     font-family: Arial, sans-serif;
     padding: 45px 55px 55px 55px;
     box-sizing: border-box;
-    z-index: 999999;
 `;
-
     /* =====================================================
        HEADER
     ===================================================== */
@@ -2785,16 +2782,16 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
     watermark.crossOrigin = "anonymous";
 
     watermark.style.cssText = `
-        position:absolute;
-        width:430px;
-        height:auto;
-        left:50%;
-        top:50%;
-        transform:translate(-50%, -50%);
-        opacity:0.055;
-        pointer-events:none;
-        z-index:0;
-    `;
+    position:absolute;
+    width:430px;
+    height:auto;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    opacity:0.055;
+    pointer-events:none;
+    z-index:0;
+`;
 
     printable.appendChild(watermark);
 
@@ -2995,7 +2992,61 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
     return printable;
 }
 
+async function waitForPDFImages(container){
 
+    const images =
+        Array.from(
+            container.querySelectorAll("img")
+        );
+
+    if(images.length === 0){
+        return;
+    }
+
+    await Promise.all(
+
+        images.map(img => {
+
+            if(img.complete){
+
+                if(img.naturalWidth > 0){
+                    return Promise.resolve();
+                }
+
+            }
+
+            return new Promise(resolve => {
+
+                img.addEventListener(
+                    "load",
+                    resolve,
+                    { once:true }
+                );
+
+                img.addEventListener(
+                    "error",
+                    resolve,
+                    { once:true }
+                );
+
+            });
+
+        })
+
+    );
+
+    /*
+     * Give browser one extra rendering cycle
+     */
+
+    await new Promise(resolve =>
+        requestAnimationFrame(() => {
+
+            requestAnimationFrame(resolve);
+
+        })
+    );
+}
 /* =========================================================
    DOWNLOAD QUESTIONS PDF
 ========================================================= */
@@ -3065,8 +3116,7 @@ async function downloadQuestionsPDF(){
            Wait for images / SVG / fonts
         ----------------------------------------------- */
 
-        await new Promise(resolve =>
-            setTimeout(resolve, 700)
+      await waitForPDFImages(printable);
         );
 
 
@@ -3332,8 +3382,7 @@ async function downloadAnswersPDF(){
            Wait for rendering
         ----------------------------------------------- */
 
-        await new Promise(resolve =>
-            setTimeout(resolve, 700)
+        await waitForPDFImages(printable);
         );
 
 
