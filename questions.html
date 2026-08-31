@@ -2681,46 +2681,351 @@ function addTextToPDF(
 
 
 /* =========================
+/* =========================================================
+   HTML → PDF SYSTEM
+   Keeps mathematics exactly as displayed on the website
+========================================================= */
+
+async function createPrintablePDFContainer(type, allQuestions, allOptions = []) {
+
+    const logoURL =
+        new URL("assets/images/logo.png", window.location.href).href;
+
+    const form =
+        localStorage.getItem("selectedForm") || "";
+
+    const title =
+        type === "questions"
+            ? "MATHEMATICS QUESTIONS"
+            : "ANSWERS & SOLUTIONS";
+
+    const printable = document.createElement("div");
+
+    printable.id = "shavil-pdf-container";
+
+    printable.style.cssText = `
+        position: fixed;
+        left: -100000px;
+        top: 0;
+        width: 794px;
+        background: white;
+        color: #000;
+        font-family: Arial, sans-serif;
+        padding: 45px 55px 55px 55px;
+        box-sizing: border-box;
+        z-index: -9999;
+    `;
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    const header = document.createElement("div");
+
+    header.style.cssText = `
+        text-align: center;
+        margin-bottom: 35px;
+    `;
+
+    header.innerHTML = `
+        <img
+            src="${logoURL}"
+            crossorigin="anonymous"
+            style="
+                width:130px;
+                max-height:75px;
+                object-fit:contain;
+                display:block;
+                margin:0 auto 12px auto;
+            "
+        >
+
+        <div style="
+            font-size:24px;
+            font-weight:700;
+            margin-bottom:8px;
+        ">
+            ${title}
+        </div>
+
+        <div style="
+            font-size:15px;
+            margin-bottom:5px;
+        ">
+            ${escapeHTML(form.toUpperCase())}
+        </div>
+
+        <div style="
+            font-size:15px;
+        ">
+            TOPIC: ${escapeHTML(
+                (topicName || "").toUpperCase()
+            )}
+        </div>
+
+        <div style="
+            height:1px;
+            background:#000;
+            margin-top:18px;
+        "></div>
+    `;
+
+    printable.appendChild(header);
+
+
+    /* =====================================================
+       WATERMARK
+    ===================================================== */
+
+    const watermark = document.createElement("img");
+
+    watermark.src = logoURL;
+
+    watermark.crossOrigin = "anonymous";
+
+    watermark.style.cssText = `
+        position:absolute;
+        width:430px;
+        height:auto;
+        left:50%;
+        top:50%;
+        transform:translate(-50%, -50%);
+        opacity:0.055;
+        pointer-events:none;
+        z-index:0;
+    `;
+
+    printable.appendChild(watermark);
+
+
+    /* =====================================================
+       QUESTIONS
+    ===================================================== */
+
+    allQuestions.forEach((question, index) => {
+
+        const wrapper = document.createElement("div");
+
+        wrapper.className = "pdf-question";
+
+        wrapper.style.cssText = `
+            position:relative;
+            z-index:1;
+            margin-bottom:28px;
+            page-break-inside:avoid;
+            break-inside:avoid;
+            width:100%;
+        `;
+
+
+        /* Question number + text */
+
+        const questionText =
+            document.createElement("div");
+
+        questionText.style.cssText = `
+            font-size:17px;
+            line-height:1.7;
+            font-weight:400;
+            margin-bottom:12px;
+            word-wrap:break-word;
+            overflow-wrap:break-word;
+        `;
+
+        questionText.innerHTML = `
+            <strong>${index + 1}.</strong>
+            ${escapeHTML(question.question)}
+        `;
+
+        wrapper.appendChild(questionText);
+
+
+        /* =================================================
+           FIGURE / DIAGRAM
+        ================================================= */
+
+        if(question.diagram_svg){
+
+            const diagram =
+                document.createElement("div");
+
+            diagram.style.cssText = `
+                width:100%;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin:15px 0 20px 0;
+                page-break-inside:avoid;
+                break-inside:avoid;
+            `;
+
+            /*
+             * IMPORTANT:
+             * We put the original SVG directly into the PDF HTML.
+             * No SVG → PNG conversion.
+             */
+
+            diagram.innerHTML =
+                question.diagram_svg;
+
+            const svg =
+                diagram.querySelector("svg");
+
+            if(svg){
+
+                svg.style.maxWidth = "600px";
+                svg.style.width = "100%";
+                svg.style.height = "auto";
+                svg.style.display = "block";
+            }
+
+            wrapper.appendChild(diagram);
+        }
+
+
+        /* =================================================
+           ANSWERS + SOLUTIONS PDF
+        ================================================= */
+
+        if(type === "answers"){
+
+            const correctOption =
+                allOptions.find(option =>
+                    Number(option.question_id) ===
+                    Number(question.id)
+                    &&
+                    option.option_letter ===
+                    question.correct_answer
+                );
+
+
+            const answerText =
+                correctOption
+                    ? correctOption.option_text
+                    : (
+                        question.correct_answer ||
+                        "Answer not available"
+                    );
+
+
+            const answer =
+                document.createElement("div");
+
+            answer.style.cssText = `
+                font-size:16px;
+                line-height:1.7;
+                margin-top:10px;
+                margin-bottom:8px;
+            `;
+
+            answer.innerHTML = `
+                <strong>ANSWER:</strong>
+                ${escapeHTML(answerText)}
+            `;
+
+            wrapper.appendChild(answer);
+
+
+            const solution =
+                document.createElement("div");
+
+            solution.style.cssText = `
+                font-size:16px;
+                line-height:1.7;
+                margin-bottom:15px;
+                white-space:pre-wrap;
+            `;
+
+            solution.innerHTML = `
+                <strong>SOLUTION:</strong><br>
+                ${escapeHTML(
+                    question.explanation ||
+                    "Solution not available yet."
+                )}
+            `;
+
+            wrapper.appendChild(solution);
+
+
+            const separator =
+                document.createElement("div");
+
+            separator.style.cssText = `
+                border-bottom:1px solid #999;
+                margin-top:15px;
+                margin-bottom:25px;
+            `;
+
+            wrapper.appendChild(separator);
+        }
+
+
+        printable.appendChild(wrapper);
+
+    });
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    const footer =
+        document.createElement("div");
+
+    footer.style.cssText = `
+        text-align:center;
+        font-size:12px;
+        color:#555;
+        margin-top:35px;
+        padding-top:12px;
+        border-top:1px solid #aaa;
+        position:relative;
+        z-index:2;
+    `;
+
+    footer.innerHTML =
+        `SHAVILmath | 0676 998 549`;
+
+    printable.appendChild(footer);
+
+
+    document.body.appendChild(printable);
+
+    return printable;
+}
+
+
+/* =========================================================
    DOWNLOAD QUESTIONS PDF
-========================= */
+========================================================= */
 
 async function downloadQuestionsPDF(){
 
     try{
-
 
         console.log(
             "STARTING QUESTIONS PDF..."
         );
 
 
+        /* -----------------------------------------------
+           Get EXACT questions used by this exercise
+        ----------------------------------------------- */
+
         const allQuestions =
             await getAllTopicQuestions();
 
-          console.table(
-    allQuestions.map((q, i) => ({
-        number: i + 1,
-        id: q.id,
-        question_order: q.question_order,
-        question: q.question,
-        difficulty: q.difficulty,
-        set_name: q.set_name
-    }))
-);
-
 
         console.log(
-            "ALL QUESTIONS:",
+            "PDF QUESTIONS =",
             allQuestions
         );
 
 
         if(
-
             !allQuestions ||
-
             allQuestions.length === 0
-
         ){
 
             alert(
@@ -2728,267 +3033,127 @@ async function downloadQuestionsPDF(){
             );
 
             return;
-
         }
 
 
+        /* -----------------------------------------------
+           Check html2pdf
+        ----------------------------------------------- */
+
         if(
-
-            !window.jspdf ||
-
-            !window.jspdf.jsPDF
-
+            typeof html2pdf === "undefined"
         ){
 
             throw new Error(
-                "jsPDF library not loaded."
+                "html2pdf library not loaded."
             );
-
         }
 
 
-        const {
-
-            jsPDF
-
-        } = window.jspdf;
-
-
-        const doc =
-            new jsPDF({
-
-                orientation:"portrait",
-
-                unit:"mm",
-
-                format:"a4"
-
-            });
-
-await loadNotoSans(doc);
-        /*
-        Logo isiwe sababu
-        ya PDF kushindwa
-        */
-
-        const logo =
-            await loadLogoData();
-
-
-        const title =
-            "MATHEMATICS QUESTIONS";
-
-
-        /*
-        FIRST PAGE
-        */
-
-        addWatermark(
-
-            doc,
-
-            logo
-
-        );
-
-
-        addPDFHeader(
-
-            doc,
-
-            logo,
-
-            title
-
-        );
-
-
-        addPDFFooter(
-            doc
-        );
-
-
-        let y = 86;
-
-
-      doc.setFont(
-    "NotoSans",
-    "normal"
-);
-
-
-        doc.setFontSize(12);
-
-
-      for(
-    let index = 0;
-    index < allQuestions.length;
-    index++
-){
-
-    const question =
-        allQuestions[index];
-
-                const questionNumber =
-                    index + 1;
-
-
-                /*
-                QUESTIONS ONLY
-
-                Hakuna multiple choices
-                */
-
-                const questionText =
-
-                    `${questionNumber}. ${cleanPDFText(
-                        question.question
-                    )}`;
-
-
-                y =
-    addTextToPDF(
-        doc,
-        questionText,
-        y,
-        logo,
-        title,
-        {
-            fontSize:11,
-            lineHeight:7,
-            bottomSpace:45
-        }
-    );
-
-y += 8;
-
-
-/*
-=========================
-QUESTION FIGURE
-=========================
-*/
-
-if(question.diagram_svg){
-
-    try{
-
-        const figurePNG =
-            await svgToPNG(
-                question.diagram_svg
-            );
-
-        if(figurePNG){
-
-            const pageWidth =
-                doc.internal.pageSize.getWidth();
-
-            const pageHeight =
-                doc.internal.pageSize.getHeight();
-
-            const margin = 20;
-
-            const maxWidth =
-                pageWidth - (margin * 2);
-
-            /*
-            Figure size
-            */
-
-            const figureWidth =
-                Math.min(
-                    maxWidth,
-                    130
-                );
-
-            const figureHeight =
-                70;
-
-
-            /*
-            Check if figure fits
-            */
-
-            if(
-                y + figureHeight >
-                pageHeight - 30
-            ){
-
-                y =
-                    createPDFPage(
-                        doc,
-                        logo,
-                        title
-                    );
-
-            }
-
-
-            /*
-            Center figure
-            */
-
-            const figureX =
-                (pageWidth -
-                    figureWidth) / 2;
-
-
-            doc.addImage(
-                figurePNG,
-                "PNG",
-                figureX,
-                y,
-                figureWidth,
-                figureHeight
+        /* -----------------------------------------------
+           Build printable HTML
+        ----------------------------------------------- */
+
+        const printable =
+            await createPrintablePDFContainer(
+                "questions",
+                allQuestions
             );
 
 
-            y +=
-                figureHeight + 12;
+        /* -----------------------------------------------
+           Wait for images / SVG / fonts
+        ----------------------------------------------- */
 
-        }
-
-    }
-    catch(error){
-
-        console.warn(
-            "QUESTION FIGURE ERROR:",
-            error
+        await new Promise(resolve =>
+            setTimeout(resolve, 700)
         );
 
-    }
 
-}
-
-
-y += 5;
-
-
-            }
-
+        /* -----------------------------------------------
+           Generate PDF
+        ----------------------------------------------- */
 
         const safeTopicName =
-
             (topicName || "topic")
-
-            .replace(
-
-                /[^a-z0-9]/gi,
-
-                "_"
-
-            );
+                .replace(
+                    /[^a-z0-9]/gi,
+                    "_"
+                );
 
 
-        /*
-        SAVE PDF
-        */
+        const options = {
 
-        doc.save(
+            margin: [
+                12,
+                10,
+                15,
+                10
+            ],
 
-            `SHAVILmath_${safeTopicName}_Questions.pdf`
+            filename:
+                `SHAVILmath_${safeTopicName}_Questions.pdf`,
 
-        );
+            image: {
+                type: "jpeg",
+                quality: 0.98
+            },
+
+            html2canvas: {
+
+                scale: 2,
+
+                useCORS: true,
+
+                allowTaint: false,
+
+                backgroundColor: "#ffffff",
+
+                logging: false,
+
+                scrollX: 0,
+
+                scrollY: 0
+
+            },
+
+            jsPDF: {
+
+                unit: "mm",
+
+                format: "a4",
+
+                orientation: "portrait"
+
+            },
+
+            pagebreak: {
+
+                mode: [
+                    "css",
+                    "legacy"
+                ],
+
+                avoid: [
+                    ".pdf-question"
+                ]
+
+            }
+
+        };
+
+
+        await html2pdf()
+            .set(options)
+            .from(printable)
+            .save();
+
+
+        /* -----------------------------------------------
+           Remove temporary HTML
+        ----------------------------------------------- */
+
+        printable.remove();
 
 
         console.log(
@@ -3000,24 +3165,29 @@ y += 5;
 
     catch(error){
 
-
         console.error(
             "QUESTIONS PDF ERROR:",
             error
         );
 
 
+        const old =
+            document.getElementById(
+                "shavil-pdf-container"
+            );
+
+        if(old){
+            old.remove();
+        }
+
+
         alert(
-
             "Failed to generate Questions PDF."
-
         );
 
     }
 
 }
-
-
 /* =========================
    GET ALL CORRECT ANSWERS
 ========================= */
@@ -3082,30 +3252,36 @@ async function getCorrectAnswers(
 }
 
 
-/* =========================
-   DOWNLOAD ANSWERS PDF
-========================= */
+/* =========================================================
+   DOWNLOAD ANSWERS & SOLUTIONS PDF
+========================================================= */
 
 async function downloadAnswersPDF(){
 
     try{
-
 
         console.log(
             "STARTING ANSWERS PDF..."
         );
 
 
+        /* -----------------------------------------------
+           Get EXACT SAME QUESTIONS
+        ----------------------------------------------- */
+
         const allQuestions =
             await getAllTopicQuestions();
 
 
+        console.log(
+            "ANSWER PDF QUESTIONS =",
+            allQuestions
+        );
+
+
         if(
-
             !allQuestions ||
-
             allQuestions.length === 0
-
         ){
 
             alert(
@@ -3113,31 +3289,12 @@ async function downloadAnswersPDF(){
             );
 
             return;
-
         }
 
 
-        if(
-
-            !window.jspdf ||
-
-            !window.jspdf.jsPDF
-
-        ){
-
-            throw new Error(
-                "jsPDF library not loaded."
-            );
-
-        }
-
-
-        /*
-        Load all options ONCE
-
-        Badala ya ku-request
-        option moja moja
-        */
+        /* -----------------------------------------------
+           Get options
+        ----------------------------------------------- */
 
         const allOptions =
             await getCorrectAnswers(
@@ -3145,184 +3302,166 @@ async function downloadAnswersPDF(){
             );
 
 
-        const {
+        /* -----------------------------------------------
+           Check html2pdf
+        ----------------------------------------------- */
 
-            jsPDF
-
-        } = window.jspdf;
-
-
-        const doc =
-            new jsPDF({
-
-                orientation:"portrait",
-
-                unit:"mm",
-
-                format:"a4"
-
-            });
-
-await loadNotoSans(doc);
-        const logo =
-            await loadLogoData();
-
-
-        const title =
-            "ANSWERS & SOLUTIONS";
-
-
-        addWatermark(
-
-            doc,
-
-            logo
-
-        );
-
-
-        addPDFHeader(
-
-            doc,
-
-            logo,
-
-            title
-
-        );
-
-
-        addPDFFooter(
-            doc
-        );
-
-
-        let y = 86;
-
-
-        for(
-
-            let index = 0;
-
-            index <
-            allQuestions.length;
-
-            index++
-
+        if(
+            typeof html2pdf === "undefined"
         ){
 
-
-            const question =
-                allQuestions[index];
-
-
-            const number =
-                index + 1;
-
-
-            /*
-            QUESTION
-            */
-
-           doc.setFont(
-    "NotoSans",
-    "normal"
-);
-
-
-            y =
-                addTextToPDF(
-
-                    doc,
-
-                    `QUESTION ${number}\n${cleanPDFText(
-                        question.question
-                    )}`,
-
-                    y,
-
-                    logo,
-
-                    title,
-
-                    {
-
-                        fontSize:12,
-
-                        lineHeight:7,
-
-                        bottomSpace:70
-
-                    }
-
-                );
-
-
-            y += 6;
-
-
-            /*
-            FIND CORRECT OPTION
-            */
-
-            const correctOption =
-                allOptions.find(
-
-                    option =>
-
-                        option.question_id ===
-                        question.id
-
-                        &&
-
-                        option.option_letter ===
-                        question.correct_answer
-
-                );
-
-
-            const answerText =
-                correctOption
-
-                    ? correctOption.option_text
-
-                    : question.correct_answer ||
-                      "Answer not available";
-
-
-            /*
-            ANSWER
-            */
-
-   doc.setFont(
-    "NotoSans",
-    "normal"
-);
-
-
-y =
-    addTextToPDF(
-
-        doc,
-
-        `ANSWER:\n${cleanPDFText(
-            answerText
-        )}`,
-
-        y,
-
-        logo,
-
-        title,
-
-        {
-            fontSize:11,
-            lineHeight:7,
-            bottomSpace:55
+            throw new Error(
+                "html2pdf library not loaded."
+            );
         }
 
-    );
 
+        /* -----------------------------------------------
+           Build printable HTML
+        ----------------------------------------------- */
+
+        const printable =
+            await createPrintablePDFContainer(
+                "answers",
+                allQuestions,
+                allOptions
+            );
+
+
+        /* -----------------------------------------------
+           Wait for rendering
+        ----------------------------------------------- */
+
+        await new Promise(resolve =>
+            setTimeout(resolve, 700)
+        );
+
+
+        /* -----------------------------------------------
+           File name
+        ----------------------------------------------- */
+
+        const safeTopicName =
+            (topicName || "topic")
+                .replace(
+                    /[^a-z0-9]/gi,
+                    "_"
+                );
+
+
+        const options = {
+
+            margin: [
+                12,
+                10,
+                15,
+                10
+            ],
+
+            filename:
+                `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`,
+
+            image: {
+
+                type: "jpeg",
+
+                quality: 0.98
+
+            },
+
+            html2canvas: {
+
+                scale: 2,
+
+                useCORS: true,
+
+                allowTaint: false,
+
+                backgroundColor: "#ffffff",
+
+                logging: false,
+
+                scrollX: 0,
+
+                scrollY: 0
+
+            },
+
+            jsPDF: {
+
+                unit: "mm",
+
+                format: "a4",
+
+                orientation: "portrait"
+
+            },
+
+            pagebreak: {
+
+                mode: [
+                    "css",
+                    "legacy"
+                ],
+
+                avoid: [
+                    ".pdf-question"
+                ]
+
+            }
+
+        };
+
+
+        /* -----------------------------------------------
+           Generate
+        ----------------------------------------------- */
+
+        await html2pdf()
+            .set(options)
+            .from(printable)
+            .save();
+
+
+        /* -----------------------------------------------
+           Remove temporary HTML
+        ----------------------------------------------- */
+
+        printable.remove();
+
+
+        console.log(
+            "ANSWERS PDF GENERATED SUCCESSFULLY"
+        );
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "ANSWERS PDF ERROR:",
+            error
+        );
+
+
+        const old =
+            document.getElementById(
+                "shavil-pdf-container"
+            );
+
+        if(old){
+            old.remove();
+        }
+
+
+        alert(
+            "Failed to generate Answers PDF."
+        );
+
+    }
+
+}
 
 /*
 =========================
