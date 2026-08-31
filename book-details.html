@@ -274,26 +274,33 @@ async function loadBook(){
         }
 
 
-        const cover =
-            book.cover_url
+       let cover = "";
 
-            ? `
-                <img
-                    src="${escapeHTML(
-                        book.cover_url
-                    )}"
-                    alt="${escapeHTML(
-                        book.title
-                    )}"
-                >
-              `
+if (book.cover_path) {
 
-            : `
-                <div class="no-cover">
-                    📘
-                </div>
-              `;
+    const {
+        data: coverData
+    } = window.supabaseClient
+        .storage
+        .from("book-covers")
+        .getPublicUrl(book.cover_path);
 
+    cover = `
+        <img
+            src="${coverData.publicUrl}"
+            alt="${escapeHTML(book.title)}"
+        >
+    `;
+
+} else {
+
+    cover = `
+        <div class="no-cover">
+            📘
+        </div>
+    `;
+
+}
 
         container.className =
             "book";
