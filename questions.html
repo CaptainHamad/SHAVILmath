@@ -2149,18 +2149,38 @@ function cleanPDFText(value){
 
         .replace(/\u00A0/g, " ")
 
-        .replace(/×/g, " x ")
-        .replace(/÷/g, " / ")
+        // Mathematical symbols
+        .replace(/×/g, " × ")
+        .replace(/x(?=\s*\^)/g, "×")
+        .replace(/÷/g, " ÷ ")
 
-        .replace(/[−–—]/g, "-")
+        .replace(/[−–—]/g, "−")
 
-      
-        .replace(/√/g, "sqrt")
+        // Square root
+        .replace(/sqrt\s*/gi, "√")
 
-        .replace(/½/g, "1/2")
-        .replace(/⅓/g, "1/3")
-        .replace(/¼/g, "1/4")
-        .replace(/¾/g, "3/4")
+        // Common fractions
+        .replace(/½/g, "½")
+        .replace(/⅓/g, "⅓")
+        .replace(/¼/g, "¼")
+        .replace(/¾/g, "¾")
+
+        // Convert ^numbers into superscripts
+        .replace(/\^0/g, "⁰")
+        .replace(/\^1/g, "¹")
+        .replace(/\^2/g, "²")
+        .replace(/\^3/g, "³")
+        .replace(/\^4/g, "⁴")
+        .replace(/\^5/g, "⁵")
+        .replace(/\^6/g, "⁶")
+        .replace(/\^7/g, "⁷")
+        .replace(/\^8/g, "⁸")
+        .replace(/\^9/g, "⁹")
+
+        // Superscript common negative powers
+        .replace(/\^\(-1\)/g, "⁻¹")
+        .replace(/\^\(-2\)/g, "⁻²")
+        .replace(/\^\(-3\)/g, "⁻³")
 
         .replace(/\s+/g, " ")
 
