@@ -2704,18 +2704,18 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
     printable.id = "shavil-pdf-container";
 
     printable.style.cssText = `
-        position: fixed;
-        left: -100000px;
-        top: 0;
-        width: 794px;
-        background: white;
-        color: #000;
-        font-family: Arial, sans-serif;
-        padding: 45px 55px 55px 55px;
-        box-sizing: border-box;
-        z-index: -9999;
-    `;
-
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 794px;
+    min-height: 1123px;
+    background: white;
+    color: #000;
+    font-family: Arial, sans-serif;
+    padding: 45px 55px 55px 55px;
+    box-sizing: border-box;
+    z-index: 999999;
+`;
 
     /* =====================================================
        HEADER
