@@ -2705,13 +2705,13 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
 
     printable.style.cssText = `
     position: relative;
-    width: 794px;
-    min-height: 1123px;
+    width: 190mm;
+    min-height: 277mm;
     margin: 0 auto;
     background: #ffffff;
     color: #000000;
     font-family: Arial, sans-serif;
-    padding: 45px 55px 55px 55px;
+    padding: 12mm;
     box-sizing: border-box;
 `;
     /* =====================================================
@@ -2822,14 +2822,15 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
             document.createElement("div");
 
         questionText.style.cssText = `
-            font-size:17px;
-            line-height:1.7;
-            font-weight:400;
-            margin-bottom:12px;
-            word-wrap:break-word;
-            overflow-wrap:break-word;
-        `;
-
+    font-size:17px;
+    line-height:1.7;
+    font-weight:400;
+    margin-bottom:12px;
+    word-wrap:break-word;
+    overflow-wrap:anywhere;
+    white-space:normal;
+    max-width:100%;
+`;
         questionText.innerHTML = `
             <strong>${index + 1}.</strong>
             ${escapeHTML(question.question)}
@@ -3124,12 +3125,7 @@ async function downloadQuestionsPDF(){
 
         const options = {
 
-            margin: [
-                12,
-                10,
-                15,
-                10
-            ],
+    margin: 0,
 
             filename:
                 `SHAVILmath_${safeTopicName}_Questions.pdf`,
@@ -3390,12 +3386,7 @@ async function downloadAnswersPDF(){
 
         const options = {
 
-            margin: [
-                12,
-                10,
-                15,
-                10
-            ],
+           margin: 0,
 
             filename:
                 `SHAVILmath_${safeTopicName}_Answers_and_Solutions.pdf`,
