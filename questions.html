@@ -2158,9 +2158,9 @@ function cleanPDFText(value){
         .replace(/[−–—]/g, "−")
 
         
-        // Square root
-.replace(/√/g, "[[SQRT]]")
-.replace(/sqrt\s*/gi, "[[SQRT]]")
+// Square root
+.replace(/sqrt\s*/g, "@@SQRT@@")
+.replace(/√/g, "@@SQRT@@")
 
         // Common fractions
         .replace(/½/g, "½")
@@ -2468,9 +2468,9 @@ function addTextToPDF(
             ---------------------------------
             */
 
-           const parts =
+          const parts =
     line.split(
-        /(\[\[SQRT\]\]|[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]|×|÷|−)/
+        /(@@SQRT@@|[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]|×|÷|−)/
     );
 
             let currentX =
@@ -2563,8 +2563,7 @@ function addTextToPDF(
                     =============================
                     */
 
-                   if(part === "[[SQRT]]"){
-
+                  if(part === "@@SQRT@@"){
     /*
     =============================
     DRAW SQUARE ROOT MANUALLY
