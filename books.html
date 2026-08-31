@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>SHAVILmath Books</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+
+body{
+
+    background:#F4F7FB;
+
+    color:#0F172A;
+
+}
+
+
+header{
+
+    background:#2563EB;
+
+    padding:20px 8%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    color:white;
+
+}
+
+
+header img{
+
+    height:55px;
+
+}
+
+
+header a{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+
+.container{
+
+    padding:50px 8%;
+
+    max-width:1400px;
+
+    margin:auto;
+
+}
+
+
+.hero{
+
+    text-align:center;
+
+    margin-bottom:45px;
+
+}
+
+
+.hero h1{
+
+    font-size:42px;
+
+    margin-bottom:10px;
+
+}
+
+
+.hero p{
+
+    color:#64748B;
+
+    font-size:17px;
+
+}
+
+
+.books-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(260px,1fr));
+
+    gap:30px;
+
+}
+
+
+.book-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+
+.book-card:hover{
+
+    transform:translateY(-7px);
+
+    box-shadow:
+        0 18px 45px rgba(37,99,235,.16);
+
+}
+
+
+.cover{
+
+    height:320px;
+
+    background:#E2E8F0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+}
+
+
+.cover img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.no-cover{
+
+    font-size:60px;
+
+}
+
+
+.book-content{
+
+    padding:25px;
+
+}
+
+
+.book-content h2{
+
+    font-size:21px;
+
+    margin-bottom:10px;
+
+}
+
+
+.description{
+
+    color:#64748B;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    min-height:65px;
+
+}
+
+
+.meta{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:18px 0;
+
+}
+
+
+.form{
+
+    color:#2563EB;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+.price{
+
+    font-size:20px;
+
+    font-weight:800;
+
+}
+
+
+.btn{
+
+    display:block;
+
+    width:100%;
+
+    border:none;
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+
+.btn:hover{
+
+    background:#1D4ED8;
+
+}
+
+
+.loading{
+
+    text-align:center;
+
+    padding:60px;
+
+    color:#64748B;
+
+}
+
+
+.empty{
+
+    text-align:center;
+
+    padding:60px;
+
+    color:#64748B;
+
+}
+
+
+@media(max-width:600px){
+
+    header{
+
+        padding:15px 5%;
+
+    }
+
+
+    header img{
+
+        height:45px;
+
+    }
+
+
+    .container{
+
+        padding:35px 5%;
+
+    }
+
+
+    .hero h1{
+
+        font-size:32px;
+
+    }
+
+
+    .books-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<img src="assets/images/logo.png">
+
+<a href="dashboard.html">
+
+⬅ Dashboard
+
+</a>
+
+</header>
+
+
+<div class="container">
+
+
+<section class="hero">
+
+<h1>📚 SHAVILmath Books</h1>
+
+<p>
+
+Learn more. Practice more. Achieve more.
+
+</p>
+
+</section>
+
+
+<div id="booksContainer"
+     class="books-grid">
+
+<div class="loading">
+
+Loading books...
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+<script>
+
+
+async function loadBooks(){
+
+    const container =
+        document.getElementById(
+            "booksContainer"
+        );
+
+
+    try{
+
+        const {
+            data,
+            error
+        } = await window.supabaseClient
+
+            .from("books")
+
+            .select("*")
+
+            .eq("status","active")
+
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        if(
+            !data ||
+            data.length === 0
+        ){
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    No books available yet.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.forEach(book => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "book-card";
+
+
+            const cover =
+                book.cover_url
+
+                    ? `
+
+                        <img
+                            src="${book.cover_url}"
+                            alt="${escapeHTML(book.title)}"
+                        >
+
+                      `
+
+                    : `
+
+                        <div class="no-cover">
+
+                            📘
+
+                        </div>
+
+                      `;
+
+
+            card.innerHTML = `
+
+                <div class="cover">
+
+                    ${cover}
+
+                </div>
+
+
+                <div class="book-content">
+
+                    <h2>
+                        ${escapeHTML(book.title)}
+                    </h2>
+
+
+                    <p class="description">
+
+                        ${
+                            escapeHTML(
+                                book.description ||
+                                "Mathematics learning material."
+                            )
+                        }
+
+                    </p>
+
+
+                    <div class="meta">
+
+                        <span class="form">
+
+                            ${escapeHTML(
+                                book.form_name ||
+                                "Mathematics"
+                            )}
+
+                        </span>
+
+
+                        <span class="price">
+
+                            TSh
+                            ${Number(
+                                book.price
+                            ).toLocaleString()}
+
+                        </span>
+
+                    </div>
+
+
+                    <a
+                        class="btn"
+                        href="book-details.html?id=${book.id}"
+                    >
+
+                        View Book
+
+                    </a>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            "BOOKS ERROR:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                Failed to load books.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+function escapeHTML(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+loadBooks();
+
+</script>
+
+
+</body>
+
+</html>
