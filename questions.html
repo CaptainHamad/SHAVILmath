@@ -2153,11 +2153,14 @@ function cleanPDFText(value){
         .replace(/×/g, " × ")
         .replace(/x(?=\s*\^)/g, "×")
         .replace(/÷/g, " ÷ ")
+          
 
         .replace(/[−–—]/g, "−")
 
+        
         // Square root
-        .replace(/sqrt\s*/gi, "√")
+.replace(/√/g, "[[SQRT]]")
+.replace(/sqrt\s*/gi, "[[SQRT]]")
 
         // Common fractions
         .replace(/½/g, "½")
@@ -2465,11 +2468,10 @@ function addTextToPDF(
             ---------------------------------
             */
 
-            const parts =
-                line.split(
-                    /(√|[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]|×|÷|−)/
-                );
-
+           const parts =
+    line.split(
+        /(\[\[SQRT\]\]|[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]|×|÷|−)/
+    );
 
             let currentX =
                 margin;
@@ -2561,33 +2563,59 @@ function addTextToPDF(
                     =============================
                     */
 
-                    if(part === "√"){
+                   if(part === "[[SQRT]]"){
 
-                        doc.setFontSize(
-                            fontSize + 2
-                        );
+    /*
+    =============================
+    DRAW SQUARE ROOT MANUALLY
+    =============================
+    */
 
+    const rootSize = fontSize * 0.85;
 
-                        doc.text(
-                            "√",
-                            currentX,
-                            lineY
-                        );
+    const rootWidth = 4;
 
-
-                        currentX +=
-                            doc.getTextWidth(
-                                "√"
-                            );
+    const rootHeight = 5;
 
 
-                        doc.setFontSize(
-                            fontSize
-                        );
+    /*
+    Draw the radical check mark
+    */
 
-                        return;
-                    }
+    doc.setLineWidth(0.35);
 
+    doc.line(
+        currentX,
+        lineY - 1,
+        currentX + 1.5,
+        lineY + 2
+    );
+
+    doc.line(
+        currentX + 1.5,
+        lineY + 2,
+        currentX + 3,
+        lineY - 4
+    );
+
+
+    /*
+    Top horizontal bar
+    */
+
+    doc.line(
+        currentX + 3,
+        lineY - 4,
+        currentX + rootWidth + 4,
+        lineY - 4
+    );
+
+
+    currentX +=
+        rootWidth + 4;
+
+    return;
+}
 
                     /*
                     =============================
