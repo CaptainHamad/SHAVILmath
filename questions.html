@@ -2364,83 +2364,280 @@ function addTextToPDF(
     const pageHeight =
         doc.internal.pageSize.getHeight();
 
-
-    // Margins za kushoto na kulia
     const margin =
-    options.margin || 22;
+        options.margin || 22;
 
     const fontSize =
         options.fontSize || 11;
 
     const lineHeight =
-        options.lineHeight || 7.5;
+        options.lineHeight || 7;
 
-    const bottomSpace = 28;
-
-
-    doc.setFontSize(fontSize);
-
-   doc.setFont(
-    "NotoSans",
-    "normal"
-);
-
-
-    /*
-    Upana halisi wa sehemu ya maandishi.
-
-    A4 portrait = takriban 210mm.
-    Tukitoa 20mm kushoto na 20mm kulia,
-    text itabaki ndani ya page.
-    */
+    const bottomSpace =
+        options.bottomSpace || 28;
 
     const maxWidth =
         pageWidth - (margin * 2);
 
 
+    /*
+    =====================================
+    CLEAN TEXT
+    =====================================
+    */
+
+    const cleanText =
+        cleanPDFText(text);
+
+
+    /*
+    =====================================
+    SPLIT INTO LINES
+    =====================================
+    */
+
     const lines =
         doc.splitTextToSize(
-            cleanPDFText(text),
+            cleanText,
             maxWidth
         );
 
 
-    /*
-    Kagua kama question yote
-    ina nafasi kwenye page.
-
-    Kama hakuna nafasi,
-    anza page mpya.
-    */
-
     const requiredHeight =
         (lines.length * lineHeight) + 8;
 
+
+    /*
+    =====================================
+    PAGE BREAK
+    =====================================
+    */
 
     if(
         y + requiredHeight >
         pageHeight - bottomSpace
     ){
 
-        y = createPDFPage(
-            doc,
-            logo,
-            title
-        );
+        y =
+            createPDFPage(
+                doc,
+                logo,
+                title
+            );
 
     }
 
 
     /*
-    Weka text ndani ya margins
+    =====================================
+    FONT
+    =====================================
     */
 
-    doc.text(
-        lines,
-        margin,
-        y,
-        {
-            maxWidth: maxWidth
+    doc.setFont(
+        "NotoSans",
+        "normal"
+    );
+
+    doc.setFontSize(
+        fontSize
+    );
+
+
+    /*
+    =====================================
+    DRAW EACH LINE
+    =====================================
+    */
+
+    lines.forEach(
+        (line, lineIndex) => {
+
+            const lineY =
+                y +
+                (lineIndex * lineHeight);
+
+
+            /*
+            ---------------------------------
+            Split mathematical symbols
+            from normal text
+            ---------------------------------
+            */
+
+            const parts =
+                line.split(
+                    /(√|[⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉]|×|÷|−)/
+                );
+
+
+            let currentX =
+                margin;
+
+
+            parts.forEach(
+                part => {
+
+                    if(!part){
+                        return;
+                    }
+
+
+                    /*
+                    =============================
+                    SUPERSCRIPTS
+                    =============================
+                    */
+
+                    if(
+                        /^[⁰¹²³⁴⁵⁶⁷⁸⁹]+$/.test(part)
+                    ){
+
+                        doc.setFontSize(
+                            fontSize * 0.70
+                        );
+
+
+                        doc.text(
+                            part,
+                            currentX,
+                            lineY - 2
+                        );
+
+
+                        currentX +=
+                            doc.getTextWidth(
+                                part
+                            );
+
+
+                        doc.setFontSize(
+                            fontSize
+                        );
+
+                        return;
+                    }
+
+
+                    /*
+                    =============================
+                    SUBSCRIPTS
+                    =============================
+                    */
+
+                    if(
+                        /^[₀₁₂₃₄₅₆₇₈₉]+$/.test(part)
+                    ){
+
+                        doc.setFontSize(
+                            fontSize * 0.70
+                        );
+
+
+                        doc.text(
+                            part,
+                            currentX,
+                            lineY + 1.5
+                        );
+
+
+                        currentX +=
+                            doc.getTextWidth(
+                                part
+                            );
+
+
+                        doc.setFontSize(
+                            fontSize
+                        );
+
+                        return;
+                    }
+
+
+                    /*
+                    =============================
+                    SQUARE ROOT
+                    =============================
+                    */
+
+                    if(part === "√"){
+
+                        doc.setFontSize(
+                            fontSize + 2
+                        );
+
+
+                        doc.text(
+                            "√",
+                            currentX,
+                            lineY
+                        );
+
+
+                        currentX +=
+                            doc.getTextWidth(
+                                "√"
+                            );
+
+
+                        doc.setFontSize(
+                            fontSize
+                        );
+
+                        return;
+                    }
+
+
+                    /*
+                    =============================
+                    OTHER MATH SYMBOLS
+                    =============================
+                    */
+
+                    if(
+                        part === "×" ||
+                        part === "÷" ||
+                        part === "−"
+                    ){
+
+                        doc.text(
+                            part,
+                            currentX,
+                            lineY
+                        );
+
+
+                        currentX +=
+                            doc.getTextWidth(
+                                part
+                            );
+
+                        return;
+                    }
+
+
+                    /*
+                    =============================
+                    NORMAL TEXT
+                    =============================
+                    */
+
+                    doc.text(
+                        part,
+                        currentX,
+                        lineY
+                    );
+
+
+                    currentX +=
+                        doc.getTextWidth(
+                            part
+                        );
+
+                }
+            );
+
         }
     );
 
@@ -2451,7 +2648,6 @@ function addTextToPDF(
     );
 
 }
-    
 
         
 
