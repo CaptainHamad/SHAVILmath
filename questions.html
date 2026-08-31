@@ -2992,60 +2992,50 @@ async function createPrintablePDFContainer(type, allQuestions, allOptions = []) 
     return printable;
 }
 
-async function waitForPDFImages(container){
+async function waitForPDFImages(container) {
 
-    const images =
-        Array.from(
-            container.querySelectorAll("img")
-        );
+    const images = Array.from(
+        container.querySelectorAll("img")
+    );
 
-    if(images.length === 0){
+    if (images.length === 0) {
         return;
     }
 
     await Promise.all(
+        images.map(function(img) {
 
-        images.map(img => {
-
-            if(img.complete){
-
-                if(img.naturalWidth > 0){
-                    return Promise.resolve();
-                }
-
+            if (
+                img.complete &&
+                img.naturalWidth > 0
+            ) {
+                return Promise.resolve();
             }
 
-            return new Promise(resolve => {
+            return new Promise(function(resolve) {
 
-                img.addEventListener(
-                    "load",
-                    resolve,
-                    { once:true }
-                );
-
-                img.addEventListener(
-                    "error",
-                    resolve,
-                    { once:true }
-                );
+                img.onload = resolve;
+                img.onerror = resolve;
 
             });
 
         })
-
     );
 
-    /*
-     * Give browser one extra rendering cycle
-     */
+    await new Promise(function(resolve) {
 
-    await new Promise(resolve =>
-        requestAnimationFrame(() => {
+        requestAnimationFrame(function() {
 
-            requestAnimationFrame(resolve);
+            requestAnimationFrame(function() {
 
-        })
-    );
+                resolve();
+
+            });
+
+        });
+
+    });
+
 }
 /* =========================================================
    DOWNLOAD QUESTIONS PDF
