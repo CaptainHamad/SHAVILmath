@@ -2697,6 +2697,17 @@ async function downloadQuestionsPDF(){
         const allQuestions =
             await getAllTopicQuestions();
 
+          console.table(
+    allQuestions.map((q, i) => ({
+        number: i + 1,
+        id: q.id,
+        question_order: q.question_order,
+        question: q.question,
+        difficulty: q.difficulty,
+        set_name: q.set_name
+    }))
+);
+
 
         console.log(
             "ALL QUESTIONS:",
