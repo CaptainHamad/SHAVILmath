@@ -177,17 +177,19 @@ Review student payments and activate Premium access.
 
 <tr>
 
-<th>Student ID</th>
+    <th>Type</th>
 
-<th>Plan</th>
+    <th>Student ID</th>
 
-<th>Amount</th>
+    <th>Item</th>
 
-<th>Payment Number</th>
+    <th>Amount</th>
 
-<th>Status</th>
+    <th>Payment Number</th>
 
-<th>Action</th>
+    <th>Status</th>
+
+    <th>Action</th>
 
 </tr>
 
@@ -236,33 +238,355 @@ async function loadPayments(){
 
     paymentsBody.innerHTML = `
         <tr>
-            <td colspan="6" class="loading">
+            <td colspan="7" class="loading">
                 Loading payment requests...
             </td>
         </tr>
     `;
 
 
-    const {
+    try{
 
-        data: payments,
-        error
+        /* =====================================
+           LOAD PREMIUM PAYMENTS
+        ===================================== */
 
-    } = await window.supabaseClient
+        const {
+            data: subscriptions,
+            error: subscriptionError
+        } = await window.supabaseClient
 
-        .from("subscriptions")
+            .from("subscriptions")
 
-        .select("*")
+            .select("*")
 
-        .order(
-            "created_at",
-            {
-                ascending:false
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(subscriptionError){
+
+            throw subscriptionError;
+
+        }
+
+
+        /* =====================================
+           LOAD BOOK ORDERS
+        ===================================== */
+
+        const {
+            data: bookOrders,
+            error: bookOrderError
+        } = await window.supabaseClient
+
+            .from("book_orders")
+
+            .select(`
+                *,
+                books (
+                    title
+                )
+            `)
+
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(bookOrderError){
+
+            throw bookOrderError;
+
+        }
+
+
+        /* =====================================
+           COMBINE PAYMENTS
+        ===================================== */
+
+        const premiumPayments =
+            (subscriptions || []).map(
+                payment => ({
+
+                    type:
+                        "Premium",
+
+                    id:
+                        payment.id,
+
+                    user_id:
+                        payment.user_id,
+
+                    item:
+                        payment.plan || "-",
+
+                    amount:
+                        payment.amount,
+
+                    payer_phone:
+                        payment.payer_phone,
+
+                    status:
+                        payment.status,
+
+                    payment_type:
+                        "subscription"
+
+                })
+            );
+
+
+        const bookPayments =
+            (bookOrders || []).map(
+                order => ({
+
+                    type:
+                        "Book",
+
+                    id:
+                        order.id,
+
+                    user_id:
+                        order.user_id,
+
+                    item:
+                        order.books?.title ||
+                        "Book",
+
+                    amount:
+                        order.amount,
+
+                    payer_phone:
+                        order.payer_phone,
+
+                    status:
+                        order.status,
+
+                    payment_type:
+                        "book"
+
+                })
+            );
+
+
+        const allPayments = [
+
+            ...premiumPayments,
+
+            ...bookPayments
+
+        ];
+
+
+        /* =====================================
+           SORT NEWEST FIRST
+        ===================================== */
+
+        allPayments.sort(
+            (a,b) => {
+
+                const dateA =
+                    new Date(
+                        a.created_at || 0
+                    );
+
+                const dateB =
+                    new Date(
+                        b.created_at || 0
+                    );
+
+                return dateB - dateA;
+
             }
         );
 
 
-    if(error){
+        /* =====================================
+           EMPTY
+        ===================================== */
+
+        if(
+            allPayments.length === 0
+        ){
+
+            paymentsBody.innerHTML = `
+                <tr>
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+                        No payment requests yet.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        /* =====================================
+           DISPLAY
+        ===================================== */
+
+        paymentsBody.innerHTML = "";
+
+
+        allPayments.forEach(
+            payment => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                const typeBadge =
+                    payment.type === "Book"
+
+                    ?
+
+                    `
+                    <span
+                        class="status active"
+                    >
+                        📚 Book
+                    </span>
+                    `
+
+                    :
+
+                    `
+                    <span
+                        class="status"
+                        style="
+                            background:#DBEAFE;
+                            color:#1D4ED8;
+                        "
+                    >
+                        ⭐ Premium
+                    </span>
+                    `;
+
+
+                const statusClass =
+                    payment.status === "active" ||
+                    payment.status === "paid"
+
+                    ?
+
+                    "active"
+
+                    :
+
+                    "pending";
+
+
+                row.innerHTML = `
+
+                    <td>
+
+                        ${typeBadge}
+
+                    </td>
+
+
+                    <td>
+
+                        ${payment.user_id}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHTML(
+                            payment.item
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        TSh
+                        ${Number(
+                            payment.amount || 0
+                        ).toLocaleString()}
+
+                    </td>
+
+
+                    <td>
+
+                        ${escapeHTML(
+                            payment.payer_phone || "-"
+                        )}
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status ${statusClass}"
+                        >
+
+                            ${payment.status || "pending"}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        ${
+                            payment.status === "pending"
+
+                            ?
+
+                            `
+                            <button
+                                class="approve-btn"
+                                onclick="
+                                    approvePayment(
+                                        '${payment.id}',
+                                        this,
+                                        '${payment.payment_type}'
+                                    )
+                                "
+                            >
+
+                                ✓ Approve
+
+                            </button>
+                            `
+
+                            :
+
+                            "—"
+                        }
+
+                    </td>
+
+                `;
+
+
+                paymentsBody.appendChild(row);
+
+            }
+        );
+
+    }
+
+    catch(error){
 
         console.error(
             "LOAD PAYMENTS ERROR:",
@@ -271,109 +595,31 @@ async function loadPayments(){
 
 
         paymentsBody.innerHTML = `
+
             <tr>
-                <td colspan="6" class="empty">
+
+                <td
+                    colspan="7"
+                    class="empty"
+                >
+
                     ⚠️ Failed to load payments.
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        error.message
+                    )}
+
                 </td>
+
             </tr>
+
         `;
 
-        return;
     }
-
-
-    if(!payments || payments.length === 0){
-
-        paymentsBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="empty">
-                    No payment requests yet.
-                </td>
-            </tr>
-        `;
-
-        return;
-    }
-
-
-    paymentsBody.innerHTML = "";
-
-
-    payments.forEach(payment => {
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-                ${payment.user_id}
-            </td>
-
-
-            <td>
-                ${payment.plan || "-"}
-            </td>
-
-
-            <td>
-                TSh ${Number(payment.amount || 0).toLocaleString()}
-            </td>
-
-
-            <td>
-                ${payment.payer_phone || "-"}
-            </td>
-
-
-            <td>
-
-                <span class="status ${payment.status || "pending"}">
-
-                    ${payment.status || "pending"}
-
-                </span>
-
-            </td>
-
-
-            <td>
-
-                ${
-                    payment.status === "pending"
-
-                    ?
-
-                    `
-                    <button
-                    class="approve-btn"
-                    onclick="approvePayment('${payment.id}', this)">
-
-                        ✓ Approve
-
-                    </button>
-                    `
-
-                    :
-
-                    "—"
-                }
-
-            </td>
-
-        `;
-
-
-        paymentsBody.appendChild(row);
-
-    });
 
 }
-
-
-
 /* =====================================
    APPROVE PAYMENT
 ===================================== */
@@ -843,7 +1089,21 @@ async function approvePayment(paymentId, button){
 /* =====================================
    START
 ===================================== */
+function escapeHTML(value){
 
+    return String(value || "")
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
 loadPayments();
 
 
