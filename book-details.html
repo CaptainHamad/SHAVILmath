@@ -175,6 +175,73 @@ header a{
 
 }
 
+.preview-btn{
+    display:block;
+    width:100%;
+    padding:15px;
+    border:2px solid #2563EB;
+    border-radius:12px;
+    background:white;
+    color:#2563EB;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    text-align:center;
+    margin-bottom:12px;
+}
+
+.preview-btn:hover{
+    background:#EFF6FF;
+}
+
+.preview-section{
+    margin-top:40px;
+    background:white;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.preview-section h2{
+    margin-bottom:8px;
+}
+
+.preview-description{
+    color:#64748B;
+    margin-bottom:20px;
+    line-height:1.7;
+}
+
+.pdf-viewer{
+    width:100%;
+    height:750px;
+    border:none;
+    border-radius:15px;
+    background:#F1F5F9;
+}
+
+.close-preview{
+    margin-top:15px;
+    padding:10px 18px;
+    border:none;
+    border-radius:10px;
+    background:#E2E8F0;
+    color:#0F172A;
+    font-weight:600;
+    cursor:pointer;
+}
+
+@media(max-width:750px){
+
+    .preview-section{
+        padding:20px;
+    }
+
+    .pdf-viewer{
+        height:600px;
+    }
+
+}
 </style>
 
 </head>
@@ -200,7 +267,30 @@ header a{
 Loading book...
 
 </div>
+<div id="previewSection"
+     class="preview-section"
+     style="display:none;">
 
+    <h2>📖 Book Preview</h2>
+
+    <p class="preview-description">
+        Preview this book before making your purchase.
+    </p>
+
+    <iframe
+        id="pdfViewer"
+        class="pdf-viewer">
+    </iframe>
+
+    <button
+        class="close-preview"
+        onclick="closePreview()">
+
+        Close Preview
+
+    </button>
+
+</div>
 </div>
 
 
@@ -272,7 +362,7 @@ async function loadBook(){
             );
 
         }
-
+window.currentBook = book;
 
        let cover = "";
 
@@ -381,15 +471,19 @@ if (book.cover_path) {
                 </div>
 
 
-                <button
-                    class="btn"
-                    onclick="buyBook()"
-                >
+<button
+    class="preview-btn"
+    onclick="previewBook()"
+>
+    📖 Preview Book
+</button>
 
-                    🛒 Buy Now
-
-                </button>
-
+<button
+    class="btn"
+    onclick="buyBook()"
+>
+    🛒 Buy Now
+</button>
             </div>
 
         `;
@@ -429,6 +523,99 @@ function escapeHTML(value){
 
 }
 
+function previewBook(){
+
+    if(!window.currentBook){
+
+        alert("Book information is not available.");
+
+        return;
+
+    }
+
+
+    if(!window.currentBook.pdf_path){
+
+        alert(
+            "Preview is not available for this book yet."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        data: pdfData
+    } = window.supabaseClient
+
+        .storage
+
+        .from("book-files")
+
+        .getPublicUrl(
+            window.currentBook.pdf_path
+        );
+
+
+    if(
+        !pdfData ||
+        !pdfData.publicUrl
+    ){
+
+        alert(
+            "Unable to open book preview."
+        );
+
+        return;
+
+    }
+
+
+    const previewSection =
+        document.getElementById(
+            "previewSection"
+        );
+
+    const pdfViewer =
+        document.getElementById(
+            "pdfViewer"
+        );
+
+
+    pdfViewer.src =
+        pdfData.publicUrl;
+
+
+    previewSection.style.display =
+        "block";
+
+
+    previewSection.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+function closePreview(){
+
+    const previewSection =
+        document.getElementById(
+            "previewSection"
+        );
+
+    const pdfViewer =
+        document.getElementById(
+            "pdfViewer"
+        );
+
+
+    pdfViewer.src = "";
+
+    previewSection.style.display =
+        "none";
+
+}
 
 function buyBook(){
 
