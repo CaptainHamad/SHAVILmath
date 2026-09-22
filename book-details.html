@@ -432,12 +432,19 @@ function escapeHTML(value){
 
 function buyBook(){
 
-    alert(
-        "Payment system coming next."
-    );
+    if(!bookId){
+
+        alert("Book not found.");
+
+        return;
+
+    }
+
+    window.location.href =
+        "book-payment.html?id=" +
+        encodeURIComponent(bookId);
 
 }
-
 
 loadBook();
 
