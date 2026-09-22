@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Book Payment | SHAVILmath</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#F4F7FB;
+    color:#0F172A;
+}
+
+header{
+    background:#2563EB;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header img{
+    height:55px;
+}
+
+.back-btn{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.container{
+    max-width:650px;
+    margin:60px auto;
+    padding:0 20px;
+}
+
+.payment-card{
+    background:white;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.payment-card h1{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#64748B;
+    margin-bottom:30px;
+}
+
+
+/* =========================
+   BOOK SUMMARY
+========================= */
+
+.book-summary{
+    background:#F8FAFC;
+    border:1px solid #E2E8F0;
+    border-radius:16px;
+    padding:25px;
+    margin-bottom:30px;
+}
+
+.book-info{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.book-cover{
+    width:90px;
+    height:120px;
+    border-radius:10px;
+    overflow:hidden;
+    background:#E2E8F0;
+    flex-shrink:0;
+}
+
+.book-cover img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.book-placeholder{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:35px;
+}
+
+.book-details h2{
+    font-size:19px;
+    margin-bottom:8px;
+}
+
+.book-details p{
+    color:#64748B;
+    font-size:14px;
+    line-height:1.6;
+}
+
+.price-row{
+    border-top:1px solid #CBD5E1;
+    margin-top:20px;
+    padding-top:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.price-row span{
+    color:#64748B;
+}
+
+.price-row strong{
+    font-size:24px;
+}
+
+
+/* =========================
+   LIPA NAMBA
+========================= */
+
+.lipa-box{
+    background:#EFF6FF;
+    border:2px solid #2563EB;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    margin-top:20px;
+}
+
+.lipa-box h3{
+    color:#1E40AF;
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+.lipa-text{
+    color:#475569;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.lipa-number{
+    background:white;
+    border:2px dashed #2563EB;
+    color:#2563EB;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:2px;
+    padding:18px;
+    border-radius:15px;
+    margin:22px 0 12px;
+}
+
+.account-name{
+    font-weight:700;
+    font-size:17px;
+    color:#0F172A;
+    margin-bottom:20px;
+}
+
+.instruction{
+    color:#64748B;
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:20px;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.transaction-input{
+    width:100%;
+    padding:15px;
+    border:1px solid #CBD5E1;
+    border-radius:12px;
+    outline:none;
+    font-size:15px;
+    transition:.3s;
+}
+
+.transaction-input:focus{
+    border-color:#2563EB;
+    box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.pay-btn{
+    width:100%;
+    margin-top:30px;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#2563EB;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.pay-btn:hover{
+    background:#1E40AF;
+}
+
+.pay-btn:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message{
+    text-align:center;
+    margin-top:18px;
+    font-weight:600;
+    line-height:1.6;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+    text-align:center;
+    padding:40px;
+    color:#64748B;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:550px){
+
+    .payment-card{
+        padding:25px 20px;
+    }
+
+    .payment-card h1{
+        font-size:25px;
+    }
+
+    .lipa-number{
+        font-size:24px;
+    }
+
+    .book-info{
+        align-items:flex-start;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<img src="assets/images/logo.png"
+     alt="SHAVILmath">
+
+<a href="books.html"
+   class="back-btn">
+
+← Back to Books
+
+</a>
+
+</header>
+
+
+
+<div class="container">
+
+<div class="payment-card">
+
+
+<h1>
+Complete Your Purchase 📚
+</h1>
+
+<p class="subtitle">
+
+You are about to purchase this SHAVILmath book.
+
+</p>
+
+
+
+<!-- BOOK SUMMARY -->
+
+<div id="bookSummary"
+     class="book-summary">
+
+    <div class="loading">
+
+        Loading book...
+
+    </div>
+
+</div>
+
+
+
+<!-- LIPA NAMBA -->
+
+<div class="lipa-box">
+
+<h3>
+📱 Lipa kupitia Lipa Namba
+</h3>
+
+
+<p class="lipa-text">
+
+Tafadhali lipa kiasi kilichoonyeshwa hapo juu
+kwenye Lipa Namba ifuatayo:
+
+</p>
+
+
+<div class="lipa-number">
+
+159450813
+
+</div>
+
+
+<p class="account-name">
+
+HAMAD MUSA MKALAVILE
+
+</p>
+
+
+<p class="instruction">
+
+Baada ya kufanya malipo, weka namba ya simu
+iliyotumika kufanya malipo ili tuweze kuthibitisha.
+
+</p>
+
+
+<input
+type="text"
+id="payerPhone"
+class="transaction-input"
+placeholder="Weka namba iliyofanya malipo, mfano 0712XXXXXX">
+
+</div>
+
+
+
+<button
+class="pay-btn"
+id="payButton">
+
+Submit Payment Request
+
+</button>
+
+
+
+<div
+id="message"
+class="message">
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supabase.js"></script>
+
+
+
+<script>
+
+/* =========================
+   GET BOOK ID
+========================= */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const bookId =
+    params.get("id");
+
+
+let currentBook = null;
+
+
+
+/* =========================
+   CHECK BOOK ID
+========================= */
+
+if(!bookId){
+
+    document.getElementById(
+        "bookSummary"
+    ).innerHTML = `
+
+        <div class="message">
+
+            ⚠️ Book not found.
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================
+   LOAD BOOK
+========================= */
+
+async function loadBook(){
+
+    if(!bookId){
+
+        return;
+
+    }
+
+
+    try{
+
+        const {
+
+            data: book,
+
+            error
+
+        } = await window
+            .supabaseClient
+
+            .from("books")
+
+            .select("*")
+
+            .eq("id",bookId)
+
+            .eq("status","active")
+
+            .single();
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        if(!book){
+
+            throw new Error(
+                "Book not found."
+            );
+
+        }
+
+
+        currentBook = book;
+
+
+        /* =========================
+           COVER
+        ========================= */
+
+        let coverHTML = `
+
+            <div class="book-placeholder">
+
+                📘
+
+            </div>
+
+        `;
+
+
+        if(book.cover_path){
+
+            const {
+
+                data: coverData
+
+            } = window
+                .supabaseClient
+
+                .storage
+
+                .from("book-covers")
+
+                .getPublicUrl(
+                    book.cover_path
+                );
+
+
+            if(
+                coverData &&
+                coverData.publicUrl
+            ){
+
+                coverHTML = `
+
+                    <img
+                        src="${coverData.publicUrl}"
+                        alt="Book Cover"
+                    >
+
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           DISPLAY BOOK
+        ========================= */
+
+        document.getElementById(
+            "bookSummary"
+        ).innerHTML = `
+
+            <div class="book-info">
+
+                <div class="book-cover">
+
+                    ${coverHTML}
+
+                </div>
+
+
+                <div class="book-details">
+
+                    <h2>
+
+                        ${escapeHTML(
+                            book.title
+                        )}
+
+                    </h2>
+
+
+                    <p>
+
+                        ${escapeHTML(
+                            book.form_name ||
+                            "Mathematics"
+                        )}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="price-row">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+
+                    TSh
+                    ${Number(
+                        book.price
+                    ).toLocaleString()}
+
+                </strong>
+
+            </div>
+
+        `;
+
+    }
+
+    catch(error){
+
+        console.error(
+            "BOOK PAYMENT ERROR:",
+            error
+        );
+
+
+        document.getElementById(
+            "bookSummary"
+        ).innerHTML = `
+
+            <div class="message">
+
+                ⚠️ Unable to load this book.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    return String(value || "")
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+
+/* =========================
+   SUBMIT BOOK PAYMENT
+========================= */
+
+document.getElementById(
+    "payButton"
+).addEventListener(
+
+    "click",
+
+    async function(){
+
+
+        /* CHECK BOOK */
+
+        if(!currentBook){
+
+            document.getElementById(
+                "message"
+            ).innerHTML =
+
+                "⚠️ Book information is not available.";
+
+            return;
+
+        }
+
+
+        /* GET PHONE */
+
+        const payerPhone =
+
+            document
+                .getElementById(
+                    "payerPhone"
+                )
+                .value
+                .trim();
+
+
+        if(!payerPhone){
+
+            document.getElementById(
+                "message"
+            ).innerHTML =
+
+                "⚠️ Tafadhali weka namba iliyotumika kufanya malipo.";
+
+            return;
+
+        }
+
+
+        /* GET USER */
+
+        const {
+
+            data: { user },
+
+            error: userError
+
+        } = await window
+            .supabaseClient
+            .auth
+            .getUser();
+
+
+        if(userError || !user){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        /* BUTTON */
+
+        const payButton =
+            document.getElementById(
+                "payButton"
+            );
+
+
+        payButton.disabled = true;
+
+        payButton.innerHTML =
+            "Submitting...";
+
+
+        /* =========================
+           INSERT BOOK ORDER
+        ========================= */
+
+        const {
+
+            data,
+
+            error
+
+        } = await window
+            .supabaseClient
+
+            .from("book_orders")
+
+            .insert({
+
+                user_id:
+                    user.id,
+
+                book_id:
+                    currentBook.id,
+
+                amount:
+                    Number(
+                        currentBook.price
+                    ),
+
+                payment_method:
+                    "lipa_namba",
+
+                payer_phone:
+                    payerPhone,
+
+                status:
+                    "pending"
+
+            })
+
+            .select()
+
+            .single();
+
+
+        /* ERROR */
+
+        if(error){
+
+            console.error(
+                "BOOK ORDER ERROR:",
+                error
+            );
+
+
+            document.getElementById(
+                "message"
+            ).innerHTML =
+
+                "⚠️ Something went wrong. Please try again.";
+
+
+            payButton.disabled =
+                false;
+
+
+            payButton.innerHTML =
+                "Submit Payment Request";
+
+
+            return;
+
+        }
+
+
+        /* SUCCESS */
+
+        console.log(
+            "Book order created:",
+            data
+        );
+
+
+        document.getElementById(
+            "message"
+        ).innerHTML =
+
+            "✅ Payment request submitted successfully! Your payment will be verified before access to the book is provided.";
+
+
+        payButton.innerHTML =
+            "Payment Request Submitted";
+
+
+    }
+
+);
+
+
+
+/* =========================
+   START
+========================= */
+
+loadBook();
+
+</script>
+
+
+</body>
+
+</html>
