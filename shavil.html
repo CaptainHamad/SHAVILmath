@@ -1,0 +1,1078 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <title>SHAVILmath | Unique Mathematics Questions</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f8fbff;
+            color: #1e293b;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,.90);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,.06);
+            z-index: 999;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        .login {
+            padding: 12px 28px;
+            background: linear-gradient(135deg,#2563eb,#1e40af);
+            color: white !important;
+            border-radius: 30px;
+        }
+
+        .login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,.35);
+        }
+
+        /* ================= HERO ================= */
+
+        .book-hero {
+            min-height: 100vh;
+            padding: 150px 8% 90px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 80px;
+
+            background:
+                radial-gradient(circle at 10% 20%, rgba(96,165,250,.20), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(37,99,235,.15), transparent 35%),
+                linear-gradient(135deg,#eff6ff,#ffffff,#dbeafe);
+        }
+
+        .book-content {
+            max-width: 650px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            background: white;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+
+            padding: 10px 18px;
+            border-radius: 50px;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            margin-bottom: 25px;
+
+            box-shadow: 0 10px 30px rgba(37,99,235,.08);
+        }
+
+        .book-content h1 {
+            font-size: clamp(42px,5vw,68px);
+            line-height: 1.08;
+            color: #0f172a;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .book-content h1 span {
+            color: #2563eb;
+        }
+
+        .subtitle {
+            font-size: 22px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .book-price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .price-label {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .price {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .buy-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            padding: 16px 32px;
+
+            background: #2563eb;
+            color: white;
+
+            border-radius: 14px;
+            text-decoration: none;
+
+            font-weight: 700;
+            font-size: 16px;
+
+            box-shadow: 0 12px 30px rgba(37,99,235,.30);
+
+            transition: .3s;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-4px);
+            background: #1d4ed8;
+            box-shadow: 0 20px 40px rgba(37,99,235,.35);
+        }
+
+        /* ================= BOOK IMAGE ================= */
+
+        .book-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-card {
+            width: 390px;
+            min-height: 500px;
+
+            padding: 30px;
+
+            background: white;
+            border-radius: 28px;
+
+            box-shadow:
+                0 30px 70px rgba(15,23,42,.18);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: relative;
+        }
+
+        .book-card::before {
+            content: "";
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            background: #dbeafe;
+
+            border-radius: 50%;
+
+            top: -60px;
+            right: -60px;
+
+            z-index: 0;
+        }
+
+        .book-card::after {
+            content: "";
+            position: absolute;
+
+            width: 140px;
+            height: 140px;
+
+            background: #eff6ff;
+
+            border-radius: 50%;
+
+            bottom: -40px;
+            left: -40px;
+
+            z-index: 0;
+        }
+
+        .book-image {
+            position: relative;
+            z-index: 2;
+
+            width: 100%;
+            max-width: 310px;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 20px 40px rgba(0,0,0,.20);
+
+            transition: .4s;
+        }
+
+        .book-card:hover .book-image {
+            transform: translateY(-8px) rotate(-1deg);
+        }
+
+        /* ================= BOOK INFORMATION ================= */
+
+        .book-info {
+            padding: 90px 8%;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            color: #0f172a;
+            margin-bottom: 15px;
+        }
+
+        .section-title span {
+            color: #2563eb;
+        }
+
+        .section-text {
+            text-align: center;
+            max-width: 700px;
+            margin: auto;
+            color: #64748b;
+            line-height: 1.8;
+            margin-bottom: 55px;
+        }
+
+        .info-grid {
+            max-width: 1050px;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 25px;
+        }
+
+        .info-card {
+            padding: 30px;
+            background: #f8fbff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+
+            text-align: center;
+
+            transition: .3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(37,99,235,.10);
+            border-color: #bfdbfe;
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #dbeafe;
+            color: #2563eb;
+
+            border-radius: 16px;
+
+            font-size: 25px;
+        }
+
+        .info-card h3 {
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* ================= ORDER SECTION ================= */
+
+        .order-section {
+            padding: 90px 20px;
+            background: #f8fbff;
+        }
+
+        .order-box {
+            max-width: 650px;
+            margin: auto;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 25px;
+
+            box-shadow: 0 20px 50px rgba(15,23,42,.08);
+
+            border-top: 5px solid #2563eb;
+        }
+
+        .order-box h2 {
+            text-align: center;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
+        .order-box > p {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            transition: .3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+        }
+
+        .total-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 18px;
+
+            background: #eff6ff;
+            border-radius: 14px;
+
+            margin: 25px 0;
+        }
+
+        .total-box span:first-child {
+            font-weight: 600;
+            color: #334155;
+        }
+
+        #total {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .order-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: #2563eb;
+            color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .order-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        /* ================= SUCCESS MESSAGE ================= */
+
+        .success {
+            display: none;
+
+            margin-top: 25px;
+            padding: 20px;
+
+            border-radius: 14px;
+
+            background: #dcfce7;
+            color: #166534;
+
+            text-align: center;
+        }
+
+        .success h3 {
+            margin-bottom: 7px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 50px 7% 25px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        footer p {
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,.12);
+            padding-top: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:900px) {
+
+            header {
+                padding: 12px 18px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo img {
+                height: 48px;
+            }
+
+            nav {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                gap: 7px;
+            }
+
+            nav a {
+                font-size: 12px;
+                text-align: center;
+                padding: 8px 2px;
+            }
+
+            .login {
+                padding: 8px 10px;
+            }
+
+            .book-hero {
+                grid-template-columns: 1fr;
+                padding: 230px 20px 70px;
+                gap: 50px;
+                text-align: center;
+            }
+
+            .book-content {
+                margin: auto;
+            }
+
+            .badge {
+                font-size: 11px;
+            }
+
+            .book-content h1 {
+                font-size: 44px;
+            }
+
+            .description {
+                font-size: 15px;
+            }
+
+            .book-price {
+                justify-content: center;
+            }
+
+            .book-display {
+                order: 2;
+            }
+
+            .book-card {
+                width: 320px;
+                min-height: 430px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+        }
+
+        @media(max-width:500px) {
+
+            .book-content h1 {
+                font-size: 38px;
+            }
+
+            .book-card {
+                width: 290px;
+                min-height: 400px;
+                padding: 20px;
+            }
+
+            .order-box {
+                padding: 25px 20px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header>
+
+    <div class="logo">
+        <a href="index.html">
+            <img src="assets/images/logo.png" alt="SHAVILmath Logo">
+        </a>
+    </div>
+
+    <nav>
+
+        <a href="index.html">Home</a>
+
+        <a href="exercises.html">Exercises</a>
+
+        <a href="special-tests.html">Special Tests</a>
+
+        <a href="past-papers.html">Past Papers</a>
+
+        <a href="shavil.html">Our Book</a>
+
+        <a href="#order">Buy</a>
+
+        <a href="login.html" class="login">Login</a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ================= BOOK HERO ================= -->
+
+<section class="book-hero">
+
+    <div class="book-content">
+
+        <div class="badge">
+            📘 The SHAVIL Series
+        </div>
+
+        <h1>
+            UNIQUE
+            <span>MATHEMATICS</span>
+            QUESTIONS
+        </h1>
+
+        <div class="subtitle">
+            Form One & Form Two
+        </div>
+
+        <p class="description">
+
+            A carefully prepared collection of Mathematics
+            questions and solutions designed to help students
+            practice, understand and improve their Mathematics
+            skills.
+
+        </p>
+
+        <div class="book-price">
+
+            <span class="price-label">
+                Get your copy for
+            </span>
+
+            <span class="price">
+                TZS 10,000
+            </span>
+
+        </div>
+
+        <a href="#order" class="buy-btn">
+
+            <i class="fas fa-shopping-cart"></i>
+
+            BUY YOUR COPY
+
+        </a>
+
+    </div>
+
+
+    <div class="book-display">
+
+        <div class="book-card">
+
+            <img
+                src="assets/images/book.png"
+                alt="Unique Mathematics Questions Book"
+                class="book-image"
+            >
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= BOOK INFORMATION ================= -->
+
+<section class="book-info">
+
+    <h2 class="section-title">
+        What's Inside <span>The Book?</span>
+    </h2>
+
+    <p class="section-text">
+
+        Practice Mathematics with carefully prepared questions
+        designed for Form One and Form Two students.
+
+    </p>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                <i class="fas fa-calculator"></i>
+            </div>
+
+            <h3>
+                305+ Questions
+            </h3>
+
+            <p>
+                A large collection of Mathematics questions
+                for consistent practice.
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+
+            <h3>
+                Clear Solutions
+            </h3>
+
+            <p>
+                Questions are accompanied by solutions to help
+                students understand how problems are solved.
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+
+            <h3>
+                Form 1 & Form 2
+            </h3>
+
+            <p>
+                Created specifically for students at Form One
+                and Form Two level.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= ORDER ================= -->
+
+<section class="order-section" id="order">
+
+    <div class="order-box">
+
+        <h2>
+            Order Your Copy
+        </h2>
+
+        <p>
+            Fill in the details below and we will contact you
+            to confirm your order.
+        </p>
+
+
+        <form id="orderForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="07XXXXXXXX"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Quantity
+                </label>
+
+                <select id="quantity">
+
+                    <option value="1">1 Book</option>
+
+                    <option value="2">2 Books</option>
+
+                    <option value="3">3 Books</option>
+
+                    <option value="4">4 Books</option>
+
+                    <option value="5">5 Books</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Delivery Area
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="e.g. Dar es Salaam, Kinondoni"
+                    required
+                >
+
+            </div>
+
+
+            <div class="total-box">
+
+                <span>
+                    Total
+                </span>
+
+                <span id="total">
+                    TZS 10,000
+                </span>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="order-btn"
+            >
+
+                PLACE ORDER
+
+            </button>
+
+
+        </form>
+
+
+        <div class="success" id="success">
+
+            <h3>
+                ✅ Order Received!
+            </h3>
+
+            <p>
+                Thank you for ordering the SHAVILmath book.
+                We will contact you shortly to confirm your order.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-logo">
+
+        <img
+            src="assets/images/logo.png"
+            alt="SHAVILmath Logo"
+        >
+
+    </div>
+
+    <p>
+        Master Math. Shape Your Future.
+    </p>
+
+    <div class="footer-bottom">
+
+        © 2026 SHAVILmath. All Rights Reserved.
+
+    </div>
+
+</footer>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    const bookPrice = 10000;
+
+    const quantity = document.getElementById("quantity");
+
+    const total = document.getElementById("total");
+
+    const orderForm = document.getElementById("orderForm");
+
+    const success = document.getElementById("success");
+
+
+    /* UPDATE TOTAL */
+
+    quantity.addEventListener("change", function () {
+
+        const qty = Number(this.value);
+
+        const amount = bookPrice * qty;
+
+        total.textContent =
+            "TZS " + amount.toLocaleString();
+
+    });
+
+
+    /* ORDER */
+
+    orderForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("name").value;
+
+        const phone =
+            document.getElementById("phone").value;
+
+        const qty =
+            document.getElementById("quantity").value;
+
+        const location =
+            document.getElementById("location").value;
+
+
+        const amount =
+            bookPrice * Number(qty);
+
+
+        /*
+            FOR NOW:
+            Display success message.
+
+            Later we can connect this to
+            WhatsApp / database / payment.
+        */
+
+
+        success.style.display = "block";
+
+        success.innerHTML = `
+
+            <h3>✅ Order Received!</h3>
+
+            <p>
+                Thank you <strong>${name}</strong>.
+            </p>
+
+            <p>
+                ${qty} book(s) — TZS ${amount.toLocaleString()}
+            </p>
+
+            <p>
+                We will contact you on
+                <strong>${phone}</strong>
+                to confirm your order.
+            </p>
+
+        `;
+
+
+        orderForm.reset();
+
+        total.textContent = "TZS 10,000";
+
+
+        success.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    });
+
+</script>
+
+
+</body>
+
+</html>
+```
