@@ -1002,73 +1002,103 @@
     });
 
 
-    /* ORDER */
+   ```javascript
+/* ================= WHATSAPP ORDER ================= */
 
-    orderForm.addEventListener("submit", function (event) {
+const bookPrice = 10000;
 
-        event.preventDefault();
-
-        const name =
-            document.getElementById("name").value;
-
-        const phone =
-            document.getElementById("phone").value;
-
-        const qty =
-            document.getElementById("quantity").value;
-
-        const location =
-            document.getElementById("location").value;
+const quantity = document.getElementById("quantity");
+const total = document.getElementById("total");
+const orderForm = document.getElementById("orderForm");
 
 
-        const amount =
-            bookPrice * Number(qty);
+/* YOUR WHATSAPP NUMBER
+   Replace this with your actual WhatsApp number.
+   Tanzania country code = 255
+   Do NOT use + or spaces.
+
+   Example:
+   255712345678
+*/
+
+const whatsappNumber = "255XXXXXXXXX";
 
 
-        /*
-            FOR NOW:
-            Display success message.
+/* UPDATE TOTAL */
 
-            Later we can connect this to
-            WhatsApp / database / payment.
-        */
+quantity.addEventListener("change", function () {
 
+    const qty = Number(this.value);
 
-        success.style.display = "block";
+    const amount = bookPrice * qty;
 
-        success.innerHTML = `
+    total.textContent =
+        "TZS " + amount.toLocaleString();
 
-            <h3>✅ Order Received!</h3>
-
-            <p>
-                Thank you <strong>${name}</strong>.
-            </p>
-
-            <p>
-                ${qty} book(s) — TZS ${amount.toLocaleString()}
-            </p>
-
-            <p>
-                We will contact you on
-                <strong>${phone}</strong>
-                to confirm your order.
-            </p>
-
-        `;
+});
 
 
-        orderForm.reset();
+/* PLACE ORDER */
 
-        total.textContent = "TZS 10,000";
+orderForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
 
 
-        success.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
+    const name =
+        document.getElementById("name").value.trim();
 
-    });
+    const phone =
+        document.getElementById("phone").value.trim();
 
+    const qty =
+        document.getElementById("quantity").value;
+
+    const location =
+        document.getElementById("location").value.trim();
+
+
+    const amount =
+        bookPrice * Number(qty);
+
+
+    /* CREATE WHATSAPP MESSAGE */
+
+    const message =
+
+`📚 *NEW SHAVILmath BOOK ORDER*
+
+*Customer Name:* ${name}
+
+*Phone Number:* ${phone}
+
+*Quantity:* ${qty} book(s)
+
+*Delivery Area:* ${location}
+
+*Total Amount:* TZS ${amount.toLocaleString()}
+
+Please confirm my order.`;
+
+
+
+    /* OPEN WHATSAPP */
+
+    const whatsappURL =
+        "https://wa.me/" +
+        whatsappNumber +
+        "?text=" +
+        encodeURIComponent(message);
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+});
+```
+});
 </script>
 
 
