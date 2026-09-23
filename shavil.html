@@ -551,30 +551,364 @@
 
 /* CTA */
 
+/*================ FINAL BOOK CTA =================*/
+
 .preview-cta{
+    max-width:1050px;
+    margin:80px auto 20px;
+
     text-align:center;
 
-    margin-top:45px;
+    padding:70px 30px;
+
+    position:relative;
 }
 
-.preview-cta p{
+
+/* EYEBROW */
+
+.cta-eyebrow{
     color:#64748b;
 
-    margin-bottom:10px;
+    font-size:18px;
+
+    margin-bottom:12px;
 }
 
-.preview-cta a{
+
+/* MAIN HEADING */
+
+.preview-cta h2{
+    margin:0;
+
     color:#2563eb;
+
+    font-size:48px;
+
+    line-height:1.15;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+}
+
+.preview-cta h2 span{
+    font-weight:700;
+}
+
+
+/* DESCRIPTION */
+
+.cta-description{
+    margin:20px auto 42px;
+
+    color:#64748b;
+
+    font-size:18px;
+
+    line-height:1.7;
+
+    max-width:800px;
+}
+
+
+/* BUTTONS */
+
+.cta-buttons{
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:28px;
+
+    max-width:900px;
+
+    margin:auto;
+}
+
+
+/* BOTH BUTTONS */
+
+.cta-buy-button,
+.cta-whatsapp-button{
+
+    width:430px;
+
+    min-height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:16px;
+
+    border-radius:45px;
 
     text-decoration:none;
 
+    font-size:20px;
+
     font-weight:700;
 
-    font-size:16px;
+    transition:.3s;
+
+    box-sizing:border-box;
 }
 
-.preview-cta a:hover{
+
+/* BLUE BUTTON */
+
+.cta-buy-button{
+
+    background:#2563eb;
+
+    color:white;
+
+    box-shadow:
+        0 15px 35px rgba(37,99,235,.22);
+}
+
+.cta-buy-button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 20px 40px rgba(37,99,235,.30);
+}
+
+
+/* WHATSAPP BUTTON */
+
+.cta-whatsapp-button{
+
+    background:#16c466;
+
+    color:white;
+
+    box-shadow:
+        0 15px 35px rgba(22,196,102,.22);
+}
+
+.cta-whatsapp-button:hover{
+
+    background:#0fa958;
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 20px 40px rgba(22,196,102,.30);
+}
+
+
+/* BUTTON ICONS */
+
+.cta-buy-button i,
+.cta-whatsapp-button i{
+
+    font-size:32px;
+}
+
+
+/* OR DIVIDER */
+
+.cta-or{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:25px;
+
+    max-width:290px;
+
+    margin:55px auto 35px;
+}
+
+.cta-or span{
+
+    height:2px;
+
+    flex:1;
+
+    background:#dbe3ec;
+}
+
+.cta-or strong{
+
+    color:#64748b;
+
+    font-size:20px;
+
+    font-weight:500;
+}
+
+
+/* WHATSAPP CONTACT */
+
+.cta-whatsapp-contact{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:16px;
+}
+
+.cta-whatsapp-contact > i{
+
+    font-size:54px;
+
+    color:#16c466;
+}
+
+.cta-whatsapp-contact div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+}
+
+.cta-whatsapp-contact span{
+
+    color:#64748b;
+
+    font-size:20px;
+}
+
+.cta-whatsapp-contact a{
+
+    color:#16a34a;
+
+    font-size:24px;
+
+    font-weight:800;
+
+    text-decoration:none;
+}
+
+.cta-whatsapp-contact a:hover{
+
     text-decoration:underline;
+}
+
+
+/* SUPPORTING TEXT */
+
+.cta-help{
+
+    margin-top:15px;
+
+    color:#64748b;
+
+    font-size:15px;
+}
+
+
+/*================ CTA MOBILE =================*/
+
+@media(max-width:800px){
+
+    .preview-cta{
+
+        padding:55px 20px;
+
+        margin-top:60px;
+    }
+
+    .preview-cta h2{
+
+        font-size:36px;
+    }
+
+    .cta-description{
+
+        font-size:16px;
+
+        margin-bottom:32px;
+    }
+
+    .cta-buttons{
+
+        flex-direction:column;
+
+        gap:15px;
+    }
+
+    .cta-buy-button,
+    .cta-whatsapp-button{
+
+        width:100%;
+
+        max-width:430px;
+
+        min-height:65px;
+
+        font-size:17px;
+    }
+
+    .cta-whatsapp-contact > i{
+
+        font-size:45px;
+    }
+
+    .cta-whatsapp-contact span{
+
+        font-size:16px;
+    }
+
+    .cta-whatsapp-contact a{
+
+        font-size:20px;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .preview-cta h2{
+
+        font-size:31px;
+    }
+
+    .cta-whatsapp-contact{
+
+        align-items:flex-start;
+    }
+
+    .cta-whatsapp-contact div{
+
+        display:block;
+
+        text-align:left;
+    }
+
+    .cta-whatsapp-contact span,
+    .cta-whatsapp-contact a{
+
+        display:block;
+    }
+
+    .cta-whatsapp-contact a{
+
+        margin-top:3px;
+    }
+
 }
 
 
@@ -1245,15 +1579,89 @@
     </div>
 
 
-    <div class="preview-cta">
+ <!-- ================= FINAL BOOK CTA ================= -->
 
-        <p>
-            Like what you see?
-        </p>
+<div class="preview-cta">
 
-        <a href="#order">
-            Get Your Copy →
+    <div class="cta-eyebrow">
+        Like what you see?
+    </div>
+
+    <h2>
+        Get Your Copy <span>→</span>
+    </h2>
+
+    <p class="cta-description">
+        Order your copy today and give your child the advantage in mathematics.
+    </p>
+
+
+    <div class="cta-buttons">
+
+        <!-- NORMAL ORDER -->
+
+        <a href="#order" class="cta-buy-button">
+            <i class="fas fa-shopping-cart"></i>
+            Get Your Copy
         </a>
+
+
+        <!-- WHATSAPP ORDER -->
+
+        <a
+            href="https://wa.me/255676998549?text=Hello%20SHAVILmath,%20I%20would%20like%20to%20order%20the%20Mathematics%20book."
+            target="_blank"
+            class="cta-whatsapp-button"
+        >
+            <i class="fab fa-whatsapp"></i>
+            Order via WhatsApp
+        </a>
+
+    </div>
+
+
+    <!-- OR -->
+
+    <div class="cta-or">
+
+        <span></span>
+
+        <strong>or</strong>
+
+        <span></span>
+
+    </div>
+
+
+    <!-- WHATSAPP NUMBER -->
+
+    <div class="cta-whatsapp-contact">
+
+        <i class="fab fa-whatsapp"></i>
+
+        <div>
+
+            <span>
+                Chat with us on WhatsApp:
+            </span>
+
+            <a
+                href="https://wa.me/255676998549"
+                target="_blank"
+            >
+                0676 998 549
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <p class="cta-help">
+        We're here to answer your questions and help you place an order.
+    </p>
+
+</div>
 <div class="hero-whatsapp">
 
     <span>
